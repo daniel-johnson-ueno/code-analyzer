@@ -3,9 +3,9 @@ name: Salesforce Code Analyzer
 on:
   workflow_dispatch:
   pull_request:
-    branches: [main]
+    branches: [main, uat]
   push:
-    branches: [main]
+    branches: [main, uat]
 
 jobs:
   code-analysis:
