@@ -1,0 +1,10 @@
+@import 'c/cssLibrary';
+
+@media all and (max-width: 800px) {
+    /* put your css styles in here */
+    .tipo-container{
+        height:25rem;
+        width: 95%;
+    }
+
+  }

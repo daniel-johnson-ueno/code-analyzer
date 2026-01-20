@@ -1,0 +1,12 @@
+@import 'c/cssLibrary';
+
+.movement-details-label {
+    color:#6C6C78;
+}
+.movement-details-value {
+    color:#252529;
+    font-weight: 600;
+}
+.movement-details-row {
+    margin-top: 15px;
+}

@@ -1,0 +1,204 @@
+<template>
+    <main class="tab-container">
+        <!--Parte del componente para consultar reintegro-->
+        <template if:false={showResult}>
+            <div class="tab-content">
+                <lightning-card>
+                    <div class="slds-p-horizontal_medium">
+                        <h1 class="query-header">Consulta de reintegros</h1>
+
+                        <lightning-input name="receiptNumber" label="Número de comprobante"
+                            onchange={onReceiptNumberInputChange} value={receiptNumber} required="true"></lightning-input>
+                        <lightning-combobox name="paymentMethod" label="Método de pago" value={paymentMethod}
+                            placeholder="Seleccione método de pago" options={paymentMethodsToSelect}
+                            onchange={onPaymentMethodInputChange} required="true"></lightning-combobox>
+
+                            <div class="actions">
+                                <lightning-button class="search-button" variant="brand" label="Consultar" title="Primary action"
+                                    onclick={onQueryButtonClick}>
+                                </lightning-button>
+                            </div>
+                            <template if:true={isLoading}>
+                                <div class="slds-align_absolute-center slds-m-around_large">
+                                    <lightning-spinner alternative-text="Procesando" size="medium"></lightning-spinner>
+                                    <span class="slds-m-left_small">Procesando solicitud</span>
+                                </div>
+                            </template>
+                    </div>
+                    <!--Seccion con comprobantes a relacionar -->
+                    <div if:true={thereIsLinkedRefunds}>
+                        <h1 class="refund-data-item">
+                            Reintegros para enlazar al caso
+                        </h1>
+                    </br>
+                        <div class="linked-refunds">
+                            <template for:each={listOfLinkedRefunds} for:item="refund">
+                                <div key={refund.Id} class="refund-item-component">
+                                    <c-refund-item class="slds-m-bottom_medium" key={refund.Id} voucher={refund}></c-refund-item>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <!--Boton para relacionar los comprobantes al caso-->
+                    <template if:true={thereIsLinkedRefunds}>
+                        <div class="actions">
+                            <lightning-button class="search-button" variant="brand" label="Confirmar" title="Primary action"
+                                onclick={createRelatedRefundRecords}>
+                            </lightning-button>
+                        </div>
+                    </template>       
+                </lightning-card>
+            </div>
+        </template>
+        <!--Parte del componente que muestra resultado-->
+        <template if:true={showResult}>
+            <lightning-card>
+                <div class="tab-content fade-in">
+                    <lightning-button-icon onclick={onBackButtonClick} icon-name="utility:back" alternative-text="Settings" title="Settings">
+                    </lightning-button-icon>
+                    <div class="receipt-container">
+                        <div class="icon-container">
+                            <template if:true={itIsInProgressOrProcessed}>
+                                <div>
+                                    <template if:true={itIsProcessed}>
+                                        <lightning-icon size="medium" icon-name="action:approval"></lightning-icon>
+                                    </template>
+                                    <template if:true={itIsInProgress}>
+                                        <lightning-icon size="medium" icon-name="utility:rotate" variant="warning"></lightning-icon>
+                                    </template>
+                                </div>
+                                <h1 class="cashback-percentage state-title">{voucher.verdict}</h1>
+                                <h3>{voucher.approvalMessage}</h3>
+                                </br>
+                                </br>
+                            </template>
+                            <template if:true={itIsPending}>
+                                <div>
+                                    <lightning-icon icon-name="utility:warning" alternative-text="Warning!" variant="warning"
+                                    title="warning variant"></lightning-icon>
+                                </div>
+                                <h1 class="cashback-percentage state-title">{voucher.verdict}</h1>
+                            </template>
+                            <template if:true={itIsAnError}>
+                                <div>
+                                <lightning-icon icon-name="utility:error" alternative-text="Error!" variant="error" title="error variant">
+                                </lightning-icon>
+                                </div>
+                                <h1 class="cashback-percentage state-title">{voucher.verdict}</h1>
+                            </template>
+                        </div>
+                        <div class="receipt-content">
+                            <div class="receipt-header">
+                                <div class="refund-data-item">
+                                    <small class="data-item-label">
+                                        Comprobante
+                                    </small>
+                                    <div class="data-item-value">
+                                        {voucher.Id}
+                                    </div>
+                                </div>
+                                <div class="refund-data-item">
+                                    <small class="data-item-label">
+                                        Monto del comprobante
+                                    </small>
+                                    <div class="data-item-value">
+                                        {voucher.currencyCode} {voucher.receiptAmount}
+                                    </div>
+                                </div>
+                                <div class="refund-data-item">
+                                    <small class="data-item-label">
+                                        Comercio
+                                    </small>
+                                    <div class="data-item-value">
+                                        {voucher.storeName} ({voucher.storeCode})
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <template if:true={itIsInProgressOrProcessed}>
+                                    <div class="refund-card">
+                                        <div class="slds-m-around_x-small">
+                                            <div class="slds-grid slds-wrap slds-gutters slds-m-bottom_x-small">
+                                                <div class="slds-col slds-size_1-of-2">
+                                                    <div class="slds-text-title">Monto del reintegro</div>
+                                                    <div class="slds-truncate refund-amount">{voucher.currencyCode} {voucher.refundAmount}</div>
+                                                </div>
+                                                <div class="slds-col slds-size_1-of-2">
+                                                    <div class="slds-text-title">Nivel</div>
+                                                    <div class="slds-truncate">{voucher.userLevel}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-m-around_x-small">
+                                            <div class="slds-grid slds-wrap slds-gutters slds-m-bottom_x-small">
+                                                <div class="slds-col slds-size_1-of-2">
+                                                    <div class="slds-text-title">Promoción</div>
+                                                    <div class="slds-truncate">{voucher.promotion}</div>
+                                                </div>
+                                                <div class="slds-col slds-size_1-of-2">
+                                                    <div class="slds-text-title">Fecha de reintegro</div>
+                                                    <div class="slds-truncate">{voucher.cashbackDate}</div>
+                                                </div>
+                                                <div class="slds-col slds-size_1-of-2">
+                                                    <div class="slds-text-title">Cashback</div>
+                                                    <div class="slds-truncate">{voucher.cashback} %</div>
+                                                </div>
+                                                <div class="slds-col slds-size_1-of-2">
+                                                    <div class="slds-text-title">Acumulado pre cashback</div>
+                                                    <div class="slds-truncate">{voucher.currencyCode} {voucher.accumulatedCashback}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-m-around_x-small">
+                                            <div class="slds-grid slds-wrap slds-gutters slds-m-bottom_x-small">
+                                                <div class="slds-col slds-size_1-of-2">
+                                                    <div class="slds-text-title">Límite de reintegro por promoción</div>
+                                                    <div class="slds-truncate">{voucher.currencyCode} {voucher.cashbackLimit}</div>
+                                                </div>
+                                                <div class="slds-col slds-size_1-of-2">
+                                                    <div class="slds-text-title">Acumulado post cashback</div>
+                                                    <div class="slds-truncate">{voucher.currencyCode} {voucher.totalLimitCashback}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <template if:true={showClientMessage}>
+                                            <div class="mess-to-client">
+                                                <small>{messageToClient}</small>
+                                            </div>
+                                         </template>
+                                    </div>
+                                </template>
+                            </div>
+                            <div class="refund-data-item">
+                                <template if:true={itIsAnError}>
+                                    <small class="refund-data-title">Motivo de rechazo:</small>
+                                    <p class="message-error">
+                                        {voucher.rejectionType}
+                                    </p>
+                                    <template if:true={showClientMessage}>
+                                        <div class="mess-to-client">
+                                            <small>{messageToClient}</small>
+                                        </div>
+                                     </template>
+                                </template>
+                            </div>
+                            <div class="refund-data-item">
+                                <template if:true={itIsPending}>
+                                </template>
+                            </div>
+                        </div>
+                        <template if:true={showButtonAddToCase}>
+                            <div class="add-to-case-container">
+                                <lightning-button variant="brand" label="Añadir al caso" title="Primary action" onclick={linkRefundAndBack}>
+                                </lightning-button>
+                            </div>
+                        </template>
+                        <template if:true={showMessageRejection}>
+                           <strong><h1 class="message-rejection">{messageRejection}</h1></strong>
+                        </template>
+                    </div>
+                </div>
+            </lightning-card>
+        </template>
+    </main>
+</template>

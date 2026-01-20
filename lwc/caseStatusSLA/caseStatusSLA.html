@@ -1,0 +1,33 @@
+<template>
+    <template if:true={thereIsSLAEstablished}>
+        <lightning-card class={getTimeClassSwitchSLA}>
+            <template if:true={loadingCase}>
+                <lightning-spinner variant="brand" size="large"> </lightning-spinner>
+            </template>
+
+            <template if:false={loadingCase}>
+                <div class="slds-p-around_medium" >
+                    <div class="sla-card-header">
+                        <h1>
+                            Cumplimiento SLAs
+                        </h1>
+                    </div>
+                    <div class="card-content-container balance-padding" style={reverseOrderStyle}>
+                        <c-status-sla if:true={thereIsEscalatedSLAEstablished} class="status-sla" state="Escalado" case-status={caseStatus}
+                            actual-saved-time-in-the-status={actualSavedTimeInEscalated}
+                            established-sla-in-hours={slaEscalatedInHours} established-sla-in-seconds={slaEscalatedInSeconds}
+                            date-time-last-status-change={dateTimeLastStatusChange} update-status={caseStatus}></c-status-sla>
+        
+                        <c-status-sla if:true={thereIsDerivatedSLAEstablished} class="status-sla" state="Derivado" case-status={caseStatus}
+                            actual-saved-time-in-the-status={actualSavedTimeInDerivated}
+                            established-sla-in-hours={slaDerivatedInHours} established-sla-in-seconds={slaDerivatedInSeconds}
+                            date-time-last-status-change={dateTimeLastStatusChange} update-status={caseStatus}></c-status-sla>
+                    </div>
+                </div>
+            </template>
+
+        </lightning-card>
+
+
+    </template>
+</template>

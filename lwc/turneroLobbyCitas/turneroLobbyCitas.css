@@ -1,0 +1,9 @@
+.slds-th__action {
+    text-align: center;
+    justify-content: center; /* Asegura que el contenido esté centrado */
+}
+
+.horizontal-line{
+    margin: 4px 0px;
+    border-color: #C9C9C9;
+}

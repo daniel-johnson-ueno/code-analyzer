@@ -1,0 +1,234 @@
+<template>
+
+    <!--Tipificación-->
+    <div class="slds-grid common-divider-header-section">
+        <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_x-small">
+            <span class="common-divider-title">Tipificación</span>
+        </div>
+    </div>
+
+    <div class='slds-grid slds-wrap'>
+        <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+            <div class='slds-grid'>
+                <div class='slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                    <p class='common-field-label slds-var-p-horizontal_small'> Tipo de Contacto</p>
+                    <lightning-input variant="label-hidden" label=""
+                                     value={caseStructure.Type} disabled>
+                    </lightning-input>
+
+                </div>
+            </div>
+        </div>
+
+        <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+            <div class='slds-grid'>
+                <div class='slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                    <p class='common-field-label slds-var-p-horizontal_small'> Producto</p>
+                    <lightning-input variant="label-hidden" label=""
+                                     value={caseStructure.Product__c} disabled>
+                    </lightning-input>
+
+                </div>
+            </div>
+        </div>
+
+        <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+            <div class='slds-grid'>
+                <div class='slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                    <p class='common-field-label slds-var-p-horizontal_small'> Tipo</p>
+                    <lightning-input variant="label-hidden" label="" value={caseStructure.SubProduct__c}
+                                     disabled></lightning-input>
+
+                </div>
+            </div>
+        </div>
+
+        <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+            <div class='slds-grid'>
+                <div class='slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                    <p class='common-field-label slds-var-p-horizontal_small'> Motivo del Caso</p>
+                    <lightning-input variant="label-hidden" label="" value={caseStructure.Casuistry__c}
+                                     disabled></lightning-input>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!--Informacion del Caso-->
+
+    <lightning-record-edit-form object-api-name="Case">
+        <div class="slds-grid common-divider-header-section">
+            <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_x-small">
+                <span class="common-divider-title">Información del Caso</span>
+            </div>
+        </div>
+
+        <div class='slds-grid slds-wrap'>
+            <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                <div class='slds-grid'>
+                    <div class='slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                        <p class='common-field-label slds-var-p-horizontal_small'><span
+                                class='common-required-field'>*</span> Asunto</p>
+                        <lightning-input-field field-name="Subject" variant="label-hidden"
+                                               data-field="Subject"
+                                               value={caseStructure.Subject}
+                                               onchange={handleInputChange}
+                                               required></lightning-input-field>
+                    </div>
+                </div>
+            </div>
+
+            <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                <div class='slds-grid'>
+                    <div class='slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                        <p class='common-field-label slds-var-p-horizontal_small'><span
+                                class='common-required-field'>*</span> Origen</p>
+                        <lightning-input-field field-name="Origin" variant="label-hidden"
+                                               data-field="Origin"
+                                               value={caseStructure.Origin}
+                                               onchange={handleInputChange}
+                                               required></lightning-input-field>
+                    </div>
+                </div>
+            </div>
+
+            <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                <div class='slds-grid'>
+                    <div class='slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                        <p class='common-field-label slds-var-p-horizontal_small'><span
+                                class='common-required-field'>*</span> Descripción</p>
+                        <lightning-input-field field-name="Description" variant="label-hidden"
+                                               data-field="Description"
+                                               value={caseStructure.Description}
+                                               onchange={handleInputChange}
+                                               required></lightning-input-field>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!--Detalles del Caso-->
+        <div class="slds-grid common-divider-header-section">
+            <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_x-small">
+                <span class="common-divider-title">Detalles del Caso</span>
+            </div>
+        </div>
+
+        <div class='slds-grid slds-wrap'>
+
+            <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                <div class='slds-grid'>
+                    <div class='slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                        <p class='common-field-label slds-var-p-horizontal_small'><span
+                                class='common-required-field'>*</span> Monto del Reclamo</p>
+                        <lightning-input-field field-name="ClaimAmount__c" variant="label-hidden"
+                                               data-field="ClaimAmount__c"
+                                               value={caseStructure.ClaimAmount__c}
+                                               onchange={handleInputChange}
+                                               required></lightning-input-field>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                <div class='slds-grid'>
+                    <div class='slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                        <p class='common-field-label slds-var-p-horizontal_small'><span
+                                class='common-required-field'>*</span> Moneda</p>
+                        <lightning-input-field field-name="CurrencyIsoCode" variant="label-hidden"
+                                               data-field="CurrencyIsoCode"
+                                               value={caseStructure.CurrencyIsoCode}
+                                               onchange={handleInputChange}
+                                               required></lightning-input-field>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!--/////////////Caso Reclamado////////////-->
+        <div class='slds-grid slds-wrap'>
+
+            <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                <div class='slds-grid'>
+                    <div class='slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                        <p class='common-field-label slds-var-p-horizontal_small'><span
+                                class='common-required-field'>*</span> Número de Referancia</p>
+                        <lightning-input-field field-name="Reference_Number__c" variant="label-hidden"
+                                               data-field="Reference_Number__c"
+                                               value={caseStructure.Reference_Number__c}
+                                               onchange={handleInputChange}
+                                               required></lightning-input-field>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                <div class='slds-grid'>
+                    <div class='slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                        <p class='common-field-label slds-var-p-horizontal_small'><span
+                                class='common-required-field'>*</span> Fecha de Operación</p>
+                        <lightning-input-field field-name="Operation_date__c" variant="label-hidden"
+                                               date-style="short"
+                                               data-field="Operation_date__c"
+                                               value={caseStructure.Operation_date__c}
+                                               onchange={handleInputChange} class="custom-date-field"
+                                               required>
+                        </lightning-input-field>
+
+                        <!--                            <lightning-input-->
+                        <!--                                    type="date"-->
+                        <!--                                    label="Operation Date"-->
+                        <!--                                    variant="label-hidden"-->
+                        <!--                                    date-style="short"-->
+                        <!--                                    value={caseStructure.Operation_date__c}-->
+                        <!--                                    onchange={handleInputChange}-->
+                        <!--                                    class="custom-date-field"-->
+                        <!--                                    required>-->
+                        <!--                            </lightning-input>-->
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class='slds-grid slds-wrap'>
+
+            <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                <div class='slds-grid'>
+                    <div class='slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                        <p class='common-field-label slds-var-p-horizontal_small'><span
+                                class='common-required-field'>*</span> Tipo de Costo </p>
+                        <lightning-input-field field-name="Fee_type__c" variant="label-hidden"
+                                               data-field="Fee_type__c"
+                                               value={caseStructure.Fee_type__c}
+                                               onchange={handleInputChange}
+                                               required></lightning-input-field>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                <div class='slds-grid'>
+                    <div class='slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                        <p class='common-field-label slds-var-p-horizontal_small'><span
+                                class='common-required-field'>*</span> Cuenta de Recepción</p>
+                        <lightning-input-field field-name="Reception_Account__c" variant="label-hidden"
+                                               data-field="Reception_Account__c"
+                                               value={caseStructure.Reception_Account__c}
+                                               onchange={handleInputChange}
+                                               required>
+                        </lightning-input-field>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </lightning-record-edit-form>
+
+</template>

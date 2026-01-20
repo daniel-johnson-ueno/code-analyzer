@@ -1,0 +1,43 @@
+<template>
+    <lightning-card>
+        <div slot="title" class="slds-media">
+            <div class="slds-media__figure">
+                <lightning-icon icon-name="standard:education" size="small" alternative-text="Education"></lightning-icon>
+            </div>
+            <div class="slds-media__body">
+                <h2 class="slds-card__header-title">
+                    <span class="slds-text-heading_small">Opportunidades - Reasignación masiva</span>
+                </h2>
+            </div>
+        </div>
+        <div slot="actions">
+            <lightning-button label="Editar Propietario" onclick={navigateToNewRecordPage} disabled={isDisabled}></lightning-button>
+        </div>
+        <div>
+            <div class="slds-card__header slds-grid">
+                <p>Oportunidades seleccionadas: {selectedContactsLen}</p>
+            </div>
+            <div class="slds-card__header slds-grid">
+                <lightning-input type="Buscar" onchange={handleSearch}></lightning-input>
+            </div>
+            <div class="slds-card__header slds-grid">
+                <lightning-button label="Deseleccionar todas" onclick={handleUnselectAll}></lightning-button>
+            </div>
+        </div>
+        <div class="slds-card__body_inner">
+            <lightning-datatable
+                key-field="Id"
+                data={contacts}
+                columns={cols}
+                selected-rows={selectedRows}
+                onrowselection={handleRowSelection}>
+            </lightning-datatable>
+        </div>
+    </lightning-card>
+    <c-opportunity-edit-form
+        show-modal={isConfirmationModalOpen}
+        selected-ids={selectedRows}  
+        onclose={handleModalClose} 
+        onsubmit={handleModalSubmit}>
+    </c-opportunity-edit-form>
+</template>

@@ -1,0 +1,43 @@
+<template>
+    <template if:true={isVisible}>
+        <lightning-record-edit-form object-api-name="Task" record-id={recordId} onsubmit={handleSubmit}>
+            <div class="slds-p-horizontal_medium">
+                <div class="slds-p-horizontal_medium">
+                    <div>
+                        <template if:true={showAprobarButton}>
+                            <lightning-button label="Aprobar" onclick={handleAprobar} style="margin-right: 10px;"></lightning-button>
+                        </template>
+                        <template if:true={showAltaButton}>
+                            <lightning-button label="Confirmar Alta" onclick={handleAlta} style="margin-right: 10px;"></lightning-button>
+                        </template>
+                        <lightning-button label="Rechazar" onclick={handleRechazar} style="margin-right: 10px;"></lightning-button>
+                        <lightning-button label="Devolver" onclick={handleDevolver}></lightning-button>
+                    </div>
+                </div>
+                <template if:true={isAltaSelected}>
+                    <lightning-record-edit-form object-api-name="Opportunity">
+                        <div class="slds-col">
+                            <lightning-input-field 
+                                name="Product_Activation_Date__c" 
+                                field-name="Product_Activation_Date__c" 
+                                value={fechaActivacion} 
+                                onchange={handleFechaChange} required>
+                            </lightning-input-field>
+                            <lightning-modal-footer>
+                                <lightning-button label="Confirmar Alta" onclick={handleConfirmAlta}></lightning-button>
+                            </lightning-modal-footer>
+                        </div>
+                    </lightning-record-edit-form>
+                </template>
+                <template if:true={showConfirmationMessage}>
+                    <lightning-modal-footer>
+                        <p>Al completar el Alta se da por cerrada la Tarea y el estado de revisión estará aprobado. ¿Está seguro que desea continuar?</p>
+                        <br/>
+                        <lightning-button label="Sí" onclick={handleConfirmacionSi} style="margin-right: 10px;"></lightning-button>
+                        <lightning-button label="No" onclick={handleConfirmacionNo}></lightning-button>
+                    </lightning-modal-footer>
+                </template>
+            </div>
+        </lightning-record-edit-form>
+    </template>
+</template>

@@ -1,0 +1,82 @@
+<template>
+
+    <lightning-card  variant="Narrow"  title="Ofertas disponibles">
+        <lightning-button-icon  icon-name={hideIconName} variant="border-filled" size="small" alternative-text="Ver más" slot="actions" onclick={handleClick}></lightning-button-icon>
+
+    <div class="slds-grid">
+
+        <div class="slds-grid card-body slds-hide">
+
+                <div class="slds-col slds-size_1-of-1">
+
+                    <template if:true={isLoading}>
+                        <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                    </template>
+
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_1-of-1 slds-var-p-horizontal_medium">
+
+                            <template lwc:if={dataLoaded}>
+
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_1-of-1 slds-var-p-vertical_large">
+
+
+
+                                        <div class="slds-scrollable_y reintegros-container">
+                                            <template for:each={offersAvailableProducts} for:item="product">
+                                                <div key={product.id} class="slds-var-p-vertical_medium reintegros-item">
+                                                    <div class="slds-grid text-primary">
+                                                        <div class="slds-col slds-size_1-of-2">
+                                                            <div >{product.description}</div>
+                                                        </div>
+                                                        <div class="slds-col slds-size_1-of-2">
+                                                            <div class="float-right text-gray">
+                                                                <p class="text-secondary">Monto disponible</p>
+                                                            </div>
+<!--                                                            <lightning-formatted-number value={product.amount} format-style="decimal" minimum-fraction-digits="2"></lightning-formatted-number>-->
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-grid text-secondary">
+                                                        <template lwc:if={product.isLoan}>
+                                                            <div class="slds-col slds-size_1-of-2 float-right">
+                                                                <div class="text-gray">{product.installmentsQuantity} cuotas de {product.currencyType} <lightning-formatted-number value={product.availableMonthlyAmount} format-style="decimal" minimum-fraction-digits="2"></lightning-formatted-number></div>
+                                                            </div>
+                                                        </template>
+                                                        <template lwc:else>
+                                                            <div class="slds-col slds-size_1-of-2">
+<!--                                                                <div class="text-gray">{product.installmentsQuantity} cuotas de {product.currencyType} <lightning-formatted-number value={product.availableMonthlyAmount} format-style="decimal" minimum-fraction-digits="2"></lightning-formatted-number></div>-->
+                                                            </div>
+                                                        </template>
+                                                        <div class="slds-col slds-size_1-of-2">
+                                                            <div class="float-right text-green">{product.currencyType} <lightning-formatted-number value={product.amountPreApprovedAvailable} format-style="decimal" minimum-fraction-digits="2"></lightning-formatted-number></div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                            </template>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </template>
+
+                            <template lwc:else>
+                                <div class="slds-var-p-vertical_x-small slds-var-p-horizontal_x-small">
+                                    <p class="text-gray">No se encontraron ofertas </p>
+                                </div>
+                            </template>
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+        </div>
+    </div>
+
+</lightning-card>
+
+</template>

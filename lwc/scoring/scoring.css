@@ -1,0 +1,63 @@
+.card-style{
+    background-color: white !important;
+    border-radius: 20px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: white;
+    padding-right: 30px;
+    padding-left: 30px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.pill{
+    display: inline-block;
+    padding: 0.5em 0.5em;
+    border-radius: 1.2em;
+    color: white;
+    text-align: center;
+}
+
+.warning-pill{
+    background-color: #FFF2D9;
+    font-weight: 500;
+    color:#664400;
+    font-size: smaller;
+}
+
+.success-pill{
+    background-color: #D6FCEC;
+    font-weight: 500;
+    color:#146542;
+    font-size: smaller;
+}
+
+.pill-text{
+    padding-top:1px;
+    float:right;
+    margin-left:3px;
+}
+
+.error-icn{
+    --slds-c-icon-color-foreground-default: #664400;
+}
+
+.check-icn{
+    --slds-c-icon-color-foreground-default: #146542;
+}
+
+.info-text{
+    font-size: 18px;
+}
+
+.scoring-level-text{
+    font-size: 48px;
+    color:#1DBF79;
+    margin-top:5px;
+}
+
+.faded-line{
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 10px;
+}

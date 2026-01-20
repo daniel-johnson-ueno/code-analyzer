@@ -1,0 +1,25 @@
+<!--
+  @name               : customModal
+  @author             : Alvaro Gonzales Lapponi
+  @creation date      : 24-01-2025
+  @modification date  : 05-02-2025
+  @last modified by   : Alvaro Gonzales Lapponi
+  @description        : 
+  @versions           : version 1.0: clase apex inicial 
+  Modifications Log
+  Ver   Date         Author                    Modification
+  1.0   24-01-2025   Alvaro Gonzales Lapponi   Initial Version
+-->
+<template>
+    <div class="backdrop"></div>
+    <div class="modal">
+        <div class="modal-content">
+            <h2 if:true={title}>{title}</h2>
+            <p if:true={subtitle}>{subtitle}</p>
+            <div class="modal-buttons">
+                <button class="btn-secondary" if:true={secondaryButtonText} onclick={secondaryButtonClicked}>{secondaryButtonText}</button>
+                <button class="btn-primary" if:true={primaryButtonText} onclick={primaryButtonClicked}>{primaryButtonText}</button>
+            </div>
+        </div>
+    </div>
+</template>

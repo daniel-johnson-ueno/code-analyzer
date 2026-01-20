@@ -1,0 +1,31 @@
+<!--
+  @name               : 
+  @author             : Alvaro Gonzales Lapponi
+  @creation date      : 
+  @modification date  : 18-03-2025
+  @last modified by   : Alvaro Gonzales Lapponi
+  @description        : 
+  @versions           : version 1.0: clase apex inicial 
+  Modifications Log
+  Ver   Date         Author                    Modification
+  1.0   07-11-2024   Alvaro Gonzales Lapponi   Initial Version
+-->
+<template>
+    <section class={classDimensions}>
+        <section if:true={headerVisibility} class="button-header">
+            <template if:true={showIcon}>
+                <section class="icon-container">
+                    <template if:true={icon}>
+                        <lightning-icon icon-name={icon} size={size} variant="inverse"></lightning-icon>          
+                    </template>
+                    <template if:true={iconSource}>
+                        <img class="icon-dimension" src={iconSource} />       
+                    </template>
+                </section>
+            </template>
+            <div if:true={title} class="title-font">{title}</div>
+        </section>
+        
+        <div class="button-font">{label}</div>
+    </section>
+</template>

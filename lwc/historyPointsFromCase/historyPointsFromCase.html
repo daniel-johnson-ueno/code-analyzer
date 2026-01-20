@@ -1,0 +1,99 @@
+<template>
+    <div class="common-card-style">
+        <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_xxx-small slds-var-p-vertical_xxx-small">
+
+                <div >
+                    <lightning-datatable
+                            key-field="eventId"
+                            data={historyPoints}
+                            columns={columns}
+                            hide-checkbox-column="true"
+                            onrowaction={handleShowHistoryMovementDetails}>
+                    </lightning-datatable>
+
+                </div>
+
+            </div>
+
+
+            <template if:true={showHistoryMovementDetails}>
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <div class="slds-modal__content slds-p-around_medium common-modal-full-rounded" id="modal-content-id-2">
+        
+                            <!--Header-->
+                            <div>
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_9-of-12">
+                                        <div class="common-modal-title">Asociar a Caso</div>
+                                    </div>
+                                    <div class="slds-col slds-size_3-of-12">
+                                        <div class="common-modal-close-button" onclick={toggleHistoryMovementDetailsPanel}>
+                                            <lightning-icon icon-name="utility:close" alternative-text="Star" size="xx-small" title="large size"></lightning-icon>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="faded-line">
+                            </div>
+        
+                            <!--Body-->
+
+                            <div class="movement-details-row">
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                        Fecha
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                        Razón de Movimiento
+                                    </div>
+                                </div>
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                        {selectedHistoryMovement.recordDate}
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                        {selectedHistoryMovement.movementReason}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="movement-details-row">
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                        Puntos
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                    </div>
+                                </div>
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                        {selectedHistoryMovement.points}
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <template if:true={isCaseRecord}>
+                                <hr class="faded-line">
+                                <br/>
+            
+                                <div class="slds-grid slds-gutters">
+                                    <div class="slds-col slds-size_2-of-3">
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-3">
+                                        <lightning-button variant="brand" label="Asociar al Caso" title="asociarCaso" onclick={onButtonAsocChange} class="slds-p-around_medium" icon-name="utility:case"></lightning-button>
+                                    </div>
+                                  </div>
+            
+                            </template>
+                        </div>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </template>
+
+        </div>
+    </div>
+</template>

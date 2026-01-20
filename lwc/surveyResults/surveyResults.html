@@ -1,0 +1,132 @@
+<template>
+
+    <lightning-card  variant="Narrow"  title="Encuestas recientes">
+        <lightning-button-icon  icon-name={hideIconName} variant="border-filled" size="small" alternative-text="Ver más" slot="actions" onclick={handleClick}></lightning-button-icon>
+
+    <div class="slds-grid">
+
+        <div class="slds-grid card-body slds-hide">
+
+                <div class="slds-col slds-size_1-of-1">
+
+                    <template if:true={isLoading}>
+                        <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                    </template>
+
+                    <div class="slds-grid">
+
+                        <template lwc:if={surveyResults}>
+                            <div class="slds-col slds-size_1-of-2 slds-text-align_right slds-var-p-vertical_small">
+                                <a  onclick={onClickShowAll} href='#'>Ver todas</a>
+                            </div>
+                        </template>
+
+                    </div>
+
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_1-of-1 slds-var-p-horizontal_medium">
+
+
+
+                            <div class="slds-grid">
+                                <div class="slds-col slds-size_1-of-1 ">
+
+
+                                    <template lwc:if={surveyResults}>
+                                        <div class="slds-scrollable_y">
+
+                                            <template for:each={surveyResults} for:item="surveyResponse">
+                                                <div class="slds-p-around_medium slds-border_bottom" key={surveyResponse.id}>
+                                                    <lightning-tile label={surveyResponse.surveyName} href='#' onclick={handleRedirect} type="media" data-id={surveyResponse.id}>
+
+                                                        <template if:true={surveyResponse.comments}>
+                                                            <div class="icon-top-right">
+                                                                <lightning-icon icon-name="utility:comments" size="x-small" class="icon-top-right" title={surveyResponse.comments}></lightning-icon>
+                                                            </div>
+                                                        </template>
+
+                                                        <div class="slds-var-p-vertical_x-small">
+                                                            <template lwc:if={surveyResponse.isProduct}>
+
+                                                                <template lwc:if={surveyResponse.qrCSAT}>
+                                                                    <div>
+                                                                        <lightning-icon icon-name="utility:record" size="xx-small" class={surveyResponse.qrIconClass}></lightning-icon>
+                                                                        <span class="slds-var-p-horizontal_x-small">{surveyResponse.qrProductName}</span>
+                                                                    </div>
+                                                                </template>
+
+                                                                <template lwc:if={surveyResponse.duoCardCSAT}>
+                                                                    <div>
+                                                                        <lightning-icon icon-name="utility:record" size="xx-small" class={surveyResponse.duoCardIconClass}></lightning-icon>
+                                                                        <span class="slds-var-p-horizontal_x-small">{surveyResponse.duoCardProductName}</span>
+                                                                    </div>
+                                                                </template>
+
+                                                                <template lwc:if={surveyResponse.loansCSAT}>
+                                                                    <div>
+                                                                        <lightning-icon icon-name="utility:record" size="xx-small" class={surveyResponse.loansIconClass}></lightning-icon>
+                                                                        <span class="slds-var-p-horizontal_x-small">{surveyResponse.loansProductName}</span>
+                                                                    </div>
+                                                                </template>
+
+                                                                <template lwc:if={surveyResponse.transfersAndAccountsCSAT}>
+                                                                    <div>
+                                                                        <lightning-icon icon-name="utility:record" size="xx-small" class={surveyResponse.transfersAndAccountsIconClass}></lightning-icon>
+                                                                        <span class="slds-var-p-horizontal_x-small">{surveyResponse.transfersAndAccountsProductName}</span>
+                                                                    </div>
+                                                                </template>
+
+                                                                <template lwc:if={surveyResponse.paymentOfServicesCSAT}>
+                                                                    <div>
+                                                                        <lightning-icon icon-name="utility:record" size="xx-small" class={surveyResponse.paymentOfServicesIconClass}></lightning-icon>
+                                                                        <span class="slds-var-p-horizontal_x-small">{surveyResponse.paymentOfServicesProductName}</span>
+                                                                    </div>
+                                                                </template>
+
+                                                            </template>
+
+                                                            <template lwc:elseif={surveyResponse.isAttentionAndExecutive}>
+                                                                <div>
+                                                                    <lightning-icon icon-name="utility:record" size="xx-small" class={surveyResponse.attentionRESIconClass}></lightning-icon>
+                                                                    <span class="slds-var-p-horizontal_x-small">{surveyResponse.attentionRESName}</span>
+                                                                </div>
+                                                                <div>
+                                                                    <lightning-icon icon-name="utility:record" size="xx-small" class={surveyResponse.generalIconClass}></lightning-icon>
+                                                                    <span class="slds-var-p-horizontal_x-small">{surveyResponse.executiveCSATName}</span>
+                                                                </div>
+                                                            </template>
+
+                                                            <template lwc:else>
+                                                                <lightning-icon icon-name="utility:record" size="x-small" class={surveyResponse.generalIconClass}></lightning-icon>
+                                                                <span class="slds-var-p-horizontal_x-small">{surveyResponse.generalProductName}</span>
+                                                            </template>
+                                                        </div>
+
+                                                        <p class="slds-var-p-vertical_x-small">
+                                                            <lightning-formatted-date-time value={surveyResponse.surveyDate}></lightning-formatted-date-time>
+                                                        </p>
+                                                    </lightning-tile>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+
+
+
+                                    <template lwc:else>
+                                        <div class="slds-var-p-vertical_x-small slds-var-p-horizontal_x-small">
+                                            <p class="text-gray">Sin información de encuestas</p>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+        </div>
+    </div>
+</lightning-card>
+</template>

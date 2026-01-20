@@ -1,0 +1,6 @@
+<apex:page standardController="case" showHeader="false" sidebar="false">
+<apex:iframe src="https://salesforceworkspace.konnectinsights.com/SalesforceWidgetProxy?kiTicketId={!
+case.KI_ReplyToken__c}
+&accessToken={!$Api.Session_Id}&Instance_Url=https://ueno.my.salesforce.com"
+scrolling="true" id="theIframe" height="1400px" width="1300px"/>
+</apex:page>

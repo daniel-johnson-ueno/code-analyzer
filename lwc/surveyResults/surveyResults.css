@@ -1,0 +1,56 @@
+@import 'c/cssLibrary';
+
+.title {
+    font-size: 16px;
+}
+
+.reintegros-container{
+    height:20rem;
+}
+
+.reintegros-item{
+    padding-right:10px;
+}
+
+.text-primary {
+    font-size: 14px;
+}
+
+.text-secondary {
+    font-size: 12px;
+}
+
+.float-right{
+    float:right !important;
+}
+
+
+.text-gray{
+    color: #6C6C78;
+}
+
+.survey-tile {
+        border-bottom: 1px solid #dcdcdc;
+        margin-bottom: 10px;
+}
+
+.green{
+    --slds-c-icon-color-foreground-default: #1DBF79;
+}
+
+.red{
+    --slds-c-icon-color-foreground-default: #FA3E74;}
+
+.yellow{
+    --slds-c-icon-color-foreground-default: #EB9C00;
+}
+
+.icon-top-right {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.lightning-tile {
+    position: relative;
+}

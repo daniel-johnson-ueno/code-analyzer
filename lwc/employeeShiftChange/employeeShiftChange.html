@@ -1,0 +1,321 @@
+<template>
+
+    <template lwc:if={isLoading}>
+        <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+    </template>
+
+    <template lwc:else>
+        <div class="common-card-style">
+
+            <div class="common-card-header-section slds-grid slds-wrap slds-var-p-horizontal_small">
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-icon icon-name="standard:shift" alternative-text="turno" title="Turnos"></lightning-icon>
+                    <span class="card-title slds-var-m-left_small">Mis Turnos</span>
+                </div>
+                    <div class="slds-col slds-size_2-of-2 slds-text-align_right">
+                        <template if:false={myTurnsHomeEmpty}>
+                            <lightning-button class="slds-m-left_x-small" label="Cambiar turno" onclick={onChangeShiftClick}></lightning-button>
+                        </template>
+                        <lightning-button class="slds-m-left_x-small" label="Solicitar dia libre" onclick={onChangeDayOffClick}></lightning-button>
+                    </div>
+            </div>
+
+            <div class="slds-grid slds-wrap">
+
+                <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_xxx-small slds-var-p-vertical_xxx-small">
+                    <div  class='slds-scrollable_y datatable-size'>
+
+                        <template if:false={myTurnsHomeEmpty}>
+                            <lightning-datatable
+                                key-field="Id"
+                                columns={columns}
+                                data={employeeShifts}
+                                hide-checkbox-column
+                            >
+                            </lightning-datatable>
+                        </template>
+                        <template if:true={myTurnsHomeEmpty}>
+                            <lightning-datatable
+                                key-field="id"
+                                columns={columns}
+                                hide-checkbox-column
+                            >
+                            </lightning-datatable>
+                            <div class="slds-align_absolute-center" style="height:5rem">
+                                Todavía no hay turnos cargados.                              
+                            </div>
+                        </template>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <br>
+    </template>
+
+    <!-- MODAL SHIFT  -->
+    <template if:true={showChangeShiftModal}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <div class="slds-modal__content slds-p-around_medium common-modal-full-rounded" id="modal-content-id-2">
+
+                    <!--Header-->
+                    <div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 common-modal-title">
+                                <lightning-icon icon-name="standard:shift_scheduling_operation" alternative-text="turno" title="Cambio de turno"></lightning-icon>
+                                <span class="card-title slds-var-m-left_small">Solicitud cambio de Turno</span>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-text-align_right">
+                                <div class="common-modal-close-button" onclick={toggleChangeShiftModal}>
+                                    <lightning-icon icon-name="utility:close" alternative-text="Star" size="xx-small" title="large size"></lightning-icon>
+                                </div>
+                            </div>
+
+                        </div>
+                        <hr class="faded-line">
+                    </div>
+
+                    <!--Body-->
+                    <!--PAGINA 1-->
+
+                        <div class="slds-grid common-divider-header-section">
+                            <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_x-small">
+                                <span class="common-divider-title">Detalles Solicitud</span>
+                            </div>
+                        </div>
+
+                        <div class="common-modal-details-row">
+                            <div class="slds-grid">
+                                <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small common-modal-details-label">
+                                    Nombre Solicitante
+                                </div>
+                            </div>
+                            <div class="slds-grid">
+                                <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small common-modal-details-value">
+                                    <p>{contact.Name}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="common-modal-details-row">
+                            <div class="slds-grid slds-wrap">
+                                <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-vertical_small'>
+                                    <p class='common-field-label slds-var-p-horizontal_small'> Fecha de Inicio</p>
+                                    <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small ">
+                                        <lightning-input type="date" name="inputStartDate" label="Enter a date" value={startDate} onchange={handleDateChange} variant="label-hidden"></lightning-input>
+                                    </div>
+
+                                </div>
+                                <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-vertical_small'>
+                                    <p class='common-field-label slds-var-p-horizontal_small'> Fecha Final</p>
+                                    <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small ">
+                                        <lightning-input type="date" name="inputEndDate" label="Enter a date" value={endDate} onchange={handleDateChange} variant="label-hidden"></lightning-input>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <br>
+
+                        <div class="common-card-style">
+                            <div class="common-card-header-section slds-grid slds-wrap slds-var-p-horizontal_small">
+                                <div class="slds-col slds-size_1-of-2 ">
+                                    <lightning-icon icon-name="standard:shift" alternative-text="turno" title="Turnos"></lightning-icon>
+                                    <span class="card-title slds-var-m-left_small">Mis Turnos</span>
+                                </div>
+                            </div>
+
+                                <div class="slds-grid slds-wrap">
+
+                                    <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_xxx-small slds-var-p-vertical_xxx-small">
+                                        <div class="slds-scrollable_y modal-datatable-size">
+
+                                            <template if:false={myTurnsModalEmpty}>
+                                                <lightning-datatable
+                                                    key-field="Id"
+                                                    columns={columns}
+                                                    data={currentEmployeeShifts}
+                                                    onrowselection={handleRowSelection}
+                                                >
+                                                </lightning-datatable>
+                                            </template>
+                                            <template if:true={myTurnsModalEmpty}>
+                                                <lightning-datatable
+                                                    key-field="id"
+                                                    columns={columns}
+                                                    onrowselection={handleRowSelection}
+                                                >
+                                                </lightning-datatable>
+                                                <div class="slds-align_absolute-center" style="height:5rem">
+                                                    Todavia no tienen turnos cargados para el rango de fechas que selecciono
+                                                </div>
+                                            </template>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                        </div>
+
+                    <div class="common-modal-details-row">
+
+                        <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-vertical_small">
+                            <p class='common-field-label slds-var-p-horizontal_small'>Ejecutivo</p>
+                            <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small common-modal-details-value">
+                                <lightning-record-picker
+                                    label="Ejecutivo"
+                                    placeholder="Buscar Ejecutivo..."
+                                    object-api-name="Contact"
+                                    onchange={handleContactToAssign}
+                                    filter={filter}
+                                    variant="label-hidden"
+                                    required="true"
+                                >
+                                </lightning-record-picker>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <br>
+
+
+                    <hr class="">
+
+                    <div class='slds-grid'>
+                        <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_x-small slds-text-align_left ">
+                            <lightning-button class="slds-m-left_x-small" name="cancel" label="Cancelar" onclick={handleButtonClick} ></lightning-button>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_x-small slds-text-align_right ">
+                            <lightning-button class="slds-m-left_x-small" label="Solicitar cambio de turno" onclick={handleButtonClick} name="submitToApproval" variant="brand"></lightning-button>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <!-- MODAL DAY OFF -->
+    <template if:true={showChangeDayOffModal}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true" aria-describedby="modal-content-id-2" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <div class="slds-modal__content slds-p-around_medium common-modal-full-rounded" id="modal-content-day-off-id-3">
+                    <!--Header-->
+                    <div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 common-modal-title">
+                                <lightning-icon icon-name="standard:shift_scheduling_operation" alternative-text="turno" title="Solicitar dia libre"></lightning-icon>
+                                <span class="card-title slds-var-m-left_small">Solicitud dia Libre</span>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-text-align_right">
+                                <div class="common-modal-close-button" onclick={toggleChangeDayOffModal}>
+                                    <lightning-icon icon-name="utility:close" alternative-text="Star" size="xx-small" title="large size"></lightning-icon>
+                                </div>
+                            </div>
+
+                        </div>
+                        <hr class="faded-line">
+                    </div>
+                    <!--Body-->
+                    <div class="slds-grid common-divider-header-section">
+                        <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_x-small">
+                            <span class="common-divider-title">Detalles Solicitud</span>
+                        </div>
+                    </div>
+
+                    <div class="common-modal-details-row">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small common-modal-details-label">
+                                Nombre Solicitante
+                            </div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small common-modal-details-value">
+                                <p>{contact.Name}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="common-modal-details-row">
+                        <div class="slds-grid slds-wrap">
+                            <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-vertical_small'>
+                                <p class='common-field-label slds-var-p-horizontal_small'> Fecha de Inicio</p>
+                                <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small ">
+                                    <lightning-input 
+                                        type="date" 
+                                        name="inputStartDate" 
+                                        label="Enter a date" 
+                                        value={startDate} 
+                                        onchange={handleDateChange} 
+                                        variant="label-hidden"
+                                        required
+                                    ></lightning-input>
+                                </div>
+                            </div>
+                            <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-vertical_small'>
+                                <p class='common-field-label slds-var-p-horizontal_small'> Fecha Final</p>
+                                <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small ">
+                                    <lightning-input 
+                                        type="date" 
+                                        name="inputEndDate" 
+                                        label="Enter a date" 
+                                        value={endDate} 
+                                        onchange={handleDateChange} 
+                                        variant="label-hidden"
+                                        required
+                                    ></lightning-input>
+                                </div>
+                            </div>
+
+                            <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-vertical_small'>
+                                <p class='common-field-label slds-var-p-horizontal_small'>Seleccione tipo de día libre</p>
+                                <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small ">
+
+                                    <lightning-combobox
+                                        name="dayOffType"
+                                        label="Seleccione tipo de dia libre"
+                                        variant="label-hidden"
+                                        value={selectedDayOffType}
+                                        onchange={handleDayOffTypeChange}
+                                        options={dayOffTypes}
+                                    >
+                                    </lightning-combobox>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <hr class="">
+                    <div class='slds-grid'>
+                        <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_x-small slds-text-align_left ">
+                            <lightning-button 
+                                class="slds-m-left_x-small"  
+                                label="Cancelar" 
+                                onclick={handleButtonClick}
+                                name="cancelDayOff" 
+                            ></lightning-button>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_x-small slds-text-align_right ">
+                            <lightning-button 
+                                class="slds-m-left_x-small" 
+                                label="Solicitar Dia libre" 
+                                onclick={handleButtonClick} 
+                                name="submitToApprovalDayOff" 
+                                variant="brand"
+                            ></lightning-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+</template>

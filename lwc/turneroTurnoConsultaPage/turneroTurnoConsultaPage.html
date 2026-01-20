@@ -1,0 +1,25 @@
+<!--
+  @name               : 
+  @author             : Alvaro Gonzales Lapponi
+  @creation date      : 
+  @modification date  : 30-01-2025
+  @last modified by   : Alvaro Gonzales Lapponi
+  @description        : 
+  @versions           : version 1.0: clase apex inicial 
+  Modifications Log
+  Ver   Date         Author                    Modification
+  1.0   01-01-2025   Alvaro Gonzales Lapponi   Initial Version
+-->
+<template>
+    <section class="container">
+        <!-- Header -->
+        <section class="header">
+            <c-turnero-header show-element={showElement} onback={handleBack}></c-turnero-header>
+        </section>
+        
+        <!-- Body -->
+        <section class="body">
+            <c-turnero-turno-consulta-detail data-id="detailElement" ondisplayelements={displayElements}></c-turnero-turno-consulta-detail>
+        </section>
+    </section>
+</template>

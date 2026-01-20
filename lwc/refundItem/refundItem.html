@@ -1,0 +1,121 @@
+<template>
+    <div class="item-container">
+        <template if:true={wasApproved}>
+            <div class={itIsProcessedOrInProcessClass}>
+                <div>
+                    <p class="voucher-id">
+                        {voucher.Id}
+                    </p>
+                    <div class="veredict-container">
+                        <small>
+                            {voucher.verdict}
+                        </small>
+                    </div>
+                </div>
+                <div class="data-item">
+                    <small>Monto del comprobante</small>
+                    <p class="amount">
+                        {voucher.currencyCode} {voucher.receiptAmount}
+                    </p>
+                </div>
+                <div class="data-item">
+                    <small>Monto a reintegrar(%)</small>
+                    <p class="amount refund-amount">
+                        {voucher.currencyCode} {voucher.refundAmount} ({voucher.cashback} %)
+                    </p>
+                </div>
+            </div>
+        </template>
+        <template if:true={wasRejected}>
+            <div class="rejected-container">
+                <div class="item-content">
+                    <div>
+                        <p class="voucher-id">
+                            {voucher.Id}
+                        </p>
+                        <div class="veredict-container">
+                            <small>
+                                {voucher.verdict}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="data-item">
+                        <small>Monto del comprobante</small>
+                        <p class="amount">
+                            {voucher.currencyCode} {voucher.receiptAmount}
+                        </p>
+                    </div>
+                    <div class="data-item">
+                        <small>Comercio (identificador)</small>
+                        <p>
+                            {voucher.storeName} ({voucher.storeCode})
+                        </p>
+                    </div>
+                </div>
+                <div class="rejection-type">
+                    <small>{voucher.rejectionType}</small>
+                </div>
+            </div>
+        </template>
+    </div>
+    <!-- <div class="slds-grid slds-wrap slds-grid_align-spread slds-p-around_small slds-border_bottom">
+        <template if:true={wasApproved}>
+            <div class="slds-col slds-size_1-of-5 slds-truncate" title="Nro. de comprobante">
+                <small>Nro. de comprobante: </small>
+            </div>
+            <div class="slds-col slds-size_1-of-5 slds-truncate" title="Promoción">
+                <small>Promoción: </small>
+            </div>
+            <div class="slds-col slds-size_1-of-5 slds-truncate" title="Cashback">
+                <small>Cashback: </small>
+            </div>
+            <div class="slds-col slds-size_1-of-5 slds-truncate" title="Monto del reintegro">
+                <small>Monto del reintegro: </small>
+            </div>
+            <div class="slds-col slds-size_1-of-5 slds-truncate" title="Estado">
+                <small>Estado: </small>
+            </div>
+        </template>
+        <template if:true={wasRejected}>
+            <div class="slds-col slds-size_1-of-3 slds-truncate" title="Nro. de comprobante">
+                <small>Nro. de comprobante: </small>
+            </div>
+            <div class="slds-col slds-size_1-of-3 slds-truncate" title="Promoción">
+                <small>Monto del comprobante: </small>
+            </div>
+            <div class="slds-col slds-size_1-of-3 slds-truncate" title="Cashback">
+                <small>Motivo de rechazo: </small>
+            </div>
+        </template>
+    </div> -->
+    <!-- <div class="slds-grid slds-wrap slds-grid_align-spread slds-p-around_small slds-border_bottom">
+        <template if:true={wasApproved}>
+            <div class="slds-col slds-size_1-of-5 slds-truncate">
+                {voucher.Id}
+            </div>
+            <div class="slds-col slds-size_1-of-5 slds-truncate">
+                {voucher.promotion}
+            </div>
+            <div class="slds-col slds-size_1-of-5 slds-truncate">
+                {voucher.cashback} %
+            </div>
+            <div class="slds-col slds-size_1-of-5 slds-truncate">
+                {voucher.refundAmount}
+            </div>
+            <div class="slds-col slds-size_1-of-5 slds-truncate">
+                {voucher.verdict}
+            </div>
+        </template>
+        <template if:true={wasRejected}>
+            <div class="slds-col slds-size_1-of-3 slds-truncate">
+                {voucher.Id}
+            </div>
+            <div class="slds-col slds-size_1-of-3 slds-truncate">
+                {voucher.receiptAmount}
+            </div>
+            <div class="slds-col slds-size_1-of-3 slds-truncate">
+                {voucher.verdict}
+            </div>
+        </template>
+    </div> -->
+</template>

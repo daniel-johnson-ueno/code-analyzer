@@ -1,0 +1,32 @@
+<!--
+  @name               : 
+  @author             : Alvaro Gonzales Lapponi
+  @creation date      : 
+  @modification date  : 26-01-2025
+  @last modified by   : Alvaro Gonzales Lapponi
+  @description        : 
+  @versions           : version 1.0: clase apex inicial 
+  Modifications Log
+  Ver   Date         Author                    Modification
+  1.0   19-11-2024   Alvaro Gonzales Lapponi   Initial Version
+-->
+<template>
+
+  <c-tunero-url-analyzer onurlanalized={handleUrlAnalized} query-params={queryParams}></c-tunero-url-analyzer>
+  <section class="header-wrapper">
+    <section class="header-item" data-visible={showElement.back}>
+      <section onclick={handleBack} class="horizontal-align clickeable">
+        <img class="action-button-icon" src={icons.back}/>
+        <div>Volver</div>
+      </section>
+    </section>
+    <img class="header-item logo" src={icons.logo} data-visible="true"/>
+    <section class="header-item" data-visible={showElement.home}>
+      <section onclick={handleHome} class="horizontal-align clickeable">
+        <img class="action-button-icon" src={icons.home}/>
+        <div>Inicio</div>
+      </section>
+    </section>
+  </section>
+    
+</template>

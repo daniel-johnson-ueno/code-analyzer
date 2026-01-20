@@ -1,0 +1,81 @@
+.processed-container, .in-process-container{
+    padding-bottom: 1rem;
+}
+
+.processed-container .veredict-container{
+    background-color: #00800085;
+}
+
+.in-process-container .veredict-container{
+    background-color: #ebc8003b;
+}
+
+.rejected-container .veredict-container{
+    background-color: #eb004e3b;
+    color: #c91221;
+}
+
+.processed-container .veredict-container small{
+    color: #008000d7;
+}
+
+.in-process-container .veredict-container small{
+    color:#8b780d;
+}
+
+.rejected-container .veredict-container small{
+    color: #c91221;
+}
+
+.veredict-container{
+    padding: 0rem 0.4rem 0.1rem 0.4rem;
+    border-radius: 50px;
+    width: fit-content;
+}
+
+.veredict-container small{
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.item-container{
+    background-color: white;
+    padding: 1rem;
+    padding-bottom: 0;
+    border-radius: 5px;
+}
+
+.item-content{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    align-items: center;
+}
+
+.data-item{
+    display: flex;
+    flex-direction: column;
+}
+
+.amount{
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.refund-amount{
+    color: #16a366;
+}
+
+.rejection-type{
+    color: #2b2b2b;
+    text-align: right;
+    font-weight: 500;
+}
+
+small{
+    color: #2b2b2b;
+}
+
+.voucher-id{
+    padding-bottom: .2rem;
+    font-weight: 500;
+}

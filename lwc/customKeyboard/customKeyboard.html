@@ -1,0 +1,87 @@
+<!--
+  @name               : 
+  @author             : Alvaro Gonzales Lapponi
+  @creation date      : 
+  @modification date  : 10-02-2025
+  @last modified by   : Alvaro Gonzales Lapponi
+  @description        : 
+  @versions           : version 1.0: clase apex inicial 
+  Modifications Log
+  Ver   Date         Author                    Modification
+  1.0   22-01-2025   Alvaro Gonzales Lapponi   Initial Version
+-->
+<template>
+    <section class="screen">
+
+        <section class="input-wrapper">
+            <input type="text" class={inputClass} value={valueInput} disabled/>
+            <div if:true={showMensajeError} class={divClass}>{mensajeError}</div>
+            <!--c-country-selector></c-country-selector-->
+        </section>
+        
+        <section class="screen">
+            <template if:true={teclados.numerico}>
+                <section class="numeric-keypad" id="numeric-keypad">
+                    <button value="1" onclick={addChar}>1</button>
+                    <button value="2" onclick={addChar}>2</button>
+                    <button value="3" onclick={addChar}>3</button>
+                    <button value="4" onclick={addChar}>4</button>
+                    <button value="5" onclick={addChar}>5</button>
+                    <button value="6" onclick={addChar}>6</button>
+                    <button value="7" onclick={addChar}>7</button>
+                    <button value="8" onclick={addChar}>8</button>
+                    <button value="9" onclick={addChar}>9</button>
+                    <button value="-" onclick={addChar}>-</button>
+                    <button value="0" onclick={addChar}>0</button>
+                    <button class="wide-button" onclick={clearInput}>Borrar</button>
+                </section>
+            </template>
+
+            <template if:true={teclados.alfanumerico}>
+                <section class="alphanumeric-keypad" id="alphanumeric-keypad">
+                    <button value="1" onclick={addChar}>1</button>
+                    <button value="2" onclick={addChar}>2</button>
+                    <button value="3" onclick={addChar}>3</button>
+                    <button value="4" onclick={addChar}>4</button>
+                    <button value="5" onclick={addChar}>5</button>
+                    <button value="6" onclick={addChar}>6</button>
+                    <button value="7" onclick={addChar}>7</button>
+                    <button value="8" onclick={addChar}>8</button>
+                    <button value="9" onclick={addChar}>9</button>
+                    <button value="0" onclick={addChar}>0</button>
+                    <button value="Q" onclick={addChar}>Q</button>
+                    <button value="W" onclick={addChar}>W</button>
+                    <button value="E" onclick={addChar}>E</button>
+                    <button value="R" onclick={addChar}>R</button>
+                    <button value="T" onclick={addChar}>T</button>
+                    <button value="Y" onclick={addChar}>Y</button>
+                    <button value="U" onclick={addChar}>U</button>
+                    <button value="I" onclick={addChar}>I</button>
+                    <button value="O" onclick={addChar}>O</button>
+                    <button value="P" onclick={addChar}>P</button>
+                    <button value="A" onclick={addChar}>A</button>
+                    <button value="S" onclick={addChar}>S</button>
+                    <button value="D" onclick={addChar}>D</button>
+                    <button value="F" onclick={addChar}>F</button>
+                    <button value="G" onclick={addChar}>G</button>
+                    <button value="H" onclick={addChar}>H</button>
+                    <button value="J" onclick={addChar}>J</button>
+                    <button value="K" onclick={addChar}>K</button>
+                    <button value="L" onclick={addChar}>L</button>
+                    <button value="Ñ" onclick={addChar}>Ñ</button>
+                    <button value="Z" onclick={addChar}>Z</button>
+                    <button value="X" onclick={addChar}>X</button>
+                    <button value="C" onclick={addChar}>C</button>
+                    <button value="V" onclick={addChar}>V</button>
+                    <button value="B" onclick={addChar}>B</button>
+                    <button value="N" onclick={addChar}>N</button>
+                    <button value="M" onclick={addChar}>M</button>
+                    <button value="-" onclick={addChar}>-</button>
+                    <button class="wide-button" onclick={clearInput}>Borrar</button>
+                </section>
+            </template>
+            <div class="divisor"></div>
+        </section>
+    </section>
+    
+</template>

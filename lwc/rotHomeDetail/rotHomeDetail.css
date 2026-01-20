@@ -1,0 +1,116 @@
+h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+div {
+    font-size: 1.3rem;
+    font-weight: 400;
+    text-align: center;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    gap: 20px;
+}
+
+.button-primary{
+    background-color: #292929;
+    color: #FFFFFF;
+}
+
+.button-secondary{
+    color: #292929;
+    border: #c9c9c9;
+    background-color: #FFFFFF;
+}
+
+.button-primary,
+.button-secondary{
+    border-radius: 24px;
+    border: 1px;
+    padding: 4px 0px;
+    width: 200px;
+    font-size: 19px;
+}
+
+.icon-large{
+    max-width: 24rem;
+    max-height: 8rem;
+}
+
+.icon-medium{
+    max-width: 140px;
+    max-height: 64px;
+}
+
+@media (min-width: 480px){
+
+    h1 {
+        font-size: 2.8rem;
+    }
+    
+    div {
+        font-size: 2.3rem;
+    }
+
+    .wrapper{
+        gap: 48px;
+    }
+
+    .icon-medium{
+        max-width: 200px;
+        max-height: 100px;
+    }
+
+    .icon-large{
+        max-width: 28rem;
+        max-height: 9rem;
+    }
+
+    .button-primary,
+    .button-secondary{
+        border-radius: 30px;
+        padding: 6px 0px;
+        width: 210px;
+        font-size: 22px;
+    }
+
+}
+
+@media (min-width: 1024px){
+
+    h1 {
+        font-size: 3rem;
+    }
+    
+    div {
+        font-size: 2.3rem;
+    }
+
+    .wrapper{
+        gap: 48px;
+    }
+
+    .icon-medium{
+        max-width: 200px;
+        max-height: 120px;
+    }
+
+    .icon-large{
+        max-width: 34rem;
+        max-height: 12rem;
+    }
+
+    .button-primary,
+    .button-secondary{
+        border-radius: 33px;
+        padding: 10px 0px;
+        width: 430px;
+        font-size: 24px;
+    }
+
+}

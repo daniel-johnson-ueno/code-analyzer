@@ -1,0 +1,115 @@
+<!--
+  @name               : rotVideollamadaSolicitudDetail
+  @author             : Alvaro Gonzales Lapponi
+  @creation date      : 02-01-2025
+  @modification date  : 26-03-2025
+  @last modified by   : Alvaro Gonzales Lapponi
+  @description        : Componente detalle para solicitar videollamadas ROT
+  @versions           : version 1.0: clase apex inicial 
+  Modifications Log
+  Ver   Date         Author                    Modification
+  1.0   13-01-2025   Alvaro Gonzales Lapponi   Initial Version
+-->
+<template>
+
+  <!--Componente para analizar URL y sus query params-->
+  <c-tunero-url-analyzer onurlanalized={handleUrlAnalized} query-params={queryParams} ends-with={endsWith}></c-tunero-url-analyzer> 
+  <!--Componente que controla inactividad frontend-->
+  <c-frontend-inactivity ontimeout={handleTimeout}></c-frontend-inactivity>
+
+  <template if:true={showModal}>
+    <c-custom-modal
+      secondary-button-text="No, seguir" primary-button-text="Sí, cancelar"
+      title="¿Querés cancelar tu turno?" subtitle="Si cancelás perderás tu lugar en la fila."
+      onprimarybuttonclicked={handleEndSession} onsecondarybuttonclicked={handleKeepWaiting}>
+    </c-custom-modal>
+  </template>
+  
+  
+  <template if:true={isLoading}>
+    <c-custom-loading></c-custom-loading>
+  </template>
+  
+  <c-auvious-widget cliente={cliente} case-id={caseId} nombre-sucursal={nombreSucursal} onsessionended={handleEndSession}></c-auvious-widget>
+  <section class="wrapper">
+
+    <!-- PANTALLA: SIN IDENTIFICAR POR BIOMETRÍA-->
+    <template if:true={pantallas.sinQueryParams}>
+      <h1 class="title">No pudimos reconocerte</h1>
+      <div>Por favor, ingresá tu documento manualmente.</div>
+      <section class="pill-selector-wrapper">
+        <div class="pill" data-selected-document={isDocument1Selected} onclick={selectDocument1}>{tipoDocumento1.labelMayus}</div>
+        <div class="pill" data-selected-document={isDocument2Selected} onclick={selectDocument2}>{tipoDocumento2.labelMayus}</div>
+        <div class="slider" style={sliderStyle}></div>
+      </section>
+
+      <c-custom-keyboard tipo-teclado={selectedDocument.inputType} tipo-input={selectedDocument.id} oninputchanged={handleChangeNumeroDocumento} show-mensaje-error={disabledButton}></c-custom-keyboard>
+      <button class="button-primary" onclick={getClienteSinReconocer} disabled={disabledButton}>Continuar</button>
+    </template>
+
+    <!-- PANTALLA: ¿ES PARA TI?-->
+    <template if:true={pantallas.validacionParaTi}>          
+      <h1 if:false={cliente.noReconocido} class="title">¿El turno es para vos, {cliente.fullName}?</h1>
+      <h1 if:true={cliente.noReconocido} class="title">¿El turno es para vos?</h1>  
+      <div class="subtitle">Si venís por otra persona, te vamos a solicitar su cédula de identidad.</div>
+  
+      <section class="buttons-wrapper">
+        <c-turnero-button label="Sí, es para mí" icon-source={icons.persona} size="x-large" dimensions="full-prioritary"
+          data-action-type="choose_forWhom" data-value="himself"
+          onclick={handlePressKey}></c-turnero-button>
+        <c-turnero-button label="Para otra persona" icon-source={icons.persona} size="medium" dimensions="half-prioritary"
+          data-action-type="choose_forWhom" data-value="other_person"
+          onclick={handlePressKey}></c-turnero-button>
+        <c-turnero-button label="Vengo por una empresa" icon-source={icons.empresas} size="medium" dimensions="half-prioritary"
+          data-action-type="choose_forWhom" data-value="other_company"
+          onclick={handlePressKey}></c-turnero-button>
+      </section>
+    
+    </template>
+
+    <!-- PANTALLA: INGRESA DOCUMENTO -->
+    <template if:true={pantallas.ingresarDocumento}>
+      <section class="pill-selector-wrapper">
+        <div class="pill" data-selected-document={isDocument1Selected} onclick={selectDocument1}>{tipoDocumento1.labelMayus}</div>
+        <div class="pill" data-selected-document={isDocument2Selected} onclick={selectDocument2}>{tipoDocumento2.labelMayus}</div>
+        <div class="slider" style={sliderStyle}></div>
+      </section>
+      <h1>Ingresá su {selectedDocument.labelMinus}</h1>
+      <c-custom-keyboard tipo-teclado={selectedDocument.inputType} tipo-input={selectedDocument.id} oninputchanged={handleChangeNumeroDocumento} show-mensaje-error={disabledButton}></c-custom-keyboard>
+      <button class="button-primary" onclick={getAlternativeClient} disabled={disabledButton}>Continuar</button>
+      
+    </template>
+
+    <!-- PANTALLA: CASOS ABIERTOS -->
+    <template if:true={pantallas.casosAbiertos}>
+      <section class="intern-wrapper">
+        <h1 if:true={cliente.fullName}>{cliente.fullName},</h1>
+        <h1>¿Por cual de estos motivos te estás comunicando?</h1>
+      </section>
+      
+      <template for:each={casos} for:item="caso">
+        <c-turnero-button key={caso.id}
+          title={caso.detalle} label={caso.numeroCaso} dimensions="full-prioritary"
+          data-id={caso.id} onclick={handleChooseCase}>
+        </c-turnero-button>        
+      </template>
+      
+      <hr class="separator"/>
+      
+      <button class="button-secondary" onclick={requestVideocall}>Otro caso</button>
+      
+    </template>
+
+
+    <!-- PANTALLA: ESPERA-->
+    <template if:true={pantallas.espera}>
+      <img class="icon-large" src={icons.coffe}/>
+      <h1 if:false={cliente.noReconocido}>En unos instantes estamos con vos, {cliente.fullName}</h1>
+      <h1 if:true={cliente.noReconocido}>En unos instantes estamos con vos</h1>
+      <div>Mientras esperás, podés tomar un café</div>
+      <button class="button-secondary" onclick={handleCancel} disabled={disabledButton}>Cancelar turno</button>
+    </template>
+
+  </section>
+
+</template>

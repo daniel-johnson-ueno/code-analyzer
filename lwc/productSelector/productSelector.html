@@ -1,0 +1,124 @@
+<!--
+  @description       : 
+  @author            : Noe Vasquez
+  @group             : 
+  @last modified on  : 06-03-2025
+  @last modified by  : Noe Vasquez
+-->
+<template>
+    <lightning-card title="Producto" icon-name="standard:product">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+
+        <!-- Botón de eliminar en la parte superior derecha -->
+            <lightning-button-icon if:true={isEnableToDelete}
+                        icon-name="utility:delete"
+                        alternative-text="Eliminar"
+                        title="Eliminar producto"
+                        slot="actions"
+                        onclick={handleDeleteAll}>
+                    </lightning-button-icon>
+
+        <template if:true={hasExistingProducts}>
+            <div class="slds-size_1-of-1 slds-medium-size_12-of-12 slds-large-size_12-of-12">
+                <template for:each={existingLineItemsFormatted} for:item="item">
+                    <div key={item.Id} class="slds-box slds-m-around_x-small custom-product-card">
+                        <div class="table-width-container">
+                            <!-- Tabla de Producto -->
+                            <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered custom-minimal-table fixed-layout">
+                                <tbody>
+                                    <tr>
+                                        <td class="fixed-label">Producto:</td>
+                                        <td class="fixed-content"><strong>{item.Product2.Name}</strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            <!-- Tabla de Familia -->
+                            <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered custom-minimal-table fixed-layout">
+                                <tbody>
+                                    <tr>
+                                        <td class="fixed-label">Familia:</td>
+                                        <td class="fixed-content">{item.Product2.Family}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Tabla Sales Price -->
+                            <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered custom-minimal-table fixed-layout">
+                                <tbody>
+                                    <tr>
+                                        <td class="fixed-label">Precio de Venta:</td>
+                                        <td class="fixed-content">  
+                                            <div class="slds-grid slds-col_bump-left">
+                                                <span class="slds-icon_container slds-input__icon slds-input__icon_left currency-label">{item.CurrencyIsoCode}</span>
+
+                                                <lightning-input
+                                                    type="number"
+                                                    step="0.01"
+                                                    value={item.UnitPrice}
+                                                    variant="label-hidden"
+                                                    class="editable-price-input"
+                                                    data-id={item.Id}
+                                                    onchange={handlePriceChange}
+                                                    onblur={handlePriceBlur}
+                                                    disabled>
+                                                </lightning-input>
+
+                                                
+                                                <lightning-button-icon
+                                                    icon-name="utility:edit"
+                                                    alternative-text="Editar"
+                                                    title="Editar Sales Price"
+                                                    class="slds-m-left_x-small"
+                                                    data-id={item.Id}
+                                                    onclick={enablePriceEdit}>
+                                                </lightning-button-icon>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                        </div>
+                        <!-- Botón con ancho completo -->
+                        <div class="slds-m-top_medium">
+                            <lightning-button
+                                label="Cambiar producto"
+                                icon-name="utility:edit"
+                                disabled={isDisabledToChangeProduct}
+                                onclick={openAddProductModal}
+                                stretch>
+                            </lightning-button>
+                        </div>
+                    </div>
+                </template>
+                
+            </div>
+        </template>
+
+        <!-- Si no tiene productos -->
+        <template if:false={hasExistingProducts}>
+            <div class="custom-warning">
+                <div class="custom-warning-content">
+                    <span class="slds-icon_container">
+                        <lightning-icon icon-name="utility:warning" variant="warning" size="small"></lightning-icon>
+                    </span>
+                    <h2 class="custom-warning-text">
+                        Debes agregar un producto a la oportunidad
+                    </h2>
+                </div>
+            </div>
+                <div class="slds-m-top_small slds-m-left_medium slds-m-right_medium">
+                    <lightning-button
+                        variant="brand"
+                        label="Agregar producto"
+                        icon-name="utility:add"
+                        stretch
+                        onclick={openAddProductModal}>
+                    </lightning-button>
+                </div>
+        </template>
+    </lightning-card>
+</template>

@@ -1,0 +1,234 @@
+<!--
+  @name               : turneroTurnoSolicitudDetail
+  @author             : Alvaro Gonzales Lapponi
+  @creation date      : 18-11-2024
+  @modification date  : 27-03-2025
+  @last modified by   : Alvaro Gonzales Lapponi
+  @description        : 
+  @versions           : version 1.0: clase apex inicial 
+  Modifications Log
+  Ver   Date         Author                    Modification
+  1.0   20-11-2024   Alvaro Gonzales Lapponi   Initial Version
+-->
+<template>
+
+  <!--Componente para analizar URL y sus query params-->
+  <c-tunero-url-analyzer onurlanalized={handleUrlAnalized} query-params={queryParams} ends-with={endsWith}></c-tunero-url-analyzer>
+  <!--Componente que controla inactividad frontend-->
+  <c-frontend-inactivity ontimeout={handleTimeout}></c-frontend-inactivity>
+
+  <template if:true={isLoading}>
+    <c-custom-loading></c-custom-loading>
+  </template>
+
+  <section class="wrapper">
+
+    <!-- PANTALLA: SIN IDENTIFICAR POR BIOMETRÍA-->
+    <template if:true={pantallas.sinQueryParams}>
+      <h1 class="title">No pudimos reconocerte</h1>
+      <div>Por favor, ingresá tu documento manualmente.</div>
+      <section class="pill-selector-wrapper">
+        <div class="pill" data-selected-document={isDocument1Selected} onclick={selectDocument1}>{tipoDocumento1.labelMayus}</div>
+        <div class="pill" data-selected-document={isDocument2Selected} onclick={selectDocument2}>{tipoDocumento2.labelMayus}</div>
+        <div class="slider" style={sliderStyle}></div>
+      </section>
+
+      <c-custom-keyboard tipo-teclado={selectedDocument.inputType} tipo-input={selectedDocument.id} oninputchanged={handleChangeNumeroDocumento} show-mensaje-error={disabledButton}></c-custom-keyboard>
+      <button class="button-primary" onclick={getClienteSinReconocer} disabled={disabledButton}>Continuar</button>
+    </template>
+
+    <!-- PANTALLA: ¿ES PARA TI?-->
+    <template if:true={pantallas.validacionParaTi}>
+      <section class="profile-wrapper">
+        <img src={profilePicture} />
+      </section>
+      
+      <h1 if:false={cliente.noReconocido} class="title">¿El turno es para vos, {cliente.fullName}?</h1>
+      <h1 if:true={cliente.noReconocido} class="title">¿El turno es para vos?</h1>  
+      <div class="subtitle">Si venís por otra persona, te vamos a solicitar su cédula de identidad.</div>
+  
+      <section class="buttons-wrapper">
+        <c-turnero-button label="Sí, es para mí" icon-source={icons.persona} size="x-large" dimensions="full-prioritary"
+          data-action-type="choose_forWhom" data-value="himself"
+          onclick={handleForWhom}></c-turnero-button>
+        <c-turnero-button label="Para otra persona" icon-source={icons.persona} size="medium" dimensions="half-prioritary"
+          data-action-type="choose_forWhom" data-value="other_person"
+          onclick={handleForWhom}></c-turnero-button>
+        <c-turnero-button label="Vengo por una empresa" icon-source={icons.empresas} size="medium" dimensions="half-prioritary"
+          data-action-type="choose_forWhom" data-value="other_company"
+          onclick={handleForWhom}></c-turnero-button>
+      </section>
+    
+    </template>
+
+    <!-- PANTALLA: INGRESA DOCUMENTO -->
+    <template if:true={pantallas.ingresarDocumento}>
+      <section class="pill-selector-wrapper">
+        <div class="pill" data-selected-document={isDocument1Selected} onclick={selectDocument1}>{tipoDocumento1.labelMayus}</div>
+        <div class="pill" data-selected-document={isDocument2Selected} onclick={selectDocument2}>{tipoDocumento2.labelMayus}</div>
+        <div class="slider" style={sliderStyle}></div>
+      </section>
+      <h1 class="title">Ingresá su {selectedDocument.labelMinus}</h1>
+
+      <c-custom-keyboard tipo-teclado={selectedDocument.inputType} tipo-input={selectedDocument.id} oninputchanged={handleChangeNumeroDocumento} show-mensaje-error={disabledButton}></c-custom-keyboard>
+      <button class="button-primary" onclick={confirmClient} disabled={disabledButton}>Continuar</button>
+      
+    </template>
+
+    <!-- PANTALLA: ¿MOTIVO DE VISITA? (PRODUCTO) -->
+    <template if:true={pantallas.motivoVisita}>
+      <section class="intern-wrapper">
+        <h1 if:false={cliente.noReconocido} class="title">{cliente.fullName},</h1>
+        <h1 class="title">¿Cuál es el motivo de la visita?</h1>
+      </section>
+
+      <section class="buttons-wrapper">
+        <template for:each={tramites} for:item="tramite">
+          <template if:true={tramite.prioritary}>
+            <c-turnero-button label={tramite.name} icon-source={tramite.iconSource} dimensions="half-prioritary" onclick={handleSelectTramite}
+              key={tramite.name} data-id={tramite.id} data-name={tramite.name}>
+            </c-turnero-button>
+          </template>
+        </template>
+      </section>
+
+      <h1>Otras operaciones</h1>
+      <section class="buttons-wrapper">
+        <template for:each={tramites} for:item="tramite">
+          <template if:false={tramite.prioritary}>
+            <c-turnero-button label={tramite.name} dimensions="third-no_prioritary" onclick={handleSelectTramite}
+              key={tramite.name} data-name={tramite.name}>
+            </c-turnero-button>
+          </template>
+        </template>
+      </section>
+
+    </template>
+  
+    <!-- PANTALLA: TIPO DE CITA (SUBPRODUCTO) -->
+    <template if:true={pantallas.tipoCita}>
+      <h1>{selectedTramiteContainer.name}</h1>
+
+      <section class="buttons-wrapper">
+        <template for:each={selectedTramiteContainer.detalles} for:item="detalle">
+          <c-turnero-button label={detalle} dimensions="half-no_prioritary" key={detalle}
+            data-value={detalle} onclick={handleSelectSubtramite}></c-turnero-button>
+        </template>
+      </section>
+      
+    </template>
+
+    <!-- PANTALLA: ATENCIÓN PRIORITARIA -->
+    <template if:true={pantallas.atencionPrioritaria}>
+      <img class="icon-large" src={icons.prioritary}/>
+      <h1 class="title">¿Necesitás atención prioritaria?</h1>
+      <div class="subtitle">Avisanos y alguien del equipo te atenderá antes</div>
+      <div class="radio-group">
+        <label class="radio-container">
+            No necesito prioridad
+            <input type="radio" name="priority" value="no" checked onclick={handleChangePriority} />
+            <span class="custom-radio"></span>
+        </label>
+        <label class="radio-container">
+            Sí, necesito prioridad
+            <input type="radio" name="priority" value="yes" onclick={handleChangePriority} />
+            <span class="custom-radio"></span>
+        </label>
+      </div>
+      <button class="button-primary" onclick={validateTypeOfProcess}>Continuar</button>
+    </template>
+
+    <!-- PANTALLA: CELULAR NO ENCONTRADO -->
+    <template if:true={pantallas.celularNoEncontrado}>
+      <img class="icon-large" src={icons.phone}/>
+      <h1 class="title">Prepará tu celular</h1>
+      <div class="subtitle">Te vamos a enviar un mensaje de texto para que puedas seguir tu turno</div>
+      <section class="action-buttons-wrapper">
+        <button class="button-primary" onclick={handleSelectNewMobilePhone}>Continuar</button>
+        <button class="button-secondary" onclick={handleOmitFollow}>Omitir</button>
+      </section>
+    </template>
+
+    <!-- PANTALLA: VALIDACIÓN NÚMERO TELÉFONO -->
+    <template if:true={pantallas.validacionTelefono}>
+      <img class="icon-large" src={icons.phone}/>
+      <h1 class="title">¿Querés seguir el turno desde el celular?</h1>
+      <div class="subtitle">Te vamos a enviar un mensaje de texto para que puedas seguir tu turno</div>
+
+      <section class="display-information">
+        <h1>{telefonoCensurado}</h1>
+        <button class="button-tertiary" onclick={handleSelectNewMobilePhone}>No, ingresar otro</button>
+      </section>
+      <section class="action-buttons-wrapper">
+        <button class="button-primary" onclick={createAppointment}>Seguir el turno</button>
+        <button class="button-secondary" onclick={handleOmitFollow}>Omitir</button>
+      </section>
+    </template>
+
+    <!-- PANTALLA: TELEFONO SECUNDARIO -->
+    <template if:true={pantallas.telefonoSecundario}>
+      <h1 class="title">Ingresá tu número de celular</h1>
+      <div class="subtitle">Este ingreso no afectará al número que tenemos registrado.</div>
+      <c-custom-keyboard tipo-teclado="numerico" tipo-input="celular" oninputchanged={handleChangeNumeroTelefono} show-mensaje-error={disabledButton}></c-custom-keyboard>
+      <button class="button-primary" onclick={handleRequestAppointmentWithSecondaryPhone} disabled={disabledButton}>Continuar</button>
+    </template>
+
+    <!-- PANTALLA: ENVIANDO MENSAJE -->
+    <template if:true={pantallas.enviandoMensaje}>
+      <img class="icon-large" src={icons.send}/>
+      <h1 class="title">Enviando mensaje de texto</h1>
+      <c-custom-loading></c-custom-loading>
+    </template> 
+    
+    <!-- PANTALLA: YA ESTÁS EN FILA -->
+    <template if:true={pantallas.confirmacionFila}>
+      <img class="icon-large" src={icons.phone}/>
+      <h1 class="title">¡Ya estás en fila!</h1>
+    </template>
+
+    <!-- PANTALLA: INSTRUCCIONES FINALES -->
+    <template if:true={pantallas.instruccionesFinales}>
+      <img class="icon-large" src={mensajeConfirmacion.icon}/>
+      <h1 class="title">{mensajeConfirmacion.title}</h1>
+      <div class="subtitle">{mensajeConfirmacion.subtitle}</div>
+      <template if:true={mensajeConfirmacion.additionalInfo}>
+        <div class="subtitle">{mensajeConfirmacion.additionalInfo}</div>
+      </template>
+      <template if:true={appointmentConditions.queueable}>
+        <section class="display-information">
+          <section>
+            <template if:false={cliente.noReconocido}>
+              <h1 class="bottom-separator">{cliente.fullName}</h1>
+            </template>         
+            <div>Motivo de tu visita:</div>
+            <div class="text-important">{selectedTramiteContainer.name} / {motivoTramite}</div>
+          </section>
+        </section>
+      </template>
+      
+      <section class="action-buttons-wrapper">
+        <template if:true={appointmentConditions.queueable}>
+          <button if:true={followUp} class="button-primary" onclick={handleNoLllegoSMS}>No me llegó el mensaje de texto</button>
+        </template>
+        <button class="button-secondary" onclick={handleHome}>Ir al inicio</button>
+      </section>
+
+    </template>
+
+    <!-- PANTALLA: QR -->
+    <template if:true={pantallas.qr}>
+      <h1 class="title">Escaneá el QR</h1>
+      <div class="subtitle">Usá la cámara de tu celular para escanearlo y seguir tu turno</div>
+      <section class="display-information">
+        <c-qr-generator url-text={urlTurno}></c-qr-generator>
+      </section>
+      <section class="intern-wrapper">
+        <div class="text-important">¿No trajiste celular?</div>
+        <div class="subtitle">No importa, un ejecutivo te buscará por tu nombre cuando sea tu turno.</div>
+      </section>
+      <button class="button-secondary" onclick={handleHome}>Ir al inicio</button>
+      
+    </template>
+
+  </section>
+</template>

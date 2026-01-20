@@ -1,0 +1,143 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #FFFF;
+    cursor: pointer;
+    border: 1.5px solid #D2D2D9;
+    border-radius: 10px;
+    padding: 14px;
+    gap: 12px;
+}
+
+.button-header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.icon-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 24px;
+    height: 24px;
+    background-color: #CCE4FF;
+    border-radius: 30%;
+}
+
+.icon-dimension{
+    height: 50%;
+}
+
+.button-font{
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.title-font{
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.full-prioritary{
+    width: 300px;
+    height: 90px;
+}
+
+.half-prioritary{
+    width: 146px;
+    height: 90px;
+}
+
+.half-no_prioritary{
+    width: 146px;
+    height: 60px;
+}
+
+.third-no_prioritary{
+    width: 94.5px;
+    height: 60px;
+}
+
+
+@media (min-width: 480px){
+
+    .icon-container{
+        width: 32px;
+        height: 32px;
+    }
+
+    .full-prioritary{
+        width: 70vw;
+        height: 120px;
+    }
+    
+    .half-prioritary{
+        width: 34vw;
+        height: 120px;
+    }
+
+    .half-no_prioritary{
+        width: 34vw;
+        height: 100px;
+    }
+    
+    .third-no_prioritary{
+        width: 22vw;
+        height: 100px;
+    }
+    
+    .button-font{
+        font-weight: 500;
+        font-size: 17px;
+    }
+
+    .title-font{
+        font-size: 19px;
+    }
+}
+
+@media (min-width: 1024px){
+
+    .icon-container{
+        width: 40px;
+        height: 40px;
+    }
+
+    .full-prioritary{
+        width: 772px;
+        height: 180px;
+    }
+    
+    .half-prioritary{
+        width: 378px;
+        height: 180px;
+    }
+
+    .half-no_prioritary{
+        width: 378px;
+        height: 120px;
+    }
+    
+    .third-no_prioritary{
+        width: 236px;
+        height: 120px;
+    } 
+    
+    .button-font{
+        font-weight: 500;
+        font-size: 22px;
+    }    
+
+    .title-font{
+        font-size: 22px;
+    }
+
+    .container{
+        border-radius: 14px;
+        padding: 20px;
+        gap: 24px;
+    }
+}

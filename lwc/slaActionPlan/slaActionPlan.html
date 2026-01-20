@@ -1,0 +1,72 @@
+<template>
+        <div class="sla-container">
+            <div class="sla-card">
+                <div class="sla-header">
+                    <lightning-icon icon-name="standard:date_time" size="small" alternative-text="SLA Icon"></lightning-icon>
+                    <h2>Cumplimiento SLAs</h2>
+                </div>
+    
+                <!-- SLA Oportunidad -->
+                <template if:true={opportunitySLA}>
+                    <div class="sla-card">
+                        <div class="sla-row">
+                            <div class="sla-content">
+                                <div class="sla-progress-circle" style={opportunitySLA.progressCircleStyle}>
+                                    <div class="sla-progress-inner">
+                                        {opportunitySLA.slaTargetHours}
+                                    </div>
+                                </div>
+    
+                                <div class="sla-column">
+                                    <div class="sla-label">
+                                        Tiempo en Asignación
+                                    </div>
+                                    <div class="sla-time" style={opportunitySLA.timeElapsedStyle}>
+                                        {opportunitySLA.timeElapsedStr}
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <span class={opportunitySLA.slaStatusClass}>
+                                {opportunitySLA.slaStatus}
+                            </span>
+                        </div>
+                    </div>
+                </template>
+    
+                <!-- SLA Action Plans -->
+                <template if:true={actionPlans}>
+                    <template for:each={actionPlans} for:item="plan">
+                        <div key={plan.Id} class="sla-card">
+                            <div class="sla-row">
+                                <div class="sla-content">
+                                    <div class="sla-progress-circle" style={plan.progressCircleStyle}>
+                                        <div class="sla-progress-inner">
+                                            {plan.slaTargetHours}
+                                        </div>
+                                    </div>
+    
+                                    <div class="sla-column">
+                                        <div class="sla-label">
+                                            Tiempo en {plan.name}
+                                        </div>
+                                        <div class="sla-time" style={plan.timeElapsedStyle}>
+                                            {plan.timeElapsedStr}
+                                        </div>
+                                    </div>
+                                </div>
+    
+                                <span class={plan.slaStatusClass}>
+                                    {plan.slaStatus}
+                                </span>
+                            </div>
+                        </div>
+                    </template>
+                </template>
+    
+                <template if:true={loading}>
+                    <lightning-spinner alternative-text="Cargando..." size="medium"></lightning-spinner>
+                </template>
+            </div>
+        </div>
+</template>

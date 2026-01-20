@@ -1,0 +1,36 @@
+<!--
+  @name               : rotHomeDetail
+  @author             : Alvaro Gonzales Lapponi
+  @creation date      : 15-12-2025
+  @modification date  : 25-02-2025
+  @last modified by   : Alvaro Gonzales Lapponi
+  @description        : 
+  @versions           : version 1.0: clase apex inicial 
+  Modifications Log
+  Ver   Date         Author                    Modification
+  1.0   13-01-2025   Alvaro Gonzales Lapponi   Initial Version
+-->
+<template>
+
+    <!--Componente para analizar URL y sus query params-->
+    <c-tunero-url-analyzer onurlanalized={handleUrlAnalized} query-params={queryParams} ends-with={endsWith}></c-tunero-url-analyzer>
+    <!--Componente para evitar logout por inactividad-->
+    <c-refresh-logout></c-refresh-logout>
+    <!--Componente que controla inactividad frontend-->
+    <c-frontend-inactivity ontimeout={handleTimeout}></c-frontend-inactivity>
+
+    <!--c-custom-loading></c-custom-loading-->
+    <section class="wrapper">
+        <template if:true={pantallas.advertisementCall}>
+            <img class="icon-large" src={icons.headphones}/>
+            <h1>Identificate para sumarte a la videollamada</h1>
+            <button class="button-primary" onclick={handleAskCall}>Continuar</button>
+        </template>
+
+        <template if:true={pantallas.requireClearFace}>
+            <h1>Despejá tu rostro y mirá a la cámara</h1>
+            <c-turnero-camera-recognizer ongetclientinfo={handleClientInfo}></c-turnero-camera-recognizer>
+        </template>
+        
+    </section>
+</template>

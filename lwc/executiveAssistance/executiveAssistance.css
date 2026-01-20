@@ -1,0 +1,8 @@
+@import 'c/cssLibrary';
+
+.datatable-container {
+   /* border: 1px solid #d8dde6; */
+    height: 400px;
+    overflow-x: auto;
+    display: flex;
+}

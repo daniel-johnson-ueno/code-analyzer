@@ -1,0 +1,93 @@
+<!--
+  @description       : 
+  @author            : 
+  @group             : 
+  @last modified on  : 04-02-2025
+  @last modified by  : Noe Vasquez
+-->
+<template>
+    <template lwc:if={booleanPageStart}>
+        <lightning-card title="Busca aqui si el cliente ya se encuentra dado de alta en Bankitti">
+            <div if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </div>
+            <div class="slds-p-around_small">
+                <lightning-radio-group  name="radioGroup"
+                                        label="Buscar cliente por"
+                                        options={options}
+                                        value={value}
+                                        onchange={handleRadioButtonChange}
+                                        required
+                                        type="radio">
+                </lightning-radio-group>
+            </div>
+            <template lwc:if={booleanDoc}>
+                <div class="slds-p-around_small tipo-container">
+                    <lightning-combobox
+                        name="docType"
+                        class="docType"
+                        label="Tipo de Documento"
+                        value={value}
+                        options={documentTypeOptions}
+                        onchange={handleDocTypeChange}
+                        onblur={handleValidationDocType}
+                        required>
+                    </lightning-combobox>
+                    <lightning-input 
+                        class="docNum"
+                        type="text"
+                        label="Número de Documento"
+                        onchange={handleDocNumInputChange}
+                        onblur={handleValidationDocNum}
+                        required>
+                    </lightning-input>
+                </div>
+            </template>
+            <template lwc:if={booleanPhone}>
+                <div class="slds-p-around_small">
+                    <lightning-input
+                        class="phoneNum" 
+                        type="text"
+                        label="Número de Teléfono"
+                        onchange={handlePhoneInputChange}
+                        onblur={handleValidationPhone}
+                        required>
+                    </lightning-input>
+                </div>
+            </template>
+            <div slot="footer" class="slds-clearfix">
+                <lightning-button 
+                    variant="success"
+                    label="Buscar" 
+                    title="Non-primary action" 
+                    onclick={handleClick} 
+                    disabled={disabled}
+                    class="slds-m-left_x-small, slds-float_right">
+                </lightning-button>
+            </div>
+        </lightning-card>
+    </template>
+    <template lwc:if={booleanPageError}>
+        <lightning-card>
+            <div slot="title" class="slds-text-body_regular slds-line-clamp slds-wrap">
+                <p>No se obtuvieron resultados para el número de documento o teléfono ingresado en Bankitti, 
+                   ¿Desea buscar en Salesforce?</p>
+            </div>
+            <div slot="footer" class="slds-clearfix">
+                <lightning-button-group class="slds-float_right">
+                    <lightning-button 
+                        label="Anterior" 
+                        title="Non-primary action" 
+                        onclick={handleClickBack}>
+                    </lightning-button>
+                    <lightning-button
+                        variant="success" 
+                        label="Buscar en Salesforce" 
+                        title="Non-primary action" 
+                        onclick={handleClickSearchAccount}>
+                    </lightning-button>
+                </lightning-button-group>
+            </div>
+        </lightning-card>
+    </template>
+</template>

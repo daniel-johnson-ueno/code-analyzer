@@ -1,0 +1,15 @@
+<template>
+    <template if:true={showWidget}>
+        <section class="widget-container">
+            <lightning-button-icon
+                icon-name="utility:refresh"
+                alternative-text="Refrescar"
+                variant="border"
+                size="small"
+                class="refresh-button"
+                onclick={refreshIframe}>
+            </lightning-button-icon>
+            <iframe src={embedUrl} class="iframe-style" allow="camera; microphone"></iframe>
+        </section>
+    </template>
+</template>

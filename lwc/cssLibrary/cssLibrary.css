@@ -1,0 +1,175 @@
+/*SPINNER STYLES*/
+.common-spinner {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.37);
+}
+
+.common-spinner-outer-div {
+    position: relative;
+}
+
+
+/*MODAL STYLES*/
+.common-slds-modal__container {
+    max-width: 80rem !important;
+    width: 80% !important;
+}
+
+/*CARD STYLES*/
+.common-card-style{
+    background-color: white !important;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(192, 192, 192);
+}
+
+.common-card-header-section{
+    background-color: rgb(236, 236, 236) !important;
+    border-radius: 5px 5px 0px 0px;
+    padding: 10px;
+}
+
+.common-card-title{
+    padding-left: 10px;
+    color: rgb(48, 47, 47);
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.common-intern-card-title{
+    padding-left: 10px;
+    color: rgb(48, 47, 47);
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/*FIELD LABELS STYLES*/
+.common-field-label{
+    color: rgb(92, 92, 92);
+}
+
+.common-required-field{
+    color: red !important;
+}
+
+.common-detail-section-title{
+    background-color: rgb(210, 210, 210) !important;
+    padding: 5px;
+    font-size: 16px;
+}
+
+.common-custom-box{
+    background-color: #f4f6f9;
+}
+
+.common-custom-box-title{
+    font-weight: bold;
+}
+
+.common-details-bar{
+    background-color: rgb(210, 210, 210) !important;
+    padding: 6px;
+}
+
+.common-details-bar:hover{
+    background-color:rgb(230, 230, 243);
+    cursor: pointer;
+}
+
+.common-details-bar-text{
+    font-size: 16px;
+    color:rgb(48, 47, 47);
+    margin-left:4px;
+}
+
+.common-bar-container{
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+}
+
+.common-modal-close-button {
+    display: inline-block;
+    padding: 0.5em 0.5em 0.5em 0.5em;
+    border-radius: 2em;
+    text-align: center;
+    background-color: white;
+    font-weight: 500;
+    color:#252529;
+    font-size: smaller;
+    border: 1px solid #C6C6CC;
+    float: right !important;
+}
+
+.common-modal-close-button:hover {
+    cursor:pointer;
+    background-color: #e8e8e8;
+}
+
+.common-modal-header-rounded {
+    border-radius: 1.5em 1.5em 0em 0em !important;
+    border-top: 1px solid #C6C6CC !important;
+    border-left: 1px solid #C6C6CC !important;
+    border-right: 1px solid #C6C6CC !important;
+}
+
+.common-modal-body-rounded {
+    border-left: 1px solid #C6C6CC !important;
+    border-right: 1px solid #C6C6CC !important;
+}
+
+.common-modal-full-rounded {
+    border-radius: 1.5em !important;
+    border: 1px solid #C6C6CC !important;
+}
+
+.common-modal-footer-rounded {
+    border-radius: 0em 0em 1.5em 1.5em !important;
+    border-bottom: 1px solid #C6C6CC !important;
+    border-left: 1px solid #C6C6CC !important;
+    border-right: 1px solid #C6C6CC !important;
+}
+
+.common-modal-title{
+    padding-left: 10px;
+    color: rgb(48, 47, 47);
+    font-size: 20px;
+    font-weight: bold;
+    float: left !important;
+}
+
+.common-modal-sub-title{
+    padding-left: 10px;
+    color: #6C6C78;
+    font-size: 14px;
+    font-weight: bold;
+    float: left !important;
+}
+
+.common-modal-details-label {
+    color:#6C6C78;
+}
+
+.common-modal-details-value {
+    color:#252529;
+    font-weight: 600;
+}
+
+.common-modal-details-row {
+    margin-top: 15px;
+}
+
+/*SECTION DIVIDER*/
+.common-divider-header-section{
+    background-color: rgb(236, 236, 236);
+    border-radius: 5px 5px 5px 5px;
+    padding: 5px;
+    margin-top: 15px;
+}
+
+.common-divider-title{
+    padding-left: 2px;
+    color: rgb(48, 47, 47);
+    font-size: 14px;
+    font-weight: bold;
+}

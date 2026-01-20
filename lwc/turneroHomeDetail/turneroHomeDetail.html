@@ -1,0 +1,36 @@
+<!--
+  @name               : turneroHomeDetail
+  @author             : Alvaro Gonzales Lapponi
+  @creation date      : 10-11-2024
+  @modification date  : 15-01-2025
+  @last modified by   : Alvaro Gonzales Lapponi
+  @description        : 
+  @versions           : version 1.0: clase apex inicial 
+  Modifications Log
+  Ver   Date         Author                    Modification
+  1.0   19-11-2024   Alvaro Gonzales Lapponi   Initial Version
+-->
+<template>
+
+  <!--Componente para analizar URL y sus query params-->
+  <c-tunero-url-analyzer onurlanalized={handleUrlAnalized} query-params={queryParams} ends-with={endsWith}></c-tunero-url-analyzer>
+  <!--Componente para evitar logout por inactividad-->
+  <c-refresh-logout></c-refresh-logout>
+  <!--Componente que controla inactividad frontend-->
+  <c-frontend-inactivity ontimeout={handleTimeout}></c-frontend-inactivity>
+
+  <section class="wrapper">
+
+    <template if:true={pantallas.advertisementAppointment}>
+      <img class="icon-medium" src={icons.calendar}/>
+      <h1>{labels.advertisementAppointment}</h1>
+      <button class="button-primary" onclick={handleAskAppointment}>Pedir turno</button>
+    </template>
+
+    <template if:true={pantallas.requireClearFace}>
+      <h1 class="text-center">{labels.requireClearFace}</h1>
+      <c-turnero-camera-recognizer ongetclientinfo={handleClientInfo}></c-turnero-camera-recognizer>
+    </template>
+
+  </section>
+</template>

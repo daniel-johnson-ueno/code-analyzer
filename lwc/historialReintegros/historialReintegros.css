@@ -1,0 +1,31 @@
+.title {
+    font-size: 16px;
+}
+
+.reintegros-container{
+    height:20rem;
+}
+
+.reintegros-item{
+    padding-right:10px;
+}
+
+.text-primary {
+    font-size: 14px;
+}
+
+.text-secondary {
+    font-size: 12px;
+}
+
+.float-right{
+    float:right !important;
+}
+
+.text-green{
+    color:#16A366;
+}
+
+.text-gray{
+    color:#252529;
+}

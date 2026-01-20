@@ -1,0 +1,56 @@
+<template>
+    <div class="slds-grid">
+        <div class="slds-col slds-size_1-of-1 slds-var-p-horizontal_x-large">
+            <div class="slds-grid">
+                <div class="slds-col slds-size_1-of-1 card-style">
+
+                    <!--Header Section-->
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_1-of-2">
+                            <div class="accordion-title"><h2><strong>Documentos adjuntos</strong></h2></div>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <div class="pill white-pill accordion-button" onclick={handleShowDetails}>
+                                <template if:false={showDetails}>
+                                    <lightning-icon icon-name="utility:chevrondown" alternative-text="Star" size="xx-small" title="large size"></lightning-icon>
+                                </template>
+                                <template if:true={showDetails}>
+                                    <lightning-icon icon-name="utility:chevronup" alternative-text="Star" size="xx-small" title="large size"></lightning-icon>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Details Section-->
+                    <template if:true={showDetails}>
+                        <div class="slds-grid faded-line">
+                            <div class="slds-col slds-size_1-of-1">
+                                <div>
+                                    <template if:true={isLoading}>
+                                        <div class="spinner-outer-div">
+                                            <lightning-spinner alternative-text="Loading" variant="brand" size="medium" class="spinner"></lightning-spinner>
+                                        </div>
+                                        <div class="documents-placeholder"></div>
+                                    </template>
+
+                                    <template if:true={documentsLoaded}>
+                                        <div class="documents-container">
+                                            <template for:each={customerDocuments} for:item="document">
+                                                <div key={document.url}>
+                                                    <p class="document-item"><a href={document.url} target="_blank">
+                                                        <img src="/resource/1717507783000/fileIcon" style="margin-bottom: 3px;"></img> {document.description}
+                                                    </a></p>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

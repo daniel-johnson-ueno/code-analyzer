@@ -1,0 +1,4 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,lightning:actionOverride" access="global" description="CaseOverrideContainer">
+    <aura:attribute name="recordId" type="Id" access="global"></aura:attribute>
+    <c:caseCreation recordId="{!v.recordId}"></c:caseCreation>
+</aura:component>

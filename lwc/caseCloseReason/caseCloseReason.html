@@ -1,0 +1,92 @@
+<template>
+    <template if:true={showCloseTipificador}>
+        <lightning-card title="">
+
+            <div class="slds-grid slds-wrap slds-grid_align-center slds-p-around_medium">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+            </template>
+                <div class="case-container">
+                    <div>
+                        <lightning-record-edit-form object-api-name="Case">
+                                <div class="sla-card-header">
+                                    
+                                    <h1>
+                                        <lightning-icon class="slds-var-m-right_x-small custom-icon-calibration" icon-name='standard:calibration' alternative-text='calibration' size='medium' title='calibration'></lightning-icon>
+                                         Cierre del Caso
+                                    </h1>
+                                </div>
+                                
+                                <template if:true={showOptions}>
+                                    <lightning-combobox
+                                        name="CloseReason"
+                                        label="Motivo de cierre"
+                                        value={recordValue}
+                                        placeholder="Seleccione un motivo..."
+                                        options={options}
+                                        onchange={handleChange}
+                                        readonly={showReadOnly}>
+                                    </lightning-combobox>
+                                </template>
+
+                                
+                                    <lightning-input-field field-name="Resolution__c"
+                                               data-field="Resolution__c"
+                                               value={resolution}
+                                               onchange={handleResolutionChange}
+                                               disabled={showReadOnly}
+                                               required>
+                                    </lightning-input-field>
+
+
+                        </lightning-record-edit-form>
+
+                        <template if:true={showSaveButton}>
+                            <template if:false={showReadOnly}>
+                            <div class="slds-m-top_medium slds-text-aling_center">
+                                <lightning-button variant="brand" label="Guardar y cerrar Caso" title="Guardar" onclick={handleSave}
+                                    class="slds-m-left_x-small">
+                                </lightning-button>
+                            </div>
+                            </template>
+                        </template>
+                        
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal de confirmación -->
+            <template if:true={showModal}>
+                <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header">
+                            <h2 class="slds-text-heading_medium">Confirmar acción</h2>
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium">
+                            ¿Está seguro de que desea guardar el valor seleccionado?
+                            <br>
+                            <template if:true={selectedLabel}>
+                                <br>
+                                <p><strong>Motivo de Cierre:</strong> {selectedLabel}</p>
+                            </template>
+
+                            <template if:true={selectedDescription}>
+                                <br>
+                                <p><strong>Descripción:</strong> {selectedDescription}</p>
+                            </template>
+                            <br>
+                            <p><strong>Resolución:</strong> {resolution}</p>
+
+                        </div>
+                        <footer class="slds-modal__footer slds-clearfix actions">
+                            <lightning-button variant="neutral" label="Cancelar" onclick={cancelSave}></lightning-button>
+                            <lightning-button variant="brand" label="Guardar" onclick={confirmSave}></lightning-button>
+                        </footer>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </template>
+        </lightning-card>
+    </template>
+</template>

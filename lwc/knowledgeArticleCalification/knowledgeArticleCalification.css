@@ -1,0 +1,51 @@
+.card-style{
+    background-color: white !important;
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: 1px solid #D8D8DE;
+    border-radius: 12px;
+}
+
+.pill{
+    display: inline-block;
+    padding: 0.5em 0.5em;
+    border-radius: 1.2em;
+    color: white;
+    text-align: center;
+}
+
+.warning-pill{
+    background-color: #ffcece;
+    font-weight: 500;
+    color:#664400;
+    font-size: smaller;
+}
+
+.success-pill{
+    background-color: #D6FCEC;
+    font-weight: 500;
+    color:#146542;
+    font-size: smaller;
+}
+
+.pill-text{
+    padding-top:1px;
+    float:right;
+    margin-left:3px;
+}
+
+.info-text{
+    font-size: 14px;
+}
+
+.info-text-title{
+    font-size: 16px;
+}
+
+.faded-line{
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 10px;
+}

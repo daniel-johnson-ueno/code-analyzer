@@ -1,0 +1,58 @@
+<template>
+    <template lwc:if={isLoading}>
+        <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+    </template>
+    <template lwc:else>
+
+        <template lwc:if={hasErrors}>
+            <strong>{errorMessage}</strong>
+        </template>
+
+        <template lwc:else>
+
+            <div class="slds-grid slds-wrap">
+
+                <template lwc:if={noResults}>
+                    <strong>{noResultsMessage}</strong>
+                </template>
+
+                <template lwc:else>
+
+                    <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_xxx-small ">
+
+                        <lightning-input
+                                class="slds-float_right small-toggle slds-grid_align-center" type="toggle" label="" name="input1" checked={checked}
+                                message-toggle-active="" message-toggle-inactive="" onchange={handleToggleClicked}>
+                        </lightning-input>
+                        <span class="slds-float_right slds-var-p-vertical_xxx-small">
+                        Mostrar Productos Activos
+                        </span>
+                    </div>
+
+
+                    <div class="slds-col slds-size_1-of-1">
+                        <template if:false={isLoading}>
+                            <template lwc:if={isSavings}>
+                                <c-subproduct-saving person-code={personCode} is-employee={isEmployee} savings-response={filteredSavings}></c-subproduct-saving>
+                            </template>
+                            <template lwc:if={isCheckings}>
+                                <c-subproduct-checking person-code={personCode} is-employee={isEmployee} checkings-response={filteredCheckings}></c-subproduct-checking>
+                            </template>
+                            <template lwc:if={isCards}>
+                                <c-subproduct-card  person-code={personCode} is-employee={isEmployee} cards-response={filteredCards}></c-subproduct-card>
+                            </template>
+                            <template lwc:if={isLoans}>
+                                <c-subproduct-loan personcode={personCode} isemployee={isEmployee} loansresponse={filteredLoans}></c-subproduct-loan>
+                            </template>
+                        </template>
+                    </div>
+                </template>
+
+            </div>
+        </template>
+    </template>
+
+
+
+
+</template>

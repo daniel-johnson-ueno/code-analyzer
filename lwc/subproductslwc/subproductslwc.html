@@ -1,0 +1,1263 @@
+<template>
+    <!-- SAVINGS: Products Webservice OK, Movements OK, Design OK -->
+    <template if:true={isSavings}>
+        <div class="c-container slds-scrollable_x">
+            <template for:each={savingsresponse} for:item="saving">
+                <div key={saving.accountNumber} class="custom-box" onclick={handleSavingClick}
+                    data-account-number={saving.accountNumber}>
+
+                    <div class="title-section">
+                        <h2 class="account-title"><img style="margin-top: -2px;" src="https://i.imgur.com/dtjA4rZ.png" alt="Caja de ahorro" width="16" height="16" /> <strong>  {saving.accountNumber}</strong></h2>
+
+                        <div>
+                            <template if:true={saving.migratedFromVision}>
+                                <div class="pill info-pill status-pill"> Visión </div>
+                            </template>
+                            <template if:true={saving.isActive}>
+                                <div class="pill success-pill">{saving.status}</div>
+                            </template>
+                            <template if:true={saving.isNeutral}>
+                                <div class="pill neutral-pill">{saving.status}</div>
+                            </template>
+                            <template if:true={saving.isError}>
+                                <div class="pill error-pill">{saving.status}</div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <hr class="faded-line">
+                    <div class="container-details">
+                        <div class="slds-grid  slds-var-p-vertical_x-small">
+                            <div class="slds-col slds-size_1-of-1">
+                                <strong>{saving.denomination}</strong>
+                            </div>
+                        </div>
+                        <div class="slds-grid  slds-var-p-vertical_x-small">
+                            <div class="slds-col slds-size_1-of-1">
+                                <strong>Moneda: </strong>{saving.currencyDes}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <template if:true={detailsSavingSelected}>
+            <div class="slds-grid slds-wrap some-margin-both-sides">
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_1-of-1">
+                            <div>
+                                <div class="pill blue-tab-pill">
+                                    <div class="pill-tab-text">Detalle</div>
+                                </div>
+                                <template if:false={isemployee}>
+                                    <div class="pill white-pill left-pill" onclick={handleMovementsSavings}>
+                                        <div class="pill-tab-text">Movimientos</div>
+                                    </div>
+                                </template>
+                                <!--nuevo boton para mostrar firmantes-->
+<!--                                <div class="pill white-pill left-pill" onclick={handleSignatoriesSavings}>-->
+<!--                                    <div class="pill-tab-text">Firmantes</div>-->
+<!--                                </div>-->
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+
+                    <div class="slds-grid  slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-1">
+                            <strong>Moneda: </strong>{selectedSaving.currencyDes}
+                        </div>
+                    </div>
+                    <div class="slds-grid  slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Saldo: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedSaving.balance}></lightning-formatted-number>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Saldo Retenido: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedSaving.retainedBalance}></lightning-formatted-number>
+                        </div>
+                    </div>
+                    <div class="slds-grid slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-2">
+                            <p><strong>Fecha de Apertura: </strong> {selectedSaving.openingDate}</p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 ">
+                            <p><strong>Saldo Bloqueado: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedSaving.blockedBalance}></lightning-formatted-number></p>
+                        </div>
+                    </div>
+                    <div class="slds-grid slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-2">
+                            <p><strong>Fecha de Cambio de Estado: </strong>{selectedSaving.statusChangeDate}</p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <p><strong>Relación:</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+        
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+        </template>      
+
+        <template if:true={recentSavingMovementsSelected}>
+            <div class="some-margin-both-sides">
+
+                <div class="slds-col slds-size_1-of-1">
+                    <div>
+                        <div class="pill white-pill" onclick={handleDetailsSavings}>
+                            <div class="pill-tab-text">Detalle</div>
+                        </div>
+                        <div class="pill blue-tab-pill left-pill">
+                            <div class="pill-tab-text">Movimientos</div>
+                        </div>
+                        <!--nuevo boton para mostrar firmantes-->
+<!--                        <div class="pill white-pill left-pill" onclick={handleSignatoriesSavings}>-->
+<!--                            <div class="pill-tab-text">Firmantes</div>-->
+<!--                        </div>-->
+                    </div>
+                </div>
+                <br>
+
+                <div class="common-card-style">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_xxx-small slds-var-p-vertical_xxx-small">
+                            <lightning-datatable key-field="movementId"
+                                                 data={recentSavingMovements}
+                                                 columns={savingMovementColumns}
+                                                 hide-checkbox-column="true"
+                                                 onrowaction={handleShowSavingMovementDetails}>
+                            </lightning-datatable>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-float_left">
+                    <lightning-button variant="base" label="Previo" title="Previo" onclick={handlePrevioSavings}
+                        class="slds-m-left_x-small slds-p-around_medium"></lightning-button>
+                </div>
+                <div class="slds-float_right">
+                    <lightning-button variant="base" label="Siguiente" title="Siguiente"
+                        onclick={handleSiguienteSavings}
+                        class="slds-m-right_x-small slds-p-around_medium"></lightning-button>
+                </div>
+                <br>
+                <br>
+            </div>
+        </template>
+
+        <template if:false={movementsFound}>
+            <strong>No se encontraron (mas) movimientos relacionados</strong>
+        </template>
+
+        <!--////////////FIRMANTES///////-->
+        <template if:true={signatoriesSavingSelected}>
+            <div class="some-margin-both-sides">
+
+                <div class="slds-col slds-size_1-of-1">
+                    <div>
+                        <div class="pill white-pill" onclick={handleDetailsSavings}>
+                            <div class="pill-tab-text">Detalle</div>
+                        </div>
+                        <template if:false={isemployee}>
+                            <div class="pill white-pill left-pill" onclick={handleMovementsSavings}>
+                                <div class="pill-tab-text">Movimientos</div>
+                            </div>
+                        </template>
+                        <!--nuevo boton para mostrar firmantes-->
+<!--                        <div class="pill blue-tab-pill left-pill">-->
+<!--                            <div class="pill-tab-text">Firmantes</div>-->
+<!--                        </div>-->
+                    </div>
+                </div>
+                <br>
+
+                <c-signatories
+                        signatories-list= {selectedSaving.signatories}
+                        registered-signature-qty={selectedSaving.registeredSignatureQty}
+                        required-signatures-qty={selectedSaving.requiredSignaturesQty}
+                        registered-signature={selectedSaving.signatureRegistered}
+                ></c-signatories>
+
+                <br>
+                <br>
+            </div>
+        </template>
+        <!--//////////////FIN FIRMANTES////////////-->
+    </template>
+
+    <!-- CHECKINGS: Products Webservice OK, Movements: OK, Design OK -->
+    <template if:true={isCheckings}>
+        <div class="c-container slds-scrollable_x">
+            <template for:each={checkingsresponse} for:item="checking">
+                <div key={checking.accountNumber} class="custom-box" onclick={handleCheckingClick}
+                    data-account-number={checking.accountNumber}>
+
+                    <div class="title-section">
+                        <h2 class="account-title"><img style="margin-top: -2px;" src="https://i.imgur.com/M6qjzk1.png" alt="Caja de ahorro" width="16" height="16" /><strong>  {checking.accountNumber}</strong></h2>
+
+                        <template if:true={checking.isActive}>
+                            <div class="pill success-pill">{checking.status}</div>
+                        </template>
+                        <template if:true={checking.isNeutral}>
+                            <div class="pill neutral-pill">{checking.status}</div>
+                        </template>
+                        <template if:true={checking.isError}>
+                            <div class="pill error-pill">{checking.status}</div>
+                        </template>
+                    </div>
+
+                    <hr class="faded-line">
+                    <div class="container-details">
+                        <div class="slds-grid  slds-var-p-vertical_x-small">
+                            <div class="slds-col slds-size_1-of-1">
+                                <strong>{checking.denomination}</strong>
+                            </div>
+                        </div>
+                        <div class="slds-grid  slds-var-p-vertical_x-small">
+                            <div class="slds-col slds-size_1-of-1">
+                                <strong>Moneda: </strong>{checking.currencyDes}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <template if:true={detailsCheckingSelected}>
+            <div class="slds-grid slds-wrap some-margin-both-sides">
+
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="slds-col slds-size_1-of-1">
+                        <div>
+                            <div class="pill blue-tab-pill">
+                                <div class="pill-tab-text">Detalle</div>
+                            </div>
+                            <template if:false={isemployee}>
+                                <div class="pill white-pill left-pill" onclick={handleMovementsChecking}>
+                                    <div class="pill-tab-text">Movimientos</div>
+                                </div>
+                            </template>
+                            <!--nuevo boton para mostrar firmantes-->
+<!--                            <div class="pill white-pill left-pill" onclick={handleSignatoriesChecking}>-->
+<!--                                <div class="pill-tab-text">Firmantes</div>-->
+<!--                            </div>-->
+                        </div>
+                    </div>
+                    <br/>
+
+                    <div class="slds-grid  slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-1">
+                            <strong>Moneda: </strong>{selectedChecking.currencyDes}
+                        </div>
+                    </div>
+                    <div class="slds-grid  slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Saldo: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedChecking.balance}></lightning-formatted-number>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Fecha del Último Movimiento:</strong> {selectedChecking.lastMovementDate}
+                        </div>
+                    </div>
+                    <div class="slds-grid  slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Firma Registrada:</strong> {selectedChecking.signatureRegistered}
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Fecha del Último Extracto:</strong> {selectedChecking.lastExtractDate}
+                        </div>
+                    </div>
+                    <div class="slds-grid  slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Cantidad de Firmas Requeridas:</strong> {selectedChecking.requiredSignaturesQty}
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Saldo del Último Extracto: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedChecking.lastExtractBalance}></lightning-formatted-number>
+                        </div>
+                    </div>
+                    <div class="slds-grid  slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Monto de Débitos Pendientes: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedChecking.pendingDebitsAmount}></lightning-formatted-number>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Nombre de Chequera:</strong> {selectedChecking.checkbookName}
+                        </div>
+                    </div>
+
+                    <div class="slds-grid  slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Monto de Créditos Pendientes: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedChecking.pendingCreditsAmount}></lightning-formatted-number>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Código de Canal:</strong> {selectedChecking.channelCode}
+                        </div>
+                    </div>
+                    <div class="slds-grid  slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Monto de Confirmación de Créditos Pendientes: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedChecking.pendingConfirmationCreditsAmount}></lightning-formatted-number>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Fecha de Cambio de Estado:</strong> {selectedChecking.statusChangeDate}
+                        </div>
+                    </div>
+                    <div class="slds-grid  slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-1">
+                            <strong>Fecha de Apertura:</strong> {selectedChecking.openingDate}
+                        </div>
+                    </div>
+                    <div class="slds-grid  slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-1">
+                            <strong>Cuenta Combinada:</strong> {selectedChecking.isCombinedAccount}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+        </template>
+
+        <template if:true={recentCheckingMovementsSelected}>
+            <div class="some-margin-both-sides">
+
+                <div class="slds-col slds-size_1-of-1">
+                    <div>
+                        <div class="pill white-pill" onclick={handleDetailsChecking}>
+                            <div class="pill-tab-text">Detalle</div>
+                        </div>
+                        <div class="pill blue-tab-pill left-pill">
+                            <div class="pill-tab-text">Movimientos</div>
+                        </div>
+                        <!--nuevo boton para mostrar firmantes-->
+<!--                        <div class="pill white-pill left-pill" onclick={handleSignatoriesChecking}>-->
+<!--                            <div class="pill-tab-text">Firmantes</div>-->
+                        </div>
+                    </div>
+                </div>
+                <br>
+
+                <div class="common-card-style">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_xxx-small slds-var-p-vertical_xxx-small">
+                            <lightning-datatable key-field="movementId"
+                                                 data={recentCheckingMovements}
+                                                 columns={savingMovementColumns}
+                                                 hide-checkbox-column="true"
+                                                 onrowaction={handleShowCheckingMovementDetails}>
+                            </lightning-datatable>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-float_left">
+                    <lightning-button variant="base" label="Previo" title="Previo" onclick={handlePrevioCheckings}
+                        class="slds-m-left_x-small slds-p-around_medium"></lightning-button>
+                </div>
+                <div class="slds-float_right">
+                    <lightning-button variant="base" label="Siguiente" title="Siguiente"
+                        onclick={handleSiguienteCheckings}
+                        class="slds-m-right_x-small slds-p-around_medium"></lightning-button>
+                </div>
+                <br>
+                <br>
+            </div>
+        </template>
+
+        <template if:false={movementsFound}>
+            <strong>No se encontraron (mas) movimientos relacionados</strong>
+        </template>
+            <!--FIRMANTES-->
+        <template if:true={signatoriesCheckingSelected}>
+            <div class="some-margin-both-sides">
+
+                <div class="slds-col slds-size_1-of-1">
+                    <div>
+                        <div class="pill white-pill" onclick={handleDetailsChecking}>
+                            <div class="pill-tab-text">Detalle</div>
+                        </div>
+                        <template if:false={isemployee}>
+                            <div class="pill white-pill left-pill" onclick={handleMovementsChecking}>
+                                <div class="pill-tab-text">Movimientos</div>
+                            </div>
+                        </template>
+                        <!--nuevo boton para mostrar firmantes-->
+<!--                        <div class="pill blue-tab-pill left-pill">-->
+<!--                            <div class="pill-tab-text">Firmantes</div>-->
+<!--                        </div>-->
+                    </div>
+                </div>
+                <br>
+
+                <c-signatories
+                        signatories-list= {selectedChecking.signatories}
+                        registered-signature-qty={selectedChecking.registeredSignatureQty}
+                        required-signatures-qty={selectedChecking.requiredSignaturesQty}
+                        registered-signature={selectedChecking.signatureRegistered}
+                ></c-signatories>
+
+                <br>
+                <br>
+            </div>
+        </template>
+            <!--FIN FIRMANTES-->
+    </template>
+
+    <!-- LOANS: Products Webservice OK, Movements: OK, Design OK -->
+    <template if:true={isLoans}>
+        <div class="c-container slds-scrollable_x">
+            <template for:each={loansresponse} for:item="loan">
+                <div key={loan.accountNumber} class="custom-box" onclick={handleLoanClick}
+                    data-account-number={loan.accountNumber}>
+
+                    <div class="title-section">
+                        <h2 class="account-title"><img style="margin-top: -2px;" src="https://i.imgur.com/E75mVHz.png" alt="Caja de ahorro" width="16" height="16" /> <strong>  {loan.accountNumber}</strong></h2>
+
+                        <template if:true={loan.isActive}>
+                            <div class="pill success-pill">{loan.status}</div>
+                        </template>
+                        <template if:true={loan.isNeutral}>
+                            <div class="pill neutral-pill">{loan.status}</div>
+                        </template>
+                        <template if:true={loan.isError}>
+                            <div class="pill error-pill">{loan.status}</div>
+                        </template>
+                    </div>
+
+                    <hr class="faded-line">
+
+                    <div class="container-details">
+                        <div class="slds-grid  slds-var-p-vertical_x-small">
+                            <div class="slds-col slds-size_1-of-1">
+                                <strong>Tipo: </strong>{loan.type}
+                            </div>
+                        </div>
+                        <div class="slds-grid  slds-var-p-vertical_x-small">
+                            <div class="slds-col slds-size_1-of-1">
+                                <strong>Moneda: </strong>{loan.moreDetails.currencyDes}
+                            </div>
+                        </div>
+                        <div class="slds-grid  slds-var-p-vertical_x-small">
+                            <div class="slds-col slds-size_1-of-1">
+                                <strong>Inicio: </strong>{loan.loanEffectiveDate}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <template if:true={selectedLoanDetailNumber}>
+            <div class="slds-grid slds-wrap some-margin-both-sides">
+
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="slds-col slds-size_1-of-1">
+                        <div>
+                            <div class="pill blue-tab-pill">
+                                <div class="pill-tab-text">Detalle</div>
+                            </div>
+                            <template if:false={isemployee}>
+                                <div class="pill white-pill left-pill" onclick={handleMovementsLoans}>
+                                    <div class="pill-tab-text">Movimientos</div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <br/>
+
+                    <div class="slds-grid  slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Moneda: </strong>{selectedLoan.currencyDes}
+                        </div>
+                    </div>
+                    <div class="slds-grid  slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Tipo de préstamo: </strong>{selectedLoan.modality}
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Seguro de Cancelación de Deuda: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedLoan.debtCancellationInsurance}></lightning-formatted-number>
+                        </div>
+                    </div>
+                    <div class="slds-grid  slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Monto Desembolsado: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedLoan.outlayAmount}></lightning-formatted-number>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Seguro de Desempleo: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedLoan.unemploymentInsurance}></lightning-formatted-number>
+                        </div>
+                    </div>
+                    <div class="slds-grid  slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Deuda total: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedLoan.totalAmount}></lightning-formatted-number>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Cargos por Cancelación Anticipada: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedLoan.earlyCancellationCharges}></lightning-formatted-number>
+                        </div>
+                    </div>
+                    <div class="slds-grid  slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Cantidad de Cuotas: </strong>{selectedLoan.totalFees}
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Deuda Pendiente: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedLoan.pendingDebt}></lightning-formatted-number>
+                        </div>
+                    </div>
+                    <div class="slds-grid  slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Cuotas Pagadas: </strong>{selectedLoan.feesPaid}
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Cuotas Pendientes: </strong>{selectedLoan.pendingFees}
+                        </div>
+                    </div>
+                    <div class="slds-grid  slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Tasa: </strong>{selectedLoan.tas}
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Cancelación Anticipada: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedLoan.payoffAmount}></lightning-formatted-number>
+                        </div>
+                    </div>
+                    <div class="slds-grid  slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Saldo Capital: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedLoan.capitalBalance}></lightning-formatted-number>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Último Monto Total Pagado: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedLoan.lastTotalAmountPaid}></lightning-formatted-number>
+                        </div>
+                    </div>
+                    <div class="slds-grid  slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Fecha de Inicio: </strong>{selectedLoan.startDate}
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Última Fecha de Pago: </strong>{selectedLoan.lastPaymentDate}
+                        </div>
+                    </div>
+                    <div class="slds-grid  slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Número de Solicitud: </strong>{selectedLoan.requestNumber}
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Saldo en Mora: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedLoan.expiredAmount}></lightning-formatted-number>
+                        </div>
+                    </div>
+                    <div class="slds-grid  slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Gastos administrativos: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedLoan.administrativeCommission}></lightning-formatted-number>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <strong>Días de Atraso: </strong>{selectedLoan.daysPastDue}
+                        </div>
+                    </div>
+                    <div class="slds-grid  slds-var-p-vertical_x-small">
+                        <div class="slds-col slds-size_1-of-1">
+                            <strong>Seguro de Sepelio: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedLoan.burialInsurance}></lightning-formatted-number>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+        </template>
+
+        <template if:true={recentLoanMovements}>
+            <div class="some-margin-both-sides">
+
+                <div class="slds-col slds-size_1-of-1">
+                    <div>
+                        <div class="pill white-pill" onclick={handleReturnLoans}>
+                            <div class="pill-tab-text">Detalle</div>
+                        </div>
+                        <div class="pill blue-tab-pill left-pill">
+                            <div class="pill-tab-text">Movimientos</div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+
+                <div class="common-card-style">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_xxx-small slds-var-p-vertical_xxx-small">
+                            <lightning-datatable key-field="installmentId"
+                                                 data={recentLoanMovements}
+                                                 columns={loanColumns}
+                                                 hide-checkbox-column="true"
+                                                 onrowaction={handleShowLoanMovementDetails}>
+                            </lightning-datatable>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-float_left">
+                    <lightning-button variant="base" label="Previo" title="Previo" onclick={handlePrevioLoans}
+                        class="slds-m-left_x-small slds-p-around_medium"></lightning-button>
+                </div>
+                <div class="slds-float_right">
+                    <lightning-button variant="base" label="Siguiente" title="Siguiente" onclick={handleSiguienteLoans}
+                        class="slds-m-right_x-small slds-p-around_medium"></lightning-button>
+                </div>
+                <br>
+                <br>
+            </div>
+        </template>
+    </template>
+
+
+    <!-- CARDS: Products WebService OK, Movements: OK, Design: OK -->
+    <template if:true={isCards}>
+        <div class="c-container slds-scrollable_x">
+            <template for:each={cardsresponse} for:item="cardToProcess">
+                <div key={cardToProcess.cardNumber} class="custom-box"
+                    data-card-number={cardToProcess.cardNumber} onclick={handleCardClick}>
+
+                    <div class="title-section">
+                        <h2 class="account-title"><img style="margin-top: -2px;" src="https://i.imgur.com/ZdMiVuW.png" alt="Tarjeta" width="16" height="16" /> 
+                            <template if:true={cardToProcess.isCredit}> Crédito</template>
+                            <template if:false={cardToProcess.isCredit}> Débito</template>
+                            <strong> {cardToProcess.cardNumberShort}</strong></h2>
+
+                        <template if:true={cardToProcess.isActive}>
+                            <div class="pill success-pill">{cardToProcess.status}</div>
+                        </template>
+                        <template if:true={cardToProcess.isNeutral}>
+                            <div class="pill neutral-pill">{cardToProcess.status}</div>
+                        </template>
+                        <template if:true={cardToProcess.isError}>
+                            <div class="pill error-pill">{cardToProcess.status}</div>
+                        </template>
+                    </div>
+
+                    <hr class="faded-line">
+
+                    <div class="container-details">
+                        <div class="slds-grid  slds-var-p-vertical_x-small">
+                            <div class="slds-col slds-size_1-of-1">
+                                <strong>{cardToProcess.name}</strong>
+                            </div>
+                        </div>
+                        <div class="slds-grid  slds-var-p-vertical_x-small">
+                            <div class="slds-col slds-size_1-of-1">
+                                {cardToProcess.cardType}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+        </div>
+
+        <template if:true={selectedCardDetailNumber}>
+            <div class="slds-grid slds-wrap some-margin-both-sides">
+
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="slds-col slds-size_1-of-1">
+                        <div>
+                            <div class="pill blue-tab-pill">
+                                <div class="pill-tab-text">Detalle</div>
+                            </div>
+                            <template if:false={isemployee}>
+                                <div class="pill white-pill left-pill" onclick={handleMovementsCards}>
+                                    <div class="pill-tab-text">Movimientos</div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <br/>
+
+                    <!-- DEBITO -->
+                    <template if:false={selectedCardIsCredit}>
+                        <div class="slds-grid  slds-var-p-vertical_x-small">
+                            <div class="slds-col slds-size_1-of-2">
+                                <strong>Numero de cuenta: </strong>{selectedCard.accountNumber}
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+                                <strong>Fecha de Vencimiento: </strong>{selectedCard.dueDate}
+                            </div>
+                        </div>
+                        <div class="slds-grid  slds-var-p-vertical_x-small">
+                            <div class="slds-col slds-size_1-of-2">
+                                <strong>Código de Oficina de Origen: </strong>{selectedCard.originOfficeCode}
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+                                <strong>Fecha de Cancelación: </strong>{selectedCard.cancellationDate}
+                            </div>
+                        </div>
+                        <div class="slds-grid  slds-var-p-vertical_x-small">
+                            <div class="slds-col slds-size_1-of-2">
+                                <strong>Fecha del Último Movimiento en Cajero Automático: </strong>{selectedCard.lastATMMovementDate}
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+                                <strong>Fecha de Activación: </strong>{selectedCard.activationDate}
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- CREDITO -->
+                    <template if:true={selectedCardIsCredit}>
+                        <div class="slds-grid  slds-var-p-vertical_medium slds-var-p-horizontal_small">
+                            <div class="slds-col slds-size_1-of-1 slds-var-p-horizontal_x-small">
+                                <strong>Moneda: </strong>{selectedCard.currencyDes}
+                            </div>
+                        </div>
+                        <div class="slds-grid card-header-section-first">
+                            <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_x-small">
+                                <span class="card-title">Saldos</span>
+                            </div>
+                        </div>
+                        <div class="slds-grid  slds-var-p-vertical_x-small slds-var-p-horizontal_small">
+                            <div class="slds-col slds-size_1-of-2 slds-var-p-horizontal_x-small">
+                                <strong>Linea de Crédito: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedCard.creditLine}></lightning-formatted-number>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-var-p-horizontal_small">
+                                <strong>Línea de Crédito Disponible: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedCard.availableCreditLine}></lightning-formatted-number>
+                            </div>
+                        </div>
+                        <div class="slds-grid  slds-var-p-vertical_x-small slds-var-p-horizontal_small">
+                            <div class="slds-col slds-size_1-of-2 slds-var-p-horizontal_x-small">
+                                <strong>Linea de Crédito Usada: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedCard.creditLineUsed}></lightning-formatted-number>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-var-p-horizontal_small">
+                                <strong>Reembolso: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedCard.cashBack}></lightning-formatted-number>
+                            </div>
+                        </div>
+
+                        <div class="slds-grid card-header-section">
+                            <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_x-small">
+                                <span class="card-title">Datos del plástico</span>
+                            </div>
+                        </div>
+                        <div class="slds-grid  slds-var-p-vertical_x-small slds-var-p-horizontal_small">
+                            <div class="slds-col slds-size_1-of-2 slds-var-p-horizontal_x-small">
+                                <strong>Titular: </strong>{selectedCard.holder}
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-var-p-horizontal_small">
+                                <strong>Numero de Cuenta: </strong>{selectedCard.accountNumber}
+                            </div>
+                        </div>
+                        <div class="slds-grid  slds-var-p-vertical_x-small slds-var-p-horizontal_small">
+                            <div class="slds-col slds-size_1-of-2 slds-var-p-horizontal_x-small">
+                                <strong>Fecha de Vencimiento: </strong>{selectedCard.dueDate}
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-var-p-horizontal_small">
+                                <strong>Color de la Tarjeta: </strong>{selectedCard.cardColor}
+                            </div>
+                        </div>
+                        <div class="slds-grid  slds-var-p-vertical_x-small slds-var-p-horizontal_small">
+                            <div class="slds-col slds-size_1-of-1 slds-var-p-horizontal_x-small">
+                                <strong>Afinidad: </strong>{selectedCard.affinity}
+                            </div>
+                        </div>
+
+                        <div class="slds-grid card-header-section">
+                            <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_x-small">
+                                <span class="card-title">Datos de extracto</span>
+                            </div>
+                        </div>
+                        <div class="slds-grid  slds-var-p-vertical_x-small slds-var-p-horizontal_small">
+                            <div class="slds-col slds-size_1-of-2 slds-var-p-horizontal_x-small">
+                                <strong>Vencimiento del extracto: </strong>{selectedCard.extractExpirationDate}
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-var-p-horizontal_small">
+                                <strong>Tasa de Interés: </strong>{selectedCard.interestRate}
+                            </div>
+                        </div>
+                        <div class="slds-grid  slds-var-p-vertical_x-small slds-var-p-horizontal_small">
+                            <div class="slds-col slds-size_1-of-1 slds-var-p-horizontal_x-small">
+                                <strong>Tiene Débito Automático: </strong>{selectedCard.hasAutomaticDebit}
+                            </div>
+                        </div>
+
+                        <div class="slds-grid card-header-section">
+                            <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_x-small">
+                                <span class="card-title">Pagos</span>
+                            </div>
+                        </div>
+                        <div class="slds-grid  slds-var-p-vertical_x-small slds-var-p-horizontal_small">
+                            <div class="slds-col slds-size_1-of-2 slds-var-p-horizontal_x-small">
+                                <strong>Pagos realizados en el mes: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedCard.monthPaymentAmount}></lightning-formatted-number>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-var-p-horizontal_small">
+                                <strong>Último Pago: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedCard.lastPayment}></lightning-formatted-number>
+                            </div>
+                        </div>
+                        <div class="slds-grid  slds-var-p-vertical_x-small slds-var-p-horizontal_small">
+                            <div class="slds-col slds-size_1-of-2 slds-var-p-horizontal_x-small">
+                                <strong>Monto de Pago Mensual: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedCard.monthPaymentAmount}></lightning-formatted-number>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-var-p-horizontal_small">
+                                <strong>Pago Minimo: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedCard.minimumPay}></lightning-formatted-number>
+                            </div>
+                        </div>
+
+                        <div class="slds-grid card-header-section">
+                            <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_x-small">
+                                <span class="card-title">Facturación</span>
+                            </div>
+                        </div>
+                        <div class="slds-grid  slds-var-p-vertical_x-small slds-var-p-horizontal_small">
+                            <div class="slds-col slds-size_1-of-2 slds-var-p-horizontal_x-small">
+                                <strong>Tipo de Pago Débito Automático: </strong>{selectedCard.paymentTypeAutomaticDebit}
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-var-p-horizontal_small">
+                                <strong>Deuda Total: </strong><lightning-formatted-number format-style="decimal" minimum-fraction-digits="2" value={selectedCard.totalDebt}></lightning-formatted-number>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </template>
+
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+        </template>
+
+        <template if:false={movementsFound}>
+            <strong>No se encontraron movimientos relacionados</strong>
+        </template>
+
+        <template if:true={recentCardMovements}>
+            <div class="some-margin-both-sides">
+
+                <div class="slds-col slds-size_1-of-1">
+                    <div>
+                        <div class="pill white-pill" onclick={handleReturnCards}>
+                            <div class="pill-tab-text">Detalle</div>
+                        </div>
+                        <div class="pill blue-tab-pill left-pill">
+                            <div class="pill-tab-text">Movimientos</div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+
+                <div class="common-card-style">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_xxx-small slds-var-p-vertical_xxx-small">
+                            <lightning-datatable key-field="movementId"
+                                                 data={recentCardMovements}
+                                                 columns={genericMovementColumns}
+                                                 hide-checkbox-column="true"
+                                                 onrowaction={handleShowCardMovementDetails}>
+                            </lightning-datatable>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-float_left">
+                    <lightning-button variant="base" label="Previo" title="Previo" onclick={handlePrevioCards}
+                        class="slds-m-left_x-small slds-p-around_medium"></lightning-button>
+                </div>
+                <div class="slds-float_right">
+                    <lightning-button variant="base" label="Siguiente" title="Siguiente"
+                        onclick={handleSiguienteCards}
+                        class="slds-m-right_x-small slds-p-around_medium"></lightning-button>
+                </div>
+                <br>
+                <br>
+            </div>
+        </template>
+    </template>
+
+    <!--Saving movements details modal -->
+    <template if:true={showSavingMovementDetails}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <div class="slds-modal__content slds-p-around_medium common-modal-full-rounded" id="modal-content-id-2">
+
+                    <!--Header-->
+                    <div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_9-of-12">
+                                <div class="common-modal-title">Detalles del movimiento</div>
+                            </div>
+                            <div class="slds-col slds-size_3-of-12">
+                                <div class="common-modal-close-button" onclick={toggleSavingMovementDetailsPanel}>
+                                    <lightning-icon icon-name="utility:close" alternative-text="Star" size="xx-small" title="large size"></lightning-icon>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-1">
+                                <div class="common-modal-sub-title">{selectedSavingMovement.movementType} - {selectedSavingMovement.movementDate}</div>
+                            </div>
+                        </div>
+                        <hr class="faded-line">
+                    </div>
+
+                    <!--Body-->
+                    <br/>
+                    <div class="movement-details-row">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Monto
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Concepto
+                            </div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedSavingMovement.amount}
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedSavingMovement.concept}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="movement-details-row">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Transacción Padre
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Referencia
+                            </div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedSavingMovement.parentTransaction}
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedSavingMovement.referenceNumber}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="movement-details-row">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Transacción Hijo
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Estado
+                            </div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedSavingMovement.childTransaction}
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedSavingMovement.transferStatus}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="movement-details-row">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Ingresado por
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Situación
+                            </div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedSavingMovement.insertedBy}
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedSavingMovement.situation}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="movement-details-row">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Documento
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                            </div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedSavingMovement.documentNumber}
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+
+    <!--Checking movements details modal -->
+    <template if:true={showCheckingMovementDetails}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <div class="slds-modal__content slds-p-around_medium common-modal-full-rounded" id="modal-content-id-3">
+
+                    <!--Header-->
+                    <div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_9-of-12">
+                                <div class="common-modal-title">Detalles del movimiento</div>
+                            </div>
+                            <div class="slds-col slds-size_3-of-12">
+                                <div class="common-modal-close-button" onclick={toggleCheckingMovementDetailsPanel}>
+                                    <lightning-icon icon-name="utility:close" alternative-text="Star" size="xx-small" title="large size"></lightning-icon>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-1">
+                                <div class="common-modal-sub-title">{selectedCheckingMovement.movementType} - {selectedCheckingMovement.movementDate}</div>
+                            </div>
+                        </div>
+                        <hr class="faded-line">
+                    </div>
+
+                    <!--Body-->
+                    <br/>
+                    <div class="movement-details-row">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Monto
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Concepto
+                            </div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedCheckingMovement.amount}
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedCheckingMovement.concept}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="movement-details-row">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Transacción Padre
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Referencia
+                            </div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedCheckingMovement.parentTransaction}
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedCheckingMovement.referenceNumber}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="movement-details-row">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Transacción Hijo
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Estado
+                            </div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedCheckingMovement.childTransaction}
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedCheckingMovement.transferStatus}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="movement-details-row">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Ingresado por
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Situación
+                            </div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedCheckingMovement.insertedBy}
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedCheckingMovement.situation}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="movement-details-row">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Documento
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                            </div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedCheckingMovement.documentNumber}
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+
+    <!--Loan movements details modal -->
+    <template if:true={showLoanMovementDetails}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <div class="slds-modal__content slds-p-around_medium common-modal-full-rounded" id="modal-content-id-4">
+
+                    <!--Header-->
+                    <div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_9-of-12">
+                                <div class="common-modal-title">Detalles de la cuota</div>
+                            </div>
+                            <div class="slds-col slds-size_3-of-12">
+                                <div class="common-modal-close-button" onclick={toggleLoanMovementDetailsPanel}>
+                                    <lightning-icon icon-name="utility:close" alternative-text="Star" size="xx-small" title="large size"></lightning-icon>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-1">
+                                <div class="common-modal-sub-title">{selectedLoanMovement.installmentNumber} - {selectedLoanMovement.expirationDate}</div>
+                            </div>
+                        </div>
+                        <hr class="faded-line">
+                    </div>
+
+                    <!--Body-->
+                    <br/>
+                    <div class="movement-details-row">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Estado
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Días de Mora
+                            </div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedLoanMovement.status}
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedLoanMovement.daysPastDueDesc}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="movement-details-row">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Cantidad
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Saldo interes
+                            </div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedLoanMovement.amount}
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="movement-details-row">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Ultimo pago Días
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                            </div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedLoanMovement.paymentDate}
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+
+    <!--Card movements details modal -->
+    <template if:true={showCardMovementDetails}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <div class="slds-modal__content slds-p-around_medium common-modal-full-rounded" id="modal-content-id-5">
+
+                    <!--Header-->
+                    <div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_9-of-12">
+                                <div class="common-modal-title">Detalles de la cuota</div>
+                            </div>
+                            <div class="slds-col slds-size_3-of-12">
+                                <div class="common-modal-close-button" onclick={toggleCardMovementDetailsPanel}>
+                                    <lightning-icon icon-name="utility:close" alternative-text="Star" size="xx-small" title="large size"></lightning-icon>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-1">
+                                <div class="common-modal-sub-title">{selectedCardMovement.movementType} - {selectedCardMovement.movementDate}</div>
+                            </div>
+                        </div>
+                        <hr class="faded-line">
+                    </div>
+
+                    <!--Body-->
+                    <br/>
+                    <div class="movement-details-row">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Descripcion
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-label">
+                                Monto
+                            </div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedLoanMovement.description}
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small movement-details-value">
+                                {selectedLoanMovement.amount}
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

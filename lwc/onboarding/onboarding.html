@@ -1,0 +1,110 @@
+<template>
+    <lightning-record-edit-form object-api-name="Case" record-id={recordId} onsubmit={handleSubmit}>
+        <div class="slds-p-horizontal_medium">
+            <div class="slds-modal__content slds-p-around_medium">
+                <h2>Solicitud Onboarding Empresas</h2>
+            </div>
+
+            <!-- Mensaje informativo -->
+            <div class="slds-notify slds-notify_alert slds-alert_info slds-m-bottom_medium">
+                <span class="slds-assistive-text">Información</span>
+                <h2 class="slds-text-heading_medium">
+                    Este caso es una Solicitud de Onboarding Empresas y debe ser procesado en la Consola de Ventas.
+                    Por favor, completa los siguientes campos.
+                </h2>
+            </div>
+
+            <div class="slds-modal__content slds-p-around_medium" style="max-height: 30rem; overflow-y: auto;">
+                <!-- Campo Preference_Experience_Center__c con lightning-input-field -->
+                <lightning-record-edit-form object-api-name="Case">
+                    <div class="slds-col">
+                        <lightning-input-field 
+                            name="Preference_experience_center__c" 
+                            field-name="Preference_experience_center__c" 
+                            required="true" 
+                            value={preferenceExperienceCenter} 
+                            onchange={handleInputChange}>
+                        </lightning-input-field>
+                    </div>
+                </lightning-record-edit-form>
+                <lightning-record-edit-form object-api-name="Account">
+                    <div class="slds-col">
+                        <lightning-input-field 
+                            name="CompanyName__c" 
+                            field-name="CompanyName__c" 
+                            required="true" 
+                            value={companyName} 
+                            onchange={handleInputChange}>
+                        </lightning-input-field>
+                    </div>
+                </lightning-record-edit-form>
+                
+                <!-- Campo RUC con label personalizado y formato corregido -->
+                <lightning-record-edit-form object-api-name="Case">
+                    <!-- Añadimos la clase slds-form-element para alineación consistente -->
+                    <div class="slds-form-element slds-col slds-m-bottom_small">
+                        <label for="fieldid" class="slds-form-element__label">
+                            &nbsp;&nbsp;<span class="slds-text-color_error">*</span> RUC
+                        </label>
+                        <lightning-input-field 
+                            id="fieldid"
+                            name="ruc__c" 
+                            field-name="ruc__c" 
+                            required="true" 
+                            value={ruc} 
+                            onchange={handleInputChange}
+                            variant="label-hidden">
+                        </lightning-input-field>
+                    </div>
+                    <label for="fieldid" class="slds-form-element__label">
+                        &nbsp;&nbsp;<span class="slds-text-color_error">*</span> Número de documento del solicitante
+                    </label>
+                    <div class="slds-col">
+                        <lightning-input-field 
+                            id="docId"
+                            name="DocumentNumber__c" 
+                            field-name="DocumentNumber__c" 
+                            required="true" 
+                            value={documentNumber} 
+                            onchange={handleInputChange}
+                            variant="label-hidden">
+                        </lightning-input-field>
+                    </div>
+                    <label for="tdId" class="slds-form-element__label">
+                        &nbsp;&nbsp;<span class="slds-text-color_error">*</span> Tipo de documento del solicitante
+                    </label>
+                    <div class="slds-col">
+                        <lightning-input-field
+                            id="tdId" 
+                            name="DocumentType__c" 
+                            field-name="DocumentType__c" 
+                            required="true" 
+                            value={documentType} 
+                            onchange={handleInputChange}
+                            variant="label-hidden">
+                        </lightning-input-field>
+                    </div>
+                    <label for="emailId" class="slds-form-element__label">
+                        &nbsp;&nbsp;<span class="slds-text-color_error">*</span> Email del solicitante
+                    </label>
+                    <div class="slds-col">
+                        <lightning-input-field 
+                            id="emailId"
+                            name="Email__c" 
+                            field-name="Email__c" 
+                            required="true" 
+                            value={emailVal} 
+                            onchange={handleInputChange}
+                            variant="label-hidden">
+                        </lightning-input-field>
+                    </div>
+                </lightning-record-edit-form>
+                
+            </div>
+
+            <lightning-modal-footer>
+                <lightning-button variant="brand" type="submit" name="save" label="Guardar" disabled={isLoading}></lightning-button>
+            </lightning-modal-footer>
+        </div>
+    </lightning-record-edit-form>
+</template>

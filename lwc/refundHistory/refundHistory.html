@@ -1,0 +1,101 @@
+<template>
+
+
+    <lightning-card  variant="Narrow"  title="Últimos reintegros">
+        <lightning-button-icon  icon-name={hideIconName} variant="border-filled" size="small" alternative-text="Ver más" slot="actions" onclick={handleClick}></lightning-button-icon>
+
+            <div class="slds-grid">
+
+                <div class="slds-grid card-body slds-hide">
+                    
+                    <div class="slds-col slds-size_1-of-1">
+
+                    <template if:true={isLoading}>
+                        <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                    </template>
+
+
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_1-of-1 slds-var-p-horizontal_medium">
+                            <template lwc:if={dataLoaded}>
+                                <div class="slds-grid">
+
+                                    <div class="slds-col slds-size_1-of-1 slds-var-p-vertical_small">
+
+                                        <lightning-input
+                                                name="enter-search"
+                                                label="Search"
+                                                type="search"
+                                                variant="label-hidden"
+                                                onchange={handleChange}
+                                        ></lightning-input>
+                                    </div>
+                                    <!--FUTURO FILTRO DE PROMOCIONES-->
+                                    <!--                                <div class="slds-col slds-size_1-of-6 slds-var-p-horizontal_small slds-var-p-vertical_small">-->
+                                    <!--                                    &lt;!&ndash;                                    <div class="slds-col slds-size_1-of-2 slds-text-align_right slds-var-p-vertical_small slds-var-p-horizontal_medium">&ndash;&gt;-->
+                                    <!--                                    <lightning-button-menu alternative-text="Show menu" variant="border-filled" icon-name="utility:slider" menu-alignment="right">-->
+                                    <!--                                        <lightning-menu-item value="MenuItemOne" label="Menu Item One"></lightning-menu-item>-->
+                                    <!--                                        <lightning-menu-item value="MenuItemTwo" label="Menu Item Two"></lightning-menu-item>-->
+                                    <!--                                        <lightning-menu-item value="MenuItemThree" label="Menu Item Three"></lightning-menu-item>-->
+                                    <!--                                        <lightning-menu-item value="MenuItemFour" label="Menu Item Four"></lightning-menu-item>-->
+                                    <!--                                    </lightning-button-menu>-->
+                                    <!--                                    &lt;!&ndash;                                    </div>&ndash;&gt;-->
+                                    <!--                                </div>-->
+
+                                </div>
+
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_1-of-1 slds-var-p-vertical_large">
+
+
+                                        <!--                                    <template lwc:if={dataLoaded}>-->
+                                        <div class="slds-scrollable_y reintegros-container">
+                                            <template for:each={filterRecords} for:item="refund">
+                                                <div key={refund.id} class="slds-var-p-vertical_medium reintegros-item">
+                                                    <div class="slds-grid text-primary">
+                                                        <div class="slds-col slds-size_1-of-2">
+                                                            <div >{refund.description}</div>
+                                                        </div>
+                                                        <div class="slds-col slds-size_1-of-2">
+                                                            <div class="float-right text-green">+ <lightning-formatted-number value={refund.amount} format-style="decimal" minimum-fraction-digits="2"></lightning-formatted-number></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-grid text-secondary">
+                                                        <div class="slds-col slds-size_1-of-2">
+                                                            <div class="text-gray">{refund.store}</div>
+                                                        </div>
+                                                        <div class="slds-col slds-size_1-of-2 float-right">
+                                                            <div class="float-right text-gray">{refund.refundDate}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </template>
+                                        </div>
+                                        <!--                                    </template>-->
+
+<!--                                                <template lwc:else>-->
+<!--                                                    <div class="text-gray">Sin Información de Reintegros</div>-->
+<!--                                                </template>-->
+                                    </div>
+                                </div>
+                            </template>
+
+                            <template lwc:else>
+                                <div class="slds-var-p-vertical_x-small slds-var-p-horizontal_x-small">
+                                    <p class="text-gray">Sin información de reintegros</p>
+                                </div>
+<!--                                <div class="text-gray slds-var-p-horizontal_small slds-var-p-vertical_small"></div>-->
+                            </template>
+
+
+                        </div>
+                    </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+</lightning-card>
+</template>

@@ -1,0 +1,201 @@
+.input-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+input {
+    place-self: center;
+    padding: 10px;
+    font-size: 12px;
+    margin: 8px 0;
+    background-color: #ffffff;
+    border-radius: 16px;
+    width: 240px;
+    text-align: center;
+}
+
+div {
+    font-size: 12px;
+}
+
+button {
+    background-color: #ffffff;
+}
+
+.button:hover {
+    background-color: #333;
+}
+
+.screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+}
+
+.numeric-keypad,
+.alphanumeric-keypad {
+    justify-content: center;
+    display: grid;
+    gap: 6px;
+    margin: 12px 0;
+    width: 100%;
+}
+
+/* Estilo para teclado numérico de cédula (4x3) */
+.numeric-keypad {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    width: 280px;
+}
+
+.numeric-keypad button {
+    padding: 12px;
+    font-size: 12px;
+    border: 1px solid #b4b4bf;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Estilo para teclado alfanumérico de pasaporte */
+.alphanumeric-keypad {
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    width: 340px;
+}
+
+.alphanumeric-keypad button {
+    padding: 9px;
+    font-size: 10px;
+    border: 1px solid #b4b4bf;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.numeric-keypad .wide-button{
+    background-color: #F0F0F0;
+}
+.alphanumeric-keypad .wide-button {
+    grid-column: span 2;
+    background-color: #F0F0F0;
+}
+
+.error-div {
+    color: #E5225A;
+}
+
+.error-input {
+    border: 1px solid #FFA6BF;
+}
+
+.no-error-input {
+    border: 1px solid #1D85FC; 
+}
+
+.divisor {
+    width: 300px;
+    border: 1px solid #C6C6CC;
+}
+
+@media (min-width: 480px){
+    input {
+        padding: 10px;
+        font-size: 22px;
+        margin: 8px 0;
+        border-radius: 16px;
+        width: 350px;
+    }
+
+    div {
+        font-size: 16px;
+    }
+
+    .screen {
+        gap: 24px;
+    }
+
+    .numeric-keypad {
+        width: 350px;
+    }
+
+    .numeric-keypad,
+    .alphanumeric-keypad {
+        gap: 8px;
+        margin: 20px 0;
+    }
+
+    .numeric-keypad button {
+        padding: 20px;
+        font-size: 20px;
+        border: 2px solid #b4b4bf;
+        border-radius: 14px;
+    }
+
+    .alphanumeric-keypad button {
+        padding: 11px;
+        font-size: 17px;
+        border: 2px solid #b4b4bf;
+        border-radius: 10px;
+    }
+
+    .divisor {
+        width: 350px;
+    }
+
+}
+
+
+@media (min-width: 1024px){
+    input {
+        padding: 10px;
+        font-size: 22px;
+        margin: 8px 0;
+        border-radius: 16px;
+        width: 450px;
+    }
+
+    div {
+        font-size: 20px;
+    }
+
+    .screen {
+        gap: 24px;
+    }
+
+    .numeric-keypad {
+        width: 450px;
+    }
+
+    .numeric-keypad,
+    .alphanumeric-keypad {
+        gap: 12px;
+        margin: 20px 0;
+    }
+
+    .numeric-keypad button {
+        padding: 20px;
+        font-size: 20px;
+        border: 2px solid #b4b4bf;
+        border-radius: 14px;
+    }
+
+    .alphanumeric-keypad button {
+        padding: 18px;
+        font-size: 18px;
+        border: 2px solid #b4b4bf;
+        border-radius: 10px;
+    }
+
+    .divisor {
+        width: 450px;
+    }
+}

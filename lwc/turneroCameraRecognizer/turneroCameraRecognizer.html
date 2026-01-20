@@ -1,0 +1,26 @@
+<!--
+  @name               : turneroCameraRecognizer
+  @author             : Alvaro Gonzales Lapponi
+  @creation date      : 05-12-2024
+  @modification date  : 24-01-2025
+  @last modified by   : Alvaro Gonzales Lapponi
+  @description        : 
+  @versions           : version 1.0: clase apex inicial 
+  Modifications Log
+  Ver   Date         Author                    Modification
+  1.0   19-11-2024   Alvaro Gonzales Lapponi   Initial Version
+-->
+<template>
+    <section class="center-align">
+        <section class="center-align">
+            <section class="picture-wrapper">
+                <video class="videoElement" autoplay playsinline style={videoStyle}></video>
+                <img if:true={showPicture} src={base64Image} style="width:100%"/>
+                <section class="waiting-wrapper">
+                    <div class="spinner"></div>
+                    <div>Validando identidad...</div>
+                </section>
+            </section>
+        </section>
+    </section>
+</template>

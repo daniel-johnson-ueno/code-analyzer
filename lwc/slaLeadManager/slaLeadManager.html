@@ -1,0 +1,89 @@
+<template>
+    <lightning-card>
+        <!-- day 1 start -->
+        <template lwc:if={slaDay1TimeEnd}>
+            <template lwc:if={slaDay1OnTime}>
+                <div class="slds-p-around_small">
+                    <div class="slds-p-bottom_x-small">
+                        <lightning-progress-bar value={slaDay1Percent} size="large"></lightning-progress-bar>
+                    </div>
+                    <div class="slds-p-around_x-small, slds-text-heading_small">SLA Día 1: <img src={slaDay1Flag}></img></div>
+                    <div class="slds-p-around_x-small, slds-text-heading_small">Objetivo cumplido {slaDay1Time}hs antes del limite.</div>
+                </div>
+            </template>
+            <template lwc:else>
+                <div class="slds-p-around_small">
+                    <div class="slds-p-bottom_x-small">
+                        <lightning-progress-bar value={slaDay1Percent} size="large"></lightning-progress-bar>
+                    </div>
+                    <div class="slds-p-around_x-small, slds-text-heading_small">SLA Día 1: <img src={slaDay1Flag}></img></div>
+                    <div class="slds-p-around_x-small, slds-text-heading_small">Objetivo incumplido, horas excedida del limite: {slaDay1Time}hs.</div>
+                </div>
+            </template>
+        </template>
+        <template lwc:else>
+            <template lwc:if={slaDay1OnTime}>
+                <div class="slds-p-around_small">
+                    <div class="slds-p-bottom_x-small">
+                        <lightning-progress-bar value={slaDay1Percent} size="large"></lightning-progress-bar>
+                    </div>
+                    <div class="slds-p-around_x-small, slds-text-heading_small">SLA Día 1: <img src={slaDay1Flag}></img></div>
+                    <div class="slds-p-around_x-small, slds-text-heading_small">Horas restantes para cumplir objetivo: {slaDay1Time}hs.</div>
+                </div>
+            </template>
+            <template lwc:else>
+                <div class="slds-p-around_small">
+                    <div class="slds-p-bottom_x-small">
+                        <lightning-progress-bar value={slaDay1Percent} size="large"></lightning-progress-bar>
+                    </div>
+                    <div class="slds-p-around_x-small, slds-text-heading_small">SLA Día 1: <img src={slaDay1Flag}></img></div>
+                    <div class="slds-p-around_x-small, slds-text-heading_small">Horas excedida del objetivo: {slaDay1Time}hs.</div>
+                </div>
+            </template>
+        </template>
+        <!-- day 1 end -->
+
+        <!-- day 3 start -->
+        <template lwc:if={slaDay3TimeEnd}>
+            <template lwc:if={slaDay3OnTime}>
+                <div class="slds-p-around_small">
+                    <div class="slds-p-bottom_x-small">
+                        <lightning-progress-bar value={slaDay3Percent} size="large"></lightning-progress-bar>
+                    </div>
+                    <div class="slds-p-around_x-small, slds-text-heading_small">SLA Día 3: <img src={slaDay3Flag}></img></div>
+                    <div class="slds-p-around_x-small, slds-text-heading_small">Objetivo cumplido {slaDay3Time}hs antes del limite.</div>
+                </div>
+            </template>
+            <template lwc:else>
+                <div class="slds-p-around_small">
+                    <div class="slds-p-bottom_x-small">
+                        <lightning-progress-bar value={slaDay3Percent} size="large"></lightning-progress-bar>
+                    </div>
+                    <div class="slds-p-around_x-small, slds-text-heading_small">SLA Día 3: <img src={slaDay3Flag}></img></div>
+                    <div class="slds-p-around_x-small, slds-text-heading_small">Objetivo incumplido, horas excedida del limite: {slaDay3Time}hs.</div>
+                </div>
+            </template>
+        </template>
+        <template lwc:else>
+            <template lwc:if={slaDay3OnTime}>
+                <div class="slds-p-around_small">
+                    <div class="slds-p-bottom_x-small">
+                        <lightning-progress-bar value={slaDay3Percent} size="large"></lightning-progress-bar>
+                    </div>
+                    <div class="slds-p-around_x-small, slds-text-heading_small">SLA Día 3: <img src={slaDay3Flag}></img></div>
+                    <div class="slds-p-around_x-small, slds-text-heading_small">Horas restantes para cumplir objetivo: {slaDay3Time}hs.</div>
+                </div>
+            </template>
+            <template lwc:else>
+                <div class="slds-p-around_small">
+                    <div class="slds-p-bottom_x-small">
+                        <lightning-progress-bar value={slaDay3Percent} size="large"></lightning-progress-bar>
+                    </div>
+                    <div class="slds-p-around_x-small, slds-text-heading_small">SLA Día 3: <img src={slaDay3Flag}></img></div>
+                    <div class="slds-p-around_x-small, slds-text-heading_small">Horas excedida del objetivo: {slaDay3Time}hs.</div>
+                </div>
+            </template>
+        </template>
+        <!-- day 3 end -->
+    </lightning-card>
+</template>

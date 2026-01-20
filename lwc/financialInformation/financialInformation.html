@@ -1,0 +1,59 @@
+<!--
+ - Created by cris on 03/07/2024.
+ -->
+
+<!-- Financial Information -->
+<template>
+
+    <div class="slds-grid">
+        <div class="slds-col slds-size_1-of-1 slds-grow-none ">
+            <div class="card-style">
+
+                <div class="slds-grid card-header-section">
+                    <div class="slds-col slds-grow-none slds-var-p-horizontal_small">
+                        <span class="intern-card-title">Informacion Financiera : Ingresos / Egresos</span>
+                    </div>
+                </div>
+
+                <div class="slds-grid">
+
+                    <div
+                            class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_xx-small slds-var-p-vertical_xx-small">
+
+                        <template lwc:if={isLoading}>
+                            <div class="spinner-outer-div">
+                                <lightning-spinner alternative-text="Loading" size="small" class="spinner"></lightning-spinner>
+                            </div>
+                            <div class="documents-placeholder"></div>
+                        </template>
+
+                        <template lwc:else>
+                            <template lwc:if={informationLoaded}>
+                                <lightning-datatable data={financialInformation}
+                                                     columns={columns}
+                                                     hide-checkbox-column="true"
+                                                     key-field="Id"
+                                                     default-sort-direction={defaultSortDirection}
+                                                     sorted-direction={sortDirection}
+                                                     sorted-by={sortedBy}
+                                                     onsort={onHandleSort}
+                                >
+                                </lightning-datatable>
+                            </template>
+
+                            <template lwc:else>
+                                <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_xx-small slds-var-p-vertical_xx-small">
+                                    <br/>
+                                </div>
+                            </template>
+                        </template>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</template>

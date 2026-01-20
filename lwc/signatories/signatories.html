@@ -1,0 +1,131 @@
+<!-- Signatories -->
+<template>
+
+    <template lwc:if={signatoriesList}>
+        <div class="slds-grid slds-wrap">
+
+            <div class="slds-col slds-size_1-of-1 slds-grow-none ">
+                <div class="slds-grid ">
+                    <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_small">
+                        <div class="slds-grid slds-wrap">
+
+                            <div class="slds-col slds-size_1-of-1 slds-grow-none">
+                                <span>Firmas Requeridas</span>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-1 slds-grow-none ">
+                                <span lwc:if={requiredSignaturesQty}><strong>{requiredSignaturesQty}</strong></span>
+                                <span lwc:else><strong>0</strong></span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-2 slds-grow-none ">
+
+                        <div class="slds-grid slds-wrap">
+
+                            <div class="slds-col slds-size_1-of-1 slds-grow-none">
+                                <span>Firmas Registradas</span>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-1 slds-grow-none ">
+                                <span lwc:if={registeredSignatureQty}><strong>{registeredSignatureQty}</strong></span>
+                                <span lwc:else><strong>0</strong></span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+
+            <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_xx-small slds-var-p-vertical_xx-small">
+                <br/>
+            </div>
+
+            <div class="slds-col slds-size_1-of-1 slds-grow-none ">
+
+                <div class="common-card-style">
+
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_xx-small slds-var-p-vertical_xx-small">
+                            <lightning-datatable
+                                    data={signatoriesList}
+                                    columns={signatoriesColumns}
+                                    hide-checkbox-column="true"
+                                    key-field="personCode"
+                                    onrowaction={handleShowSignatureDetails}
+                                    
+                            >
+                            </lightning-datatable>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </template>
+
+    <template lwc:else>
+        <strong>No se encontraron firmantes</strong>
+    </template>
+
+    <template lwc:if={showSignatureDetails}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <div class="slds-modal__content slds-p-around_medium common-modal-full-rounded" id="modal-content-id-2">
+
+                    <!-- HEADER-->
+                    <div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_9-of-12">
+                                <div class="common-modal-title">Régimen de Firma</div>
+                            </div>
+                            <div class="slds-col slds-size_3-of-12">
+                                <div class="common-modal-close-button" onclick={toggleSignatureDetailsPanel}>
+                                    <lightning-icon icon-name="utility:close" alternative-text="Star" size="xx-small" title="large size"></lightning-icon>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-1">
+                                <div class="common-modal-sub-title">{clickedSignature.personCode} - {clickedSignature.fullName}</div>
+                            </div>
+                        </div>
+                        <hr class="faded-line">
+                    </div>
+
+                    <!--Body-->
+                    <br/>
+                    <div class="signature-details-row slds-align_absolute-center">
+                        <template lwc:if={clickedSignature.signature}>
+                            <img style='display:block; width:350px;height:250px;' id='base64image'
+                                 src={clickedSignature.signature} />
+                        </template>
+                    </div>
+                    <div class="signature-details-row">
+
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small signature-details-value">
+                                {registeredSignature}
+                            </div>
+                        </div>
+                    </div>
+
+                    <br/>
+
+                </div>
+
+            </div>
+
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+</template>

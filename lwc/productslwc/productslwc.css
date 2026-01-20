@@ -1,0 +1,11 @@
+.large {
+    height: 100px;
+}
+
+ .x-large {
+    height: 150px;
+}
+
+.small-toggle {
+    transform: scale(0.75); /* Ajusta el valor según necesites */
+}

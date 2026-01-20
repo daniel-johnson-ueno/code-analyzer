@@ -1,0 +1,182 @@
+<template>
+    <lightning-card  variant="Narrow"  title="Préstamos disponibles">
+        <lightning-button-icon  icon-name={hideIconName} variant="border-filled" size="small" alternative-text="Ver más" slot="actions" onclick={handleClick}></lightning-button-icon>
+
+    <div class="slds-grid">
+
+        <div class="slds-grid card-body slds-hide">
+
+                <div class="slds-col slds-size_1-of-1">
+
+                    <template if:true={isLoading}>
+                        <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                    </template>
+
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_1-of-1">
+                            <h2 class="slds-border_bottom slds-var-p-horizontal_medium slds-var-p-vertical_small"><strong>Ofertas de Prestamos disponibles</strong></h2>
+                        </div>
+                    </div>
+
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_1-of-1 slds-var-p-horizontal_medium">
+                            <template lwc:if={loanOffersLoaded}>
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_1-of-1 slds-var-p-vertical_large">
+                                        <div class="slds-scrollable_y">
+                                            <template for:each={loanOffers} for:item="loanOffer">
+                                                <div key={loanOffer.id}>
+
+                                                    <div class="slds-grid slds-wrap slds-border_bottom">
+
+                                                        <div class="slds-col slds-size_1-of-1 slds-var-p-vertical_small">
+                                                            <div class="slds-grid">
+                                                                <div class="slds-col slds-size_1-of-2">
+                                                                    <div class="text-gray">
+                                                                        <p class="text-primary">Banco y Tipo</p>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="slds-col slds-size_1-of-2">
+                                                                    <div class="text-gray">
+                                                                        <p>{loanOffer.provider} - {loanOffer.lineType}</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="slds-col slds-size_1-of-1 slds-var-p-vertical_small">
+                                                            <div class="slds-grid">
+                                                                <div class="slds-col slds-size_1-of-2">
+                                                                    <div class="text-gray">
+                                                                        <p class="text-primary">Monto disponible</p>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="slds-col slds-size_1-of-2">
+                                                                    <div class="text-gray">
+                                                                        <div class="text-green">{loanOffer.currencyType} <lightning-formatted-number value={loanOffer.limits.creditAmount} format-style="decimal" minimum-fraction-digits="2"></lightning-formatted-number></div>
+                                                                        <div class="text-green">en {loanOffer.limits.installmentsQuantity} cuotas</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                            <template lwc:else>
+                                <div class="slds-var-p-vertical_x-small slds-var-p-horizontal_x-small">
+                                    <p class="text-gray">No se encontraron ofertas </p>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_1-of-1">
+                            <h2 class="slds-border_bottom slds-var-p-horizontal_medium slds-var-p-vertical_small"><strong>Solicitudes de Prestamos disponibles</strong></h2>
+                        </div>
+                    </div>
+
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_1-of-1 slds-var-p-horizontal_medium">
+                            <template lwc:if={loanRequestsLoaded}>
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_1-of-1 slds-var-p-vertical_large">
+                                        <div class="slds-scrollable_y">
+                                            <template for:each={loanRequests} for:item="loanRequest">
+                                                <div key={loanRequest.id}>
+
+                                                    <div class="slds-grid slds-wrap slds-border_bottom">
+
+                                                        <div class="slds-col slds-size_1-of-1 slds-var-p-vertical_x-small">
+                                                            <div class="slds-grid">
+                                                                <div class="slds-col slds-size_1-of-2">
+                                                                    <div class="text-gray">
+                                                                        <p class="text-primary">Banco</p>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="slds-col slds-size_1-of-2">
+                                                                    <div class="text-gray">
+                                                                        <p>{loanRequest.metadata.provider}</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="slds-col slds-size_1-of-1 slds-var-p-vertical_x-small">
+                                                            <div class="slds-grid">
+                                                                <div class="slds-col slds-size_1-of-2">
+                                                                    <div class="text-gray">
+                                                                        <p class="text-primary">Alias</p>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="slds-col slds-size_1-of-2">
+                                                                    <div class="text-gray">
+                                                                        <p>{loanRequest.metadata.alias}</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="slds-col slds-size_1-of-1 slds-var-p-vertical_x-small">
+                                                            <div class="slds-grid">
+                                                                <div class="slds-col slds-size_1-of-2">
+                                                                    <div class="text-gray">
+                                                                        <p class="text-primary">Estado</p>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="slds-col slds-size_1-of-2">
+                                                                    <div class="text-gray">
+                                                                        <p>{loanRequest.state}</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="slds-col slds-size_1-of-1 slds-var-p-vertical_small">
+                                                            <div class="slds-grid">
+                                                                <div class="slds-col slds-size_1-of-2">
+                                                                    <div class="text-gray">
+                                                                        <p class="text-primary">Monto disponible</p>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="slds-col slds-size_1-of-2">
+                                                                    <div class="text-gray">
+                                                                        <div class="text-green">{loanRequest.currencyType} <lightning-formatted-number value={loanRequest.amount} format-style="decimal" minimum-fraction-digits="2"></lightning-formatted-number></div>
+                                                                        <div class="text-green">en {loanRequest.installments} cuotas</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                            <template lwc:else>
+                                <div class="slds-var-p-vertical_x-small slds-var-p-horizontal_x-small">
+                                    <p class="text-gray">No se encontraron solicitudes </p>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</lightning-card>
+</template>

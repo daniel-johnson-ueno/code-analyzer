@@ -1,0 +1,14 @@
+@import 'c/cssLibrary';
+
+.signature-details-label {
+    color:#6C6C78;
+}
+
+.signature-details-value {
+    color:#252529;
+    font-weight: 600;
+}
+
+.signature-details-row {
+    margin-top: 15px;
+}

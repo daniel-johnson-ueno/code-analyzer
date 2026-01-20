@@ -1,0 +1,38 @@
+<template>
+    <template if:true={showModal}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_small">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 class="slds-modal__title slds-hyphenate">Editar propietario</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-record-edit-form
+                        object-api-name="Opportunity"
+                        record-id={recordId}
+                        onsuccess={handleSuccess}
+                        onsubmit={handleSubmit}
+                        disabled={isDisabled}>  
+                        <p class="slds-p-horizontal_small slds-p-vertical_small">
+                            <lightning-combobox
+                                label="Cambiar Propietario"
+                                placeholder="Buscar propietario"
+                                options={activeUserOptions}
+                                onchange={handleOwnerChange}>
+                            </lightning-combobox>
+                        </p>
+                        <div class="slds-align_absolute-center slds-m-top_medium">
+                            <lightning-button label="Cancelar" onclick={handleCancel}></lightning-button>
+                            &nbsp;&nbsp;
+                            <lightning-button variant="brand" type="submit" label="Guardar"></lightning-button>
+                        </div>
+                    </lightning-record-edit-form>
+                </div>
+
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cerrar" onclick={handleCancel}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

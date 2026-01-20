@@ -1,0 +1,36 @@
+<template>
+
+        <lightning-card  variant="Narrow"  title="Cluster actual">
+            <lightning-button-icon  icon-name={hideIconName} variant="border-filled" size="small" alternative-text="Ver más" slot="actions" onclick={handleClick}></lightning-button-icon>
+
+        <div class="slds-grid">
+
+  
+                <div class="slds-grid card-body slds-hide">
+                    <div class="slds-col slds-size_1-of-1">
+                        <template if:true={isLoading}>
+                            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                        </template>
+    
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-1 slds-var-p-horizontal_medium">
+                                <template lwc:if={dataExist}>
+                                    <div class="slds-grid">
+                                        <div class="slds-col slds-size_1-of-1 slds-var-p-vertical_large">
+                                                {clusterInfo}
+                                        </div>
+                                    </div>
+                                </template>
+    
+                                <template lwc:else>
+                                    <div class="slds-var-p-vertical_x-small slds-var-p-horizontal_x-small">
+                                        <p class="text-gray">{errorInfo}</p>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </lightning-card>
+</template>

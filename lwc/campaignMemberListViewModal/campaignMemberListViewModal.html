@@ -1,0 +1,49 @@
+<!--
+  @description       : 
+  @author            : Noe Vasquez
+  @group             : 
+  @last modified on  : 05-13-2025
+  @last modified by  : Noe Vasquez
+-->
+<template>
+    <section role="dialog" tabindex="-1" class="slds-fade-in-open">
+        <template if:true={isLoading}>
+            <div class="slds-align_absolute-center slds-m-around_large">
+                <lightning-spinner alternative-text="Cargando" size="large"></lightning-spinner>
+            </div>
+        </template>
+        
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <h2 class="slds-modal__title slds-hyphenate">Asignar Ejecutivo</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium">
+                <lightning-record-edit-form
+                    object-api-name="CampaignMember"
+                    record-id={recordId}
+                    onsuccess={handleSuccess}
+                    onsubmit={handleSubmit}
+                    disabled={isDisabled}>  
+                    <p class="slds-p-horizontal_small slds-p-vertical_small">
+                        <lightning-record-picker
+                            label="Cambiar Ejecutivo"
+                            placeholder="Buscar Ejecutivo"
+                            object-api-name="User"
+                            onchange={handleOwnerChange}>
+                        </lightning-record-picker>
+                    </p>
+                    <div class="slds-align_absolute-center slds-m-top_medium">
+                        <lightning-button label="Cancelar" onclick={handleCancel}></lightning-button>
+                        &nbsp;&nbsp;
+                        <lightning-button variant="brand" label="Guardar" onclick={handleSubmit}></lightning-button>
+                    </div>
+                </lightning-record-edit-form>
+            </div>
+            <!--
+            <footer class="slds-modal__footer">
+                <lightning-button label="Cerrar" onclick={handleCancel}></lightning-button>
+            </footer>
+            -->
+        </div>
+    </section>
+</template>

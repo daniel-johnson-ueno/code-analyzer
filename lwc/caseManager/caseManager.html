@@ -1,0 +1,144 @@
+<template>
+
+    <div class="common-card-style">
+
+        <div class="slds-grid common-card-header-section">
+            <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small">
+                <lightning-icon icon-name="standard:case" alternative-text="nuevo caso" title="Nuevo Caso">
+                </lightning-icon>
+                <span class="common-card-title">Nuevo Caso</span>
+            </div>
+        </div>
+        
+
+        <div class='slds-grid'>
+
+            <div class='slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+
+                <template lwc:if={isLoading}>
+                    <div>
+                        <lightning-spinner class="slds-is-fixed" alternative-text="Loading" size="large"
+                        ></lightning-spinner>
+                    </div>
+                </template>
+
+                <template lwc:else>
+                    <template lwc:if={showMessage}>
+                        <p class='slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                            Actualmente la generación de casos solo puede iniciarse desde la ficha del Cliente.
+                        </p>
+                    </template>
+
+
+                    <template lwc:elseif={firstStep}>
+
+                        <lightning-combobox
+                                label="Producto" placeholder=""
+                                options={options}
+                                onchange={handleProductChange}
+                                value={selectedProduct}>
+                        </lightning-combobox>
+
+
+
+                        <template lwc:if={selectedProduct}>
+                            <br>
+                            <c-custom-lookup
+                                    records-list={recordList}
+                                    onvalueselected={handleValueSelectedTipificadores}
+                                    selected-icon-name="custom:custom108"
+                                    label="Tipificador"
+                                    onvaluedeleted={handleValueDeleted}
+                            >
+                            </c-custom-lookup>
+                        </template>
+
+                        <br>
+
+                    </template>
+
+<!--                    Picklist vieja-->
+<!--                    <template lwc:elseif={firstStep}>-->
+
+<!--                        <c-custom-lookup records-list={recordList}-->
+<!--                                         onvalueselected={handleValueSelectedTipificadores}-->
+<!--                                         selected-icon-name="custom:custom108"-->
+<!--                                         label="Tipificador"-->
+<!--                                         onvaluedeleted={handleValueDeleted}>-->
+<!--                        </c-custom-lookup>-->
+<!--                        <br>-->
+<!--                    </template>-->
+
+                    <template lwc:elseif={secondStep}>
+                        <template lwc:if={showTransferenciasForm}>
+                            <c-transfer-form case-structure={newCase} onformchange={handleChange}></c-transfer-form>
+                        </template>
+<!--                        <template lwc:elseif={showOnboardingForm}>-->
+
+<!--                        </template>-->
+                        <template lwc:elseif={showDefaultForm}>
+                            <c-default-form case-structure={newCase} ondefaultformchange={handleChange}></c-default-form>
+                        </template>
+
+
+                    </template>
+
+                </template>
+
+            </div>
+
+
+
+        </div>
+        <!--BUTTONS -->
+        <template if:false={isLoading}>
+
+            <template lwc:if={showMessage}>
+                <footer class="slds-modal__footer">
+
+                </footer>
+            </template>
+
+            <template lwc:else>
+                <template lwc:if={firstStep}>
+                    <footer class="slds-modal__footer">
+
+                        <template lwc:if={valueSelected}>
+                            <lightning-button variant="brand" label="Siguiente" title="Siguiente" onclick={onNext}
+                                              class="slds-m-left_x-small">
+                            </lightning-button>
+                        </template>
+
+                        <template lwc:else>
+                            <lightning-button variant="brand" label="Siguiente" title="Siguiente" onclick={onNext}
+                                              class="slds-m-left_x-small" disabled>
+                            </lightning-button>
+                        </template>
+
+                    </footer>
+
+
+                </template>
+                <template lwc:elseif={secondStep}>
+                    <footer class="slds-modal__footer">
+
+                        <lightning-button variant="neutral" label="Atras" title="Atras" onclick={onBack}
+                                          class="slds-m-left_x-small">
+                        </lightning-button>
+
+                        <lightning-button variant="brand" label="Crear Caso" title="Crear Caso" onclick={onSave}
+                                          class="slds-m-left_x-small">
+                        </lightning-button>
+
+                        <br>
+                    </footer>
+                </template>
+            </template>
+
+
+        </template>
+
+
+    </div>
+
+</template>

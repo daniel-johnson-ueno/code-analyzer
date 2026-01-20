@@ -1,0 +1,87 @@
+/**
+ * Created by cris on 03/07/2024.
+ */
+.spinner {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.37);
+}
+
+.spinner-outer-div {
+    position: relative;
+}
+
+.slds-modal__container {
+    max-width: 80rem !important;
+    width: 80% !important;
+}
+
+.card-style{
+    background-color: white !important;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(192, 192, 192);
+}
+
+.card-header-section{
+    background-color: rgb(236, 236, 236) !important;
+    border-radius: 5px 5px 0px 0px;
+    padding: 10px;
+}
+
+.card-title{
+    padding-left: 10px;
+    color: rgb(48, 47, 47);
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.intern-card-title{
+    padding-left: 10px;
+    color: rgb(48, 47, 47);
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.field-label{
+    color: rgb(92, 92, 92);
+}
+
+.required-field{
+    color: red !important;
+}
+
+.detail-section-title{
+    background-color: rgb(210, 210, 210) !important;
+    padding: 5px;
+    font-size: 16px;
+}
+
+.custom-box{
+    background-color: #f4f6f9;
+}
+
+.custom-box-title{
+    font-weight: bold;
+}
+
+.details-bar{
+    background-color: rgb(210, 210, 210) !important;
+    padding: 6px;
+}
+
+.details-bar:hover{
+    background-color:rgb(230, 230, 243);
+    cursor: pointer;
+}
+
+.details-bar-text{
+    font-size: 16px;
+    color:rgb(48, 47, 47);
+    margin-left:4px;
+}
+
+.bar-conteiner{
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+}

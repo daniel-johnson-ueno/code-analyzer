@@ -1,0 +1,79 @@
+<template>
+
+    <div class="slds-grid">
+
+        <div class="slds-col slds-size_1-of-1 card-style">
+
+            <div class="slds-grid">
+
+                <div class="slds-col slds-size_1-of-1">
+
+                    <template lwc:if={isLoading}>
+                        <div class="common-spinner-outer-div">
+                            <lightning-spinner alternative-text="Loading" variant="brand" size="small" class="common-spinner">
+                            </lightning-spinner>
+                        </div>
+                    </template>
+
+                    <template lwc:if={loyaltyLoaded}>
+                    <div class="chart-container">
+                            <canvas class="barChart" lwc:dom="manual" id="pieChart" width="70" height="70"></canvas>
+                    </div>
+
+
+                        <div class="info-container">
+
+                            <template lwc:if={userPoints}>
+
+                                <div class="pill info-pill">
+                                    <lightning-icon icon-name="utility:favorite" alternative-text="Star" size="xx-small" title="large size" class="star-icn"></lightning-icon>
+                                    <div class="pill-text">{userPoints} upys</div>
+                                </div>
+
+                            </template>
+
+                            <template lwc:else>
+
+                                <div class="pill info-pill">
+                                    <lightning-icon icon-name="utility:favorite" alternative-text="Star" size="xx-small" title="large size" class="star-icn"></lightning-icon>
+                                    <div class="pill-text">0 upys</div>
+                                </div>
+
+                            </template>
+
+                            <template lwc:if={userLevel}>
+
+                                <div class="info-text">
+                                    <strong> Nivel {userLevel}</strong>
+                                </div>
+
+                                <div class="level-points">
+                                    <span> Desde {loyaltyData.tier.minimumPoints} a {loyaltyData.tier.maximumPoints} upys </span>
+                                </div>
+
+                            </template>       
+                            
+
+                        </div>
+                    </template>
+
+                </div>
+            </div>
+
+            <template lwc:if={hasError}>
+                <div class="info-text-warning info-container">
+                    Nivel - Puntos Upys
+                </div>
+                <br/><br/>
+                <div class="pill warning-pill">
+                    <div class="pill-text">{errorMessage}</div>
+                </div>
+            </template>
+            
+        </div>
+    </div>
+
+
+
+
+</template>

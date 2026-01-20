@@ -1,0 +1,12 @@
+.canvas-cnt {
+    overflow-x: auto; 
+    overflow-y: auto; 
+    white-space: nowrap; 
+    max-height: 500px;
+}
+
+.floatingBarChart {
+    width: 2700px;
+    min-height:200px;
+    height: 400px;
+}

@@ -1,0 +1,27 @@
+<template>
+    <lightning-input
+            type="date"
+            name="filterDate"
+            label="Seleccionar Fecha"
+            value={initDate}
+            onchange={handleChangeDate}>
+    </lightning-input>
+
+    <lightning-combobox
+            name="channelSelector"
+            label="Seleccionar Canal"
+            placeholder="Seleccione un canal"
+            options={channelOptions}
+            value={selectedChannel}
+            onchange={handleChangeChannel}>
+    </lightning-combobox>
+    
+    <lightning-card
+            title="Estados de Agente"
+            icon-name="custom:custom63">
+
+        <div class="canvas-chart-cnt">
+            <canvas lwc:dom="manual" class="service-presence-chart"></canvas>
+        </div>
+    </lightning-card>
+</template>

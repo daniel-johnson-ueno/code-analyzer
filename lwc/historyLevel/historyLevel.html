@@ -1,0 +1,46 @@
+<template>
+    <div class="common-card-style">
+        <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_xxx-small slds-var-p-vertical_xxx-small">
+                <div >
+                    <lightning-datatable
+                            key-field=""
+                            data={historyLevel}
+                            columns={columns}
+                            hide-checkbox-column="true">
+                    </lightning-datatable>
+
+<!--                    <template lwc:if={isPaginationNeeded}>-->
+<!--                        <template lwc:if={showBack}>-->
+<!--                            <div class="slds-float_left">-->
+<!--                                <lightning-button-->
+<!--                                        variant="base"-->
+<!--                                        label="Previo"-->
+<!--                                        title="Previo"-->
+<!--                                        name="back"-->
+<!--                                        onclick={onClick}-->
+<!--                                        class="slds-m-left_x-small slds-p-around_medium">-->
+<!--                                </lightning-button>-->
+<!--                            </div>-->
+<!--                        </template>-->
+<!--                        <template lwc:if={showNext}>-->
+<!--                            <div class="slds-float_right">-->
+<!--                                <lightning-button-->
+<!--                                        variant="base"-->
+<!--                                        label="Siguiente"-->
+<!--                                        title="Siguiente"-->
+<!--                                        name="next"-->
+<!--                                        onclick={onClick}-->
+<!--                                        class="slds-m-right_x-small slds-p-around_medium">-->
+<!--                                </lightning-button>-->
+<!--                            </div>-->
+<!--                        </template>-->
+
+<!--                    </template>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!--style="max-height:300px;" class="common-scroll-datatable"-->

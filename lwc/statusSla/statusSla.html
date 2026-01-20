@@ -1,0 +1,38 @@
+<template>
+    <div class="status-sla">
+        <template if:true={loadingOrError}>
+            <lightning-spinner if:true={loadingData} variant="brand" size="small"> </lightning-spinner>
+            <p if:true={loadedAndError}>Error al cargar el sla</p>
+        </template>
+        <div if:false={loadingOrError} class={getColorClassSwitchPercentage}>
+            <div class="sla-content-container">
+                <div>
+                    <p>Tiempo en {state}</p>
+                    <h1 class="actual-sla">{formattedTime}</h1>
+                    <div class="sla-status">
+                        <div class="status-circle">
+                        </div>
+                        <p>
+                            <template if:true={elapsedTimeIsOnTime}>
+                                En tiempo
+                            </template>
+                            <template if:false={elapsedTimeIsOnTime}>
+                                Fuera de tiempo
+                            </template>
+                        </p>
+                    </div>
+                </div>
+                <div class="circle-container">
+                    <svg class="circle" width="90" height="90" viewBox="0 0 90 90">
+                      <circle class="circle-bg" cx="45" cy="45" r="40" />
+                      <circle class="circle-progress"  cx="45" cy="45" r="40" style={circleProgressEscalated} />
+                    </svg>
+                    <div class="circle-content">
+                        <h2>{establishedSlaInHours}h</h2>
+                        <small>SLA</small>
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </div>
+</template>

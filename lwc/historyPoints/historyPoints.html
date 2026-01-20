@@ -1,0 +1,16 @@
+<template>
+    <div class="common-card-style">
+        <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_xxx-small slds-var-p-vertical_xxx-small">
+                <div >
+                    <lightning-datatable
+                            key-field="eventId"
+                            data={data}
+                            columns={columns}
+                            hide-checkbox-column="true">
+                    </lightning-datatable>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

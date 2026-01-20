@@ -1,0 +1,50 @@
+<template>
+
+    <template lwc:if={isLoading}>
+        <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+    </template>
+
+    <lightning-card title="Importar CSV" icon-name="custom:custom63">
+
+        <div class="slds-m-around_medium">
+            <lightning-input type="file" label="Seleccionar archivo CSV" accept=".csv"
+                             onchange={handleFileUpload}></lightning-input>
+        </div>
+
+        <br>
+        <template lwc:if={csvLoaded}>
+            <div class="slds-grid slds-wrap">
+
+                <div class="slds-col slds-size_1-of-1 slds-p-horizontal_small slds-p-vertical_x-small">
+                    <div class="common-card-style">
+                        <div class="slds-grid slds-wrap slds-border_bottom">
+                            <div class="slds-col slds-size_1-of-2 slds-align-middle slds-var-p-horizontal_small slds-var-p-vertical_small">
+                                <lightning-icon icon-name="standard:shift" ></lightning-icon>
+                                <span class="slds-var-p-horizontal_small common-intern-card-title">Turnos</span>
+
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-2 slds-var-p-horizontal_small slds-var-p-vertical_small slds-text-align_right">
+                                <lightning-button label="Crear turnos" onclick={handleCreateShifts}></lightning-button>
+                            </div>
+
+                        </div>
+
+                        <lightning-datatable
+                                key-field="id"
+                                data={shiftWrapperList}
+                                columns={columns}
+                                hide-checkbox-column
+                        ></lightning-datatable>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </template>
+
+
+    </lightning-card>
+    <br>
+</template>

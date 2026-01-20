@@ -1,0 +1,503 @@
+<template>
+    <div class="slds-card search-client-component">
+        <div if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </div>
+        <div class="search-client-component-container">
+            <div if:true={initScreen}>
+                <div class="search-client-component-header">
+                    <template if:true={recordId}>
+                        <h2>{label.searchClientCaseTitle}</h2>
+                        <p>{label.searchClientCaseSubTitle}</p>
+                    </template>
+                    <template if:false={recordId}>
+                        <h2 if:false={recordId}>{label.searchClientHomeTitle}</h2>
+                        <p>{label.searchClientHomeSubTitle}</p>
+                    </template>
+                </div>
+                <div class="search-client-component-content">
+                    <label onclick={onSwitchButtonChange} class={switchButtonClass}>
+                        <div class="button-container">
+                            <div>
+                                <p>
+                                    Documento
+                                </p>
+                            </div>
+                            <div>
+                                <p>
+                                    Teléfono
+                                </p>
+                            </div>
+                        </div>
+                    </label>
+                    <template if:true={searchByDocumentIsSelected}>
+
+                        <lightning-combobox name="docType" class="docType" label="Tipo de Documento"
+                            value={documentTypeSelectedValue} options={documentTypes}
+                            onchange={onDocumentTypeSelectionChange} onblur={handleValidationDocType} required>
+                        </lightning-combobox>
+                        <lightning-input name= "docNum" class="docNum" type="text" label="Número de Documento"
+                            onchange={handleDocNumInputChange} onblur={handleValidationDocNum} required
+                            placeholder="Ingrese el número de documento">
+                        </lightning-input>
+
+                    </template>
+                    <template if:false={searchByDocumentIsSelected}>
+
+                        <lightning-input class="phoneNum" type="text" label="Número de Teléfono"
+                            onchange={handlePhoneInputChange} onblur={handleValidationPhone} required
+                            placeholder="Ingrese el número de teléfono">
+                        </lightning-input>
+
+                    </template>
+                </div>
+
+            </div>
+            <div if:true={accountWasSearchedAndFound}>
+                <div class="search-client-component-header">
+                    <template if:true={foundAccountOnHome}>
+                        <h2>{label.searchClientFoundAccountHome}</h2>
+                        <p>
+                            {label.searchClientFoundAccountHomeDesc}
+                        </p>
+                    </template>
+                    <template if:true={foundAccountOnCase}>
+                        <h2>{label.searchClientFoundAccountHome}</h2>
+                        <p>
+                        {label.searchClientFoundAccountCaseDesc}
+                        </p>
+                    </template>
+                </div>
+                <div class="search-client-component-content">
+                    <div class="account-data-container">
+                        <div class="data-item">
+                            <p class="data-item-label">Nombre</p>
+                            <p class="data-item-value">
+                                {foundAccount.Name}
+                            </p>
+                        </div>
+                        <div if:true={foundAccount.PersonBirthdate} class="data-item">
+                            <p class="data-item-label">Fecha de nacimiento</p>
+                            <p class="data-item-value">
+                                {foundAccount.PersonBirthdate}
+                            </p>
+                        </div>
+                        <div if:true={foundAccount.OriginCountry__c} class="data-item">
+                            <p class="data-item-label">Nacionalidad</p>
+                            <p class="data-item-value">
+                                {foundAccount.OriginCountry__c}
+                            </p>
+                        </div>
+                        <div if:true={foundAccount.Phone} class="data-item">
+                            <p class="data-item-label">Teléfono</p>
+                            <p class="data-item-value">
+                                {foundAccount.Phone}
+                        </p>
+                        </div>
+                        <div if:true={foundAccount.Occupation__c} class="data-item">
+                            <p class="data-item-label">Ocupación</p>
+                            <p class="data-item-value">
+                                {foundAccount.Occupation__c}
+                            </p>
+                        </div>
+                        <div if:true={foundAccount.PersonEmail} class="data-item">
+                            <p class="data-item-label">Correo electrónico</p>
+                            <p class="data-item-value">
+                                {foundAccount.PersonEmail}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="note" if:true={foundAccountOnCase}>
+                        <p>{label.searchClientFoundAccountCaseNote}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div if:true={accountWasCreated}>
+                <div class="search-client-component-header">
+                    <template if:true={createdAccountOnHome}>
+                        <h2>{label.searchClientAccountCreatedTitle}</h2>
+                        <p>{label.searchClientAccountCreatedSubTitle}</p>
+                    </template>
+                    <template if:true={createdAccountOnCase}>
+                        <h2>Se creó la cuenta correctamente para vincular al caso</h2>
+                        <p>
+                            Se creó una cuenta con los datos ingresados, verifique que la misma corresponda con
+                            la cuenta del dueño del caso
+                        </p>
+                    </template>
+                </div>
+                <div class="search-client-component-content">
+                    <div class="account-data-container">
+                        <div class="data-item">
+                            <p class="data-item-label">Tipo de Documento</p>
+                            <p class="data-item-value">
+                                {documentTypeSelectedValueLabel}
+                            </p>
+                        </div>
+                        <div class="data-item">
+                            <p class="data-item-label">Número de Documento</p>
+                            <p class="data-item-value">
+                                {docNumValue}
+                            </p>
+                        </div>
+                        <div class="data-item">
+                            <p class="data-item-label">Nombre</p>
+                            <p class="data-item-value">
+                                {accountFirstName} {accountLastName}
+                            </p>
+                        </div>
+                        <div class="data-item">
+                            <p class="data-item-label">Teléfono</p>
+                            <p class="data-item-value">
+                                {accountPhone}
+                            </p>
+                        </div>
+                        <div class="data-item">
+                            <p class="data-item-label">Correo electrónico</p>
+                            <p class="data-item-value">
+                                {accountEmail}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="note" if:true={createdAccountOnCase}>
+                        <p>Tenga en cuenta que el caso será enlazado a esta cuenta, por
+                            ello antes de hacerlo
+                            verifique con paciencia los datos de la misma.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div if:true={accountWasSearchedAndNotFound}>
+                <div if:true={pageTypeService}>
+                    <div class="search-client-component-header">
+                        <h2>{label.searchClientNotFound}</h2>
+                        <p>
+                            {label.searchClientNotFoundDesc}
+                        </p>
+                    </div>
+                </div>
+                <div if:false={pageTypeService}>
+                    <div class="search-client-component-header">
+                        <h2>{label.searchClientNotFound}</h2>
+                        <p>
+                            {label.searchClientSalesNotFoundDesc}
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="account-data-container">
+                    <template if:true={searchByDocumentIsSelected}>
+                        <div class="data-item">
+                            <p class="data-item-label">Tipo de documento</p>
+                            <p class="data-item-value">
+                                {documentTypeSelectedValueLabel}
+                            </p>
+                        </div>
+                        <div class="data-item">
+                            <p class="data-item-label">Número de Documento</p>
+                            <p class="data-item-value">
+                                {docNumValue}
+                            </p>
+                        </div>
+                    </template>
+                    <template if:false={searchByDocumentIsSelected}>
+                        <div class="data-item">
+                            <p class="data-item-label">Teléfono</p>
+                            <p class="data-item-value">
+                                {phoneValue}
+                            </p>
+                        </div>
+                    </template>
+                </div>
+                <div class="note">
+                    <p>{label.searchClientNotFoundNote}</p>
+                </div>
+            </div>
+            <div slot="footer" class="slds-clearfix actions">
+                <template if:false={accountWasCreated}>
+                    <button if:false={showSearchButton} onclick={handleClick}
+                        class="slds-button search-button slds-button_neutral">
+                        Buscar
+                    </button>
+                </template>
+                <button if:true={accountWasCreated} onclick={navigateToAccount}
+                    class="slds-button search-button slds-button_neutral">
+                    Ir a la cuenta
+                </button>
+
+                <div if:true={accountWasSearchedAndFound}>
+                    <button onclick={searchAnotherAccount} class="slds-button slds-button_neutral secondary-button">
+                        Buscar otra cuenta
+                    </button>
+                    <button if:true={foundAccountOnCase} onclick={handleAssociateAccountToCase}
+                        class="slds-button search-button slds-button_neutral">
+                        Asociar al caso
+                    </button>
+                    <button if:true={foundAccountOnHome} onclick={navigateToAccount}
+                        class="slds-button search-button slds-button_neutral">
+                        Ir a la cuenta
+                    </button>
+                </div>
+
+                <div if:true={accountWasSearchedAndNotFound}>
+                    <button onclick={searchAnotherAccount} class="slds-button slds-button_neutral secondary-button">
+                        Buscar otra cuenta
+                    </button>
+                    <button if:true={accountCreationButtonEnabled} onclick={handleCreateAccount} class="slds-button search-button slds-button_neutral">
+                        Crear cuenta
+                    </button>
+                    <button if:false={pageTypeService} onclick={handleGlobalSearchAccount} class="slds-button search-button slds-button_neutral">
+                        Buscar en Salesforce
+                    </button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- MODAL ACCOUNT CREATION -->
+
+
+    <template if:true={showModalCreation}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true" aria-describedby="modal-content-id-2" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <div class="slds-modal__content slds-p-around_medium common-modal-full-rounded" id="modal-content-day-off-id-3">
+                    <!--Header-->
+                    <div>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 search-client-component-header">
+                            <h2>{label.searchClientAccountCreationTitle}</h2>
+                            <p>
+                                {label.searchClientAccountCreationSubTitle}
+                            </p>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-text-align_right">
+                                <div class="common-modal-close-button" onclick={cancelAccountCreation}>
+                                    <lightning-icon icon-name="utility:close" alternative-text="Star" size="xx-small" title="large size"></lightning-icon>
+                                </div>
+                            </div>
+                        </div>
+<!--                         <hr class="faded-line"> -->
+                    </div>
+                    <!--Body-->
+
+                    <div class="common-modal-details-rowAcc">
+                    <div if:true={isLoadingModal}>
+                        <div class="slds-is-relative">
+                            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                        </div>
+                    </div>
+
+                        <div class="slds-grid slds-wrap">
+
+                            <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-vertical_small'>
+                                <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small ">
+
+                                <lightning-combobox
+                                    name="Company"
+                                    label="Seleccione Empresa"
+                                    value={companySelected}
+                                    options={companiesOptions}
+                                    onchange={handleCompanyChange}
+                                    read-only={showDuplicateAccount}
+                                    required
+                                >
+                                </lightning-combobox>
+                                </div>
+                            </div>
+
+
+                            <template if:true={isBussinesAccount}>
+                                <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-vertical_small'>
+                                    <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small ">
+                                    <lightning-input type="text" name="inputFirstName" label="Nombre/Razon Social" onchange={handleComanyNameChange} read-only={showDuplicateAccount} placeholder="Ingrese el nombre/razon social"
+                                        required={isBussinesAccount}></lightning-input>
+                                    </div>
+                                </div>
+                            </template>
+
+                        </div>
+                    </div>
+
+                    <div class="common-modal-details-rowAcc">
+
+                        <div class="slds-grid slds-wrap">
+
+                            <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-vertical_small'>
+                                <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small ">
+
+                                <lightning-combobox
+                                    name="documentType"
+                                    label="Seleccione tipo de documento"
+                                    value={documentTypeSelectedValue}
+                                    options={documentTypes}
+                                    onchange={handleDocumentTypeChange}
+                                    readonly={readOnlyTypeAndDocumentField}
+                                >
+                                </lightning-combobox>
+                                </div>
+                            </div>
+
+                            <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-vertical_small'>
+                                <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small ">
+                                <lightning-input type="text" name="inputDocNum" value={docNumValueCreation} label="Número de Documento" onchange={handleDocNumberChange} readonly={readOnlyTypeAndDocumentField}></lightning-input>
+                                </div>
+                            </div>
+
+                            <template if:true={isPersonAccount}>
+
+                            <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-vertical_small'>
+                                <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small ">
+                                <lightning-input type="text" name="inputFirstName" label="Nombre" onchange={handleFirstNameChange} read-only={showDuplicateAccount} placeholder="Ingrese el nombre"
+                                    required={isPersonAccount}></lightning-input>
+                                </div>
+                            </div>
+
+                            <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-vertical_small'>
+                                <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small ">
+                                <lightning-input type="text" name="inputLastName" label="Apellido" onchange={handleLastNameChange} read-only={showDuplicateAccount} placeholder="Ingrese el apellido"
+                                    required={isPersonAccount}></lightning-input>
+                                </div>
+                            </div>
+
+                            </template>
+                            
+
+                            <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-vertical_small'>
+                                <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small ">
+                                <lightning-input type="text" name="inputPhone" label="Teléfono" value={phoneValue} onchange={handlePhoneChange} readonly={readOnlyPhoneField} placeholder="Ingrese el número de teléfono" required></lightning-input>
+                                </div>
+                            </div>
+
+                            <div class='slds-col slds-size_1-of-2 slds-grow-none slds-var-p-vertical_small'>
+                                <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small ">
+                                <lightning-input type="email" name="inputEmail" label="Correo electrónico" onchange={handleEmailChange} read-only={showDuplicateAccount} placeholder="Ingrese el Correo electrónico" required></lightning-input>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+
+
+                    <div if:true={showDuplicateAccount}>
+                        <div class="search-client-component-header">
+                            <h2>{label.searchClientFoundAccountOnCreationTitle}</h2>
+                            <div if:false={recordOnCase}>
+                                <p>
+                                    {label.searchClientFoundAccountOnCreation}
+                                </p>
+                            </div>
+                            <div if:true={recordOnCase}>
+                                <p>{label.searchClientFoundAccountOnCreationCase}
+                                    Por favor haga click en la tarjeta para seleccionar la cuenta y asociarla al Caso.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="c-container slds-scrollable_x">
+
+                            <template for:each={listDuplicateAccount} for:item="account">
+                                <div key={account.Id} class="custom-box" onclick={handleSelectClick}
+                                    data-account-number={account.Id}>
+
+                                    <div class="title-section">
+                                        <h2 class="account-title"> <strong>{account.Name}</strong></h2>
+                                    </div>
+
+                                    <hr class="faded-line">
+                                    
+                                    <div class="container-details">
+                                        <div class="slds-grid  slds-var-p-vertical_x-small">
+                                            <div class="slds-col slds-size_1-of-1">
+                                                <strong>Tipo: </strong>{account.DocumentType__c}
+                                            </div>
+                                        </div>
+                                        <div class="slds-grid  slds-var-p-vertical_x-small">
+                                            <div class="slds-col slds-size_1-of-1">
+                                                <strong>Número de Documento: </strong>{account.DocumentNumber__c}
+                                            </div>
+                                        </div>
+                                        <div class="slds-grid  slds-var-p-vertical_x-small">
+                                            <div class="slds-col slds-size_1-of-1">
+                                                <strong>Correo electrónico: </strong>{account.PersonEmail}
+                                            </div>
+                                        </div>
+                                        <div class="slds-grid  slds-var-p-vertical_x-small">
+                                            <div class="slds-col slds-size_1-of-1">
+                                                <strong>Teléfono: </strong>{account.Phone}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        
+                    </div>
+
+                    <hr class="">
+                    <div class='slds-grid'>
+                        <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_x-small slds-text-align_left ">
+                            
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_x-small slds-text-align_right ">
+                            <button onclick={cancelAccountCreation} class="slds-button slds-button_neutral secondary-button">
+                                Cancelar
+                            </button>
+
+
+                            <button if:true={recordOnCase} onclick={handleSelectedAccountToCase} 
+                                class="slds-button search-button slds-button_neutral"
+                                disabled={enableButtonLink}>
+                                Asociar Cuenta al Caso
+                            </button>
+
+
+                            <button if:false={recordOnCase} onclick={handleSelectedAccount} 
+                                class="slds-button search-button slds-button_neutral"
+                                disabled={enableButtonLink}>
+                                Ir a la Cuenta Seleccionada
+                            </button>
+                            
+                        </div>
+                    </div>
+                    </div>
+
+                    <div if:false={showDuplicateAccount}>
+                
+                        <hr class="">
+                        <div class='slds-grid'>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_x-small slds-text-align_left ">
+                                
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_x-small slds-text-align_right ">
+                                <button onclick={cancelAccountCreation} class="slds-button slds-button_neutral secondary-button">
+                                    Cancelar
+                                </button>
+                                
+                                
+                                <button if:false={recordOnCase} onclick={submitAccountCreation} 
+                                    class="slds-button search-button slds-button_neutral"
+                                    disabled={buttonCreationDisabled}>
+                                    Crear Cuenta
+                                </button>
+
+                                <button if:true={recordOnCaseCreation} onclick={submitAccountCreation}
+                                    class="slds-button search-button slds-button_neutral">
+                                    Crear Cuenta y asociar al Caso
+                                </button>
+                                
+                            </div>
+                        </div>
+                        </div>
+                </div>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+
+</template>

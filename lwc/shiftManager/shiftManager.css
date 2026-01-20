@@ -1,0 +1,15 @@
+@import 'c/cssLibrary';
+
+.horizontal-center-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.half-width {
+    width: 50%;
+}
+
+.card-title{
+    font-size: 10px;
+}

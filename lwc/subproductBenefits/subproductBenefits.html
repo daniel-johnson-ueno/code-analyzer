@@ -1,0 +1,101 @@
+<template>
+    <lightning-radio-group
+      name="Product"
+      label="Product Group"
+      options={options}
+      value={value}
+      type="button"
+      variant="label-hidden"
+      onchange={handleSelectionChange}>
+    </lightning-radio-group>
+
+    <template lwc:if={isLoading}>
+        <div>
+            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+        </div>
+    </template>
+
+    <template lwc:else>
+        <!--Date inputs-->
+        <template lwc:if={productSelected}>
+            <template lwc:if={isDateFilterNeeded}>
+                <div class="slds-grid">
+                    <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_xxx-small slds-var-p-vertical_xxx-small">
+
+                    </div>
+                    <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_xxx-small slds-var-p-vertical_xxx-small">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_xxx-small slds-var-p-vertical_xxx-small">
+                                <lightning-input type="date" name="fromDate" label="Fecha inicio" value={inputFromDate} onchange={onFromDateChange} date-style="medium"></lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-grow-none slds-var-p-horizontal_xxx-small slds-var-p-vertical_xxx-small">
+                                <lightning-input type="date" name="untilDate" label="Fecha fin" value={inputUntilDate} onchange={onUntilDateChange} date-style="medium" ></lightning-input>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <br>
+
+            <template lwc:if={noProductsLoaded}>
+                <strong>No se encontraron resultados.</strong>
+            </template>
+
+            <template lwc:else>
+                <template lwc:if={isHistoryLevelSelected}>
+                    <template lwc:if={isCaseRecord}>
+                        <c-history-level-from-case history-level={loyaltyData} ></c-history-level-from-case>
+                    </template>
+                    <template lwc:else>
+                        <c-history-level history-level={loyaltyData} ></c-history-level>
+                    </template>
+                </template>
+
+
+                <template lwc:if={isHistoryPointsSelected}>
+                    <template lwc:if={isCaseRecord}>
+                        <c-history-points-from-case history-points={loyaltyData}></c-history-points-from-case>
+                    </template>
+                    <template lwc:else>
+                        <c-history-points data={loyaltyData} columns={columns}></c-history-points>
+                    </template>
+                </template>
+
+                <template lwc:if={isUpysSummarySelected}>
+                    <c-history-points data={loyaltyData} columns={columns} ></c-history-points>
+                </template>
+
+                <!--Buttons-->
+                <template lwc:if={showPaginator}>
+                    <template lwc:if={showBack}>
+                        <div class="slds-float_left">
+                            <lightning-button
+                              variant="base"
+                              label="Previo"
+                              title="Previo"
+                              name="back"
+                              onclick={onPreviousClick}
+                              class="slds-m-left_x-small slds-p-around_medium">
+                            </lightning-button>
+                        </div>
+                    </template>
+                    <template lwc:if={showNext}>
+                        <div class="slds-float_right">
+                            <lightning-button
+                              variant="base"
+                              label="Siguiente"
+                              title="Siguiente"
+                              name="next"
+                              onclick={onNextClick}
+                              class="slds-m-right_x-small slds-p-around_medium">
+                            </lightning-button>
+                        </div>
+                    </template>
+                </template>
+            </template>
+            <br>
+            <br>
+        </template>
+    </template>
+
+</template>

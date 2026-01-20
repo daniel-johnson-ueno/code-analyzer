@@ -1,0 +1,17 @@
+<template>
+    <div class="customer-profile-photo-container">
+        <template lwc:if={photoUrl}>
+            <!-- Mostrar la foto de perfil si está disponible -->
+            <div class="customer-photo-avatar">
+                <img src={photoUrl} alt="Profile Photo" style="border-radius: 50%; width: 100%; height: 100%;" />
+            </div>
+        </template>
+
+        <template lwc:if={shouldShowInitials}>
+            <!-- Mostrar las iniciales durante la carga o cuando no hay foto disponible -->
+            <div class="customer-avatar">
+                <span>{nameInitials}</span>
+            </div>
+        </template>
+    </div>
+</template>

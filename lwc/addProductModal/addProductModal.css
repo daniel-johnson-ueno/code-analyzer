@@ -1,0 +1,22 @@
+.slds-modal__container {
+    max-width: 80rem !important;
+    width: 80% !important;
+    min-width: 20rem;
+}
+
+.slds-modal__content {
+    /*min-height: 300px;*/
+    /*overflow: initial;*/
+}
+
+.padding-search {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.modal-footer-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding-top: 1rem;
+}

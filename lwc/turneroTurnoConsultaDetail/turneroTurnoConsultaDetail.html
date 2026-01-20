@@ -1,0 +1,114 @@
+<!--
+  @name               : turneroTurnoConsultaDetail
+  @author             : Alvaro Gonzales Lapponi
+  @creation date      : 20-01-2025
+  @modification date  : 20-03-2025
+  @last modified by   : Alvaro Gonzales Lapponi
+  @description        : 
+  @versions           : version 1.0: clase apex inicial 
+  Modifications Log
+  Ver   Date         Author                    Modification
+  1.0   27-01-2025   Alvaro Gonzales Lapponi   Initial Version
+-->
+<template>
+    <c-tunero-url-analyzer onurlanalized={handleUrlAnalized} query-params={queryParams} ends-with={endsWith}></c-tunero-url-analyzer>
+    <template if:true={isLoading}>
+        <c-custom-loading></c-custom-loading>
+    </template>
+
+    <template if:true={showCancelModal}>
+        <c-custom-modal
+            secondary-button-text="No, seguir" primary-button-text="Sí, cancelar"
+            title="¿Querés cancelar tu turno?" subtitle="Vas a perder tu lugar en la fila virtual. Si querés volver a ser atendido, vas a tener que registrar tu turno nuevamente."
+            onprimarybuttonclicked={confirmCancellation} onsecondarybuttonclicked={keepWaiting}>
+        </c-custom-modal>
+    </template>
+    
+
+    <section class="wrapper">
+
+        <!-- PANTALLA: CLIENTE EN COLA DEFAULT -->
+        <template if:true={pantallas.enColaDefault}>
+            <section class="wrapper-wait-screen">
+                <section class="wrapper">
+                    <img class="icon-medium" src={icons.relojArena}/>
+                    <h1>{labels.TurneroSeguimientoIndicacion}</h1>
+                    <div>Ya estás en la fila.</div>
+                    <div>Te vamos a llamar cuando sea tu turno.</div>
+                </section>
+    
+                <button class="button-tertiary" onclick={handleCancelarTurno}>Cancelar turno</button>
+            </section>
+        </template>
+
+        <!-- PANTALLA: CLIENTE EN COLA DETALLADO -->
+        <template if:true={pantallas.enColaDetallado}>
+            <section class="wrapper-wait-screen">
+                <section class="wrapper">
+                    <h1>Tomá asiento y seguí tu turno</h1>
+                    <div>Una persona del equipo te llamará por tu nombre.</div>
+
+                    <section class="info-card-container">
+                        <section>
+                            <section class="indicador-wrapper">
+                                <img src={icons.personas}/>
+                                <h2>{turno.personasAntes}</h2>
+                            </section>
+                            <h3>Personas antes que vos</h3>
+                        </section>
+                        <section>
+                            <section class="indicador-wrapper">
+                                <img src={icons.reloj}/>
+                                <h2>{tiempoEspera} min.</h2>
+                            </section>
+                            <h3>De espera aproximada</h3>
+                        </section>
+                    </section>
+
+                    <template if:true={showInlineMessage}>
+                        <c-inline-message
+                            title="Recordatorio"
+                            subtitle="Tenés que estar presente en la sala a la hora de ser llamado"
+                            icon={icons.infoBadge}
+                            onclose={handleCloseInlineMessage}>
+                        </c-inline-message>
+                    </template>
+                    
+                </section>
+                <button class="button-tertiary" onclick={handleCancelarTurno}>Cancelar turno</button>
+            </section>
+        </template>
+
+        <!-- PANTALLA: SIGUIENTE EN FILA -->
+        <template if:true={pantallas.siguienteEnFila}>
+            <section class="wrapper-wait-screen">
+                <section class="wrapper">
+                    <img class="icon-medium" src={icons.info}/>
+                    <h1>¡Sos el siguiente en fila!</h1>
+                    <div>Por favor, esperá a ser llamado.</div>
+                </section>
+    
+                <button class="button-tertiary" onclick={handleCancelarTurno}>Cancelar turno</button>
+            </section>
+        </template>
+
+
+        <!-- PANTALLA: CLIENTE EN TURNO -->
+        <template if:true={pantallas.enTurno}>
+            <h1>¡Es tu turno!</h1>
+            <div>Quedate cerca de los sillones</div>
+            <section class="alert-card-container">
+                <div>Te va a atender</div>
+                <h1>{turno.nombreAsesor}</h1>
+            </section>
+        </template>
+
+        <!-- PANTALLA: TURNO FINALIZADO -->
+        <template if:true={pantallas.turnoFinalizado}>
+            <img class="icon-medium" src={icons.check}/>
+            <h1>¡Gracias por tu visita!</h1>
+            <div>Tu turno ha finalizado</div>
+        </template>
+        
+    </section>
+</template>

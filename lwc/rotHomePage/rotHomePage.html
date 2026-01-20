@@ -1,0 +1,25 @@
+<!--
+  @name               : rotHomePage
+  @author             : Alvaro Gonzales Lapponi
+  @creation date      : 10-01-2025
+  @modification date  : 13-01-2025
+  @last modified by   : Alvaro Gonzales Lapponi
+  @description        : 
+  @versions           : version 1.0: clase apex inicial 
+  Modifications Log
+  Ver   Date         Author                    Modification
+  1.0   13-01-2025   Alvaro Gonzales Lapponi   Initial Version
+-->
+<template>
+    <section class="container">
+        <!-- Header -->
+        <section class="header">
+            <c-rot-header show-element={showElement} onback={handleBack}></c-rot-header>
+        </section>
+        
+        <!-- Body -->
+        <section class="body">
+            <c-rot-home-detail data-id="detailElement" ondisplayelements={displayElements}></c-rot-home-detail>
+        </section>
+    </section>
+</template>

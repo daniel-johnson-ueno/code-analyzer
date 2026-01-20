@@ -1,0 +1,150 @@
+<template>
+    <template if:true={showTipificador}>
+        <lightning-card title="">
+            <div class="slds-grid slds-wrap slds-grid_align-center slds-p-around_medium">
+                <div class={conditionalClass}>
+                    <template lwc:if={showCreateCase}>
+                        <div class="slds-grid common-card-header-section">
+                            <div class="slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small">
+                                <lightning-icon icon-name="standard:case" alternative-text="nuevo caso"
+                                    title="Nuevo Caso">
+                                </lightning-icon>
+                                <span style="font-size: 15px;"><strong> Nuevo Caso</strong></span>
+                            </div>
+                            <div class="card-divider"></div>
+                        </div>
+                        <!--<template if:false={isNotAllowed}> -->
+                        <template if:true={isAllowed}>
+                            <div class='slds-grid'>
+                                <div
+                                    class='slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                                    <template lwc:if={isLoading}>
+                                        <div>
+                                            <lightning-spinner class="slds-is-fixed" alternative-text="Loading"
+                                                size="large"></lightning-spinner>
+                                        </div>
+                                    </template>
+                                    <template lwc:else>
+                                        <template lwc:if={showMessage}>
+                                            <h2
+                                                class='slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                                                <strong>Actualmente la generación de casos solo puede iniciarse desde la
+                                                    ficha del Cliente.</strong>
+                                            </h2>
+                                        </template>
+                                        <template lwc:elseif={firstStep}>
+                                            <div>
+                                                <c-default-form case-structure={newCase}
+                                                    ondefaultformchange={handleChange}></c-default-form>
+                                            </div>
+                                            </br>
+                                            </br>
+                                        </template>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+                        <!--<template if:false={isNotAllowed}>-->
+                        <template if:false={isAllowed}>
+                            <lightning-card title="">
+                                <h1
+                                    class='slds-col slds-size_1-of-1 slds-grow-none slds-var-p-horizontal_small slds-var-p-vertical_small'>
+                                    <strong>Según tus permisos no podés crear casos, consulta con un superior como
+                                        continuar con la operatoria.</strong>
+                                </h1>
+                            </lightning-card>
+                        </template>
+                    </template>
+                    <div>
+                        <template if:true={shouldShowButton}>
+                            <div class="slds-align_absolute-center">
+                                <lightning-button variant="brand" label="Re Tipificar"
+                                    onclick={handleTipificador}></lightning-button>
+                            </div>
+                        </template>
+                        <template if:true={showSecondTipificador}>
+                            <lightning-record-edit-form object-api-name="Case">
+                                <template if:true={requiredFields}>
+                                    <p class="slds-text-heading_medium slds-text-align_center slds-m-bottom_medium">
+                                        Tipificación
+                                    </p>
+                                    <template if:true={searchCompany}>
+                                        <lightning-combobox class="slds-m-around_small style-custom-no-top"
+                                            name="searchCompany" label="Selecciona la empresa del grupo"
+                                            placeholder="Empresas grupo Vazquez" options={companiesOptions}
+                                            value={companySelect} onchange={handleCompanySelect} required="true">
+                                        </lightning-combobox>
+                                    </template>
+                                    <template if:true={companySelect}>
+                                        <lightning-input label="Tipo de caso"
+                                            class="slds-m-around_small style-custom-no-top"
+                                            placeholder="Escribe para buscar tipo..." type="text" value={tipoValue}
+                                            onchange={handleTipoSearch} onblur={handleTipoBlur} required="true">
+                                        </lightning-input>
+                                    </template>
+                                    <template if:true={tipoFilteredOptions}>
+                                        <ul class="slds-listbox slds-listbox_vertical slds-dropdown_fluid">
+                                            <template for:each={tipoFilteredOptions} for:item="option">
+                                                <li key={option.value} class="slds-listbox__item"
+                                                    onmousedown={handleTipoSelect} data-value={option.value}>
+                                                    <div class="slds-listbox__option slds-listbox__option_plain slds-media"
+                                                        role="option">
+                                                        <span class="slds-media__body">{option.label}</span>
+                                                    </div>
+                                                </li>
+                                            </template>
+                                        </ul>
+                                    </template>
+                                    <template lwc:if={tipoValue}>
+                                        <div class="slds-m-bottom_medium">
+                                            <lightning-input label="Motivo de caso"
+                                                class="slds-m-around_small style-custom-no-top"
+                                                placeholder="Escribe para buscar motivo..." type="text"
+                                                value={reasonValue} onchange={handleReasonSearch}
+                                                onblur={handleReasonBlur} required="true">
+                                            </lightning-input>
+                                            <template if:true={reasonFilteredOptions}>
+                                                <ul class="slds-listbox slds-listbox_vertical slds-dropdown_fluid">
+                                                    <template for:each={reasonFilteredOptions} for:item="option">
+                                                        <li key={option.value} class="slds-listbox__item"
+                                                            onmousedown={handleReasonSelect} data-value={option.value}>
+                                                            <div class="slds-listbox__option slds-listbox__option_plain slds-media"
+                                                                role="option">
+                                                                <span class="slds-media__body">{option.label}</span>
+                                                            </div>
+                                                        </li>
+                                                    </template>
+                                                </ul>
+                                            </template>
+                                        </div>
+                                    </template>
+                                    <template if:true={requiredFields}>
+                                        <template for:each={requiredFields} for:item="field">
+                                            <lightning-input-field style="margin-left: 10px; padding-right: 25px;"
+                                                data-field={field} field-name={field} key={field} required="true">
+                                            </lightning-input-field>
+                                        </template>
+                                    </template>
+                                </template>
+                            </lightning-record-edit-form>
+                            <div class="slds-m-top_medium slds-text-aling_center">
+                                <template if:true={showCreateCase}>
+                                    <div class="slds-align_absolute-center">
+                                        <lightning-button variant="brand" label="Crear caso" title="Crear caso"
+                                            onclick={handleSave}>
+                                        </lightning-button>
+                                    </div>
+                                </template>
+                                <template if:false={showCreateCase}>
+                                    <lightning-button variant="brand" label="Guardar" title="Guardar"
+                                        onclick={handleSave} class="slds-m-left_x-small">
+                                    </lightning-button>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </lightning-card>
+    </template>
+</template>

@@ -1,0 +1,85 @@
+<template>
+    <template if:true={task}>
+        <lightning-card>
+            <div class="slds-card__body slds-m-around_medium">
+                <!-- Detalle -->
+                <lightning-layout horizontal-align="spread" class="slds-p-bottom_medium">
+                    <lightning-layout-item size="6">
+                        <p class="slds-p-horizontal_small slds-p-vertical_small"><strong>Asunto:</strong> {task.Subject}</p>
+                        
+                        <p class="slds-p-horizontal_small"><strong>Propietario:</strong> {task.Owner.Name}</p>
+                        
+                        <template if:true={isOwnerQueue}>
+                            <p class="slds-p-horizontal_small slds-p-vertical_small">
+                                <lightning-record-picker
+                                    label="Cambiar Propietario"
+                                    placeholder="Buscar propietario"
+                                    object-api-name="User"
+                                    disabled={isOwnerChangeDisabled}
+                                    value={newOwnerId}
+                                    onchange={handleOwnerChange}>
+                                </lightning-record-picker>
+                                <br />
+                                <lightning-button 
+                                    label="Guardar Nuevo Propietario" 
+                                    onclick={handleSaveOwner} 
+                                    disabled={isOwnerChangeDisabled}
+                                    class="slds-m-top_medium"  
+                                ></lightning-button>
+                            </p>
+                        </template>
+                        
+                        <p class="slds-p-horizontal_small slds-p-vertical_small"><strong>Estado:</strong> {task.Status}</p>
+                        <p class="slds-p-horizontal_small slds-p-vertical_small"><strong>Tiempo en Horas:</strong> {formattedTimeInHours}</p>
+                        <p class="slds-p-horizontal_small slds-p-vertical_small"><strong>Tiempo en Días:</strong> {formattedTimeInDays}</p>
+                        <p class="slds-p-horizontal_small slds-p-vertical_small"><strong>Fecha/hora de inicio:</strong> {formattedStartDateTime}</p>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item size="6">
+                        <p class="slds-p-horizontal_small slds-p-vertical_small"><strong>Fecha de Vencimiento:</strong> {formattedActivityDate}</p>
+                        <p class="slds-p-horizontal_small slds-p-vertical_small"><strong>Relacionado con:</strong> {whatDisplay}</p>
+                        <p class="slds-p-horizontal_small slds-p-vertical_small"><strong>Prioridad:</strong> {task.Priority}</p>
+                    </lightning-layout-item>
+                </lightning-layout>
+
+                <!-- Información Adicional -->
+                <h3 class="slds-section__title">
+                    <button type="button" class="slds-button slds-section__title-action" aria-expanded="true">
+                        <span class="slds-truncate">Información adicional</span>
+                    </button>
+                </h3>
+                <lightning-layout horizontal-align="spread" class="slds-p-bottom_medium">
+                    <lightning-layout-item size="6">
+                        <!-- Comentarios editables -->
+                        <lightning-textarea
+                            label="Comentarios"
+                            value={commentValue}
+                            onchange={handleCommentChange}
+                            class="slds-p-horizontal_small slds-p-vertical_small"
+                            disabled={isCommentDisabled}
+                        ></lightning-textarea>
+                        <lightning-button variant="brand" label="Guardar Comentarios" onclick={handleSave}  disabled={isCommentDisabled}></lightning-button>
+                    </lightning-layout-item>
+                </lightning-layout>
+
+                <!-- Información del Sistema -->
+                <h3 class="slds-section__title">
+                    <button type="button" class="slds-button slds-section__title-action" aria-expanded="true">
+                        <span class="slds-truncate">Información del sistema</span>
+                    </button>
+                </h3>
+                <lightning-layout horizontal-align="spread" class="slds-p-bottom_medium">
+                    <lightning-layout-item size="6">
+                        <p class="slds-p-horizontal_small slds-p-vertical_small"><strong>Creado por:</strong> {createdByDisplay}</p>
+                        <p class="slds-p-horizontal_small slds-p-vertical_small"><strong>Fecha de Creación:</strong> {formattedCreatedDate}</p>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item size="6">
+                        <p class="slds-p-horizontal_small slds-p-vertical_small"><strong>Modificado por:</strong> {lastModifiedByDisplay}</p>
+                        <p class="slds-p-horizontal_small slds-p-vertical_small"><strong>Fecha de Última Modificación:</strong> {formattedLastModifiedDate}</p>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </div>
+        </lightning-card>
+    </template>
+</template>

@@ -1,0 +1,7 @@
+<design:component>
+    <design:attribute name="type" label="Toast Type (error, warning, success, info, other)"/>
+    <design:attribute name="messageText" label="Message Text"/>
+    <design:attribute name="title" label="Title (si Title + Message Text es muy corto, se mostrará en una sola línea)"/>
+    <design:attribute name="duration" label="Duration (ms)"/>
+    <design:attribute name="mode" label="Mode (dismissible, pester, sticky)"/>
+</design:component>

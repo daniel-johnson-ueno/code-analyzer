@@ -1,0 +1,110 @@
+<template>
+    <template if:true={showTipificador}>
+        <lightning-card title="">
+            <div class="slds-grid slds-wrap slds-grid_align-center slds-p-around_medium">
+                <div class="case-container">
+                    <div>
+                        <template if:true={shouldShowButton}>
+                            <div class="slds-align_absolute-center">
+                                <lightning-button variant="brand" label="Re Tipificar"
+                                    onclick={handleTipificador}></lightning-button>
+                            </div>
+                        </template>
+                        <template if:true={showSecondTipificador}>
+                            <lightning-record-edit-form object-api-name="Case">
+                                <template if:true={requiredFields}>
+                                    <p class="slds-text-heading_medium slds-text-align_center slds-m-bottom_medium">
+                                        Tipificación
+                                    </p>
+                                    <div class="slds-m-bottom_medium">
+                                        <template if:true={emptySubject}>
+                                            <lightning-input label="Asunto"
+                                            class="slds-m-around_small style-custom-no-top"
+                                            placeholder="Ingresa el asunto" type="text" value={subjectValue}
+                                            onchange={handleSubject} required="true">
+                                            </lightning-input>
+                                        </template>
+                                        <template if:true={emptyDescription}> 
+                                            <lightning-input label="Descripción"
+                                            class="slds-m-around_small style-custom-no-top"
+                                            placeholder="Ingresa la descripcion" type="text"
+                                            value={descriptionValue} onchange={handleDescription} required="true">
+                                            </lightning-input>
+                                        </template>  
+                                    </div>
+                                    <template if:true={searchCompany}>
+                                        <lightning-combobox class="slds-m-around_small style-custom-no-top"
+                                            name="searchCompany" label="Selecciona la empresa del grupo"
+                                            placeholder="Empresas grupo Vazquez" options={companiesOptions}
+                                            value={companySelect} onchange={handleCompanySelect} required="true">
+                                        </lightning-combobox>
+                                    </template>
+                                    <template if:true={companySelect}>
+                                        <lightning-input label="Tipo de caso"
+                                            class="slds-m-around_small style-custom-no-top"
+                                            placeholder="Escribe para buscar tipo..." type="text" value={tipoValue}
+                                            onchange={handleTipoSearch} onblur={handleTipoBlur} required="true">
+                                        </lightning-input>
+                                    </template>
+                                    <template if:true={tipoFilteredOptions}>
+                                        <ul class="slds-listbox slds-listbox_vertical slds-dropdown_fluid">
+                                            <template for:each={tipoFilteredOptions} for:item="option">
+                                                <li key={option.value} class="slds-listbox__item"
+                                                    onmousedown={handleTipoSelect} data-value={option.value}>
+                                                    <div class="slds-listbox__option slds-listbox__option_plain slds-media"
+                                                        role="option">
+                                                        <span class="slds-media__body">{option.label}</span>
+                                                    </div>
+                                                </li>
+                                            </template>
+                                        </ul>
+                                    </template>
+                                    <template lwc:if={tipoValue}>
+                                        <div class="slds-m-bottom_medium">
+                                            <lightning-input label="Motivo de caso"
+                                                class="slds-m-around_small style-custom-no-top"
+                                                placeholder="Escribe para buscar motivo..." type="text"
+                                                value={reasonValue} onchange={handleReasonSearch}
+                                                onblur={handleReasonBlur} required="true">
+                                            </lightning-input>
+                                            <template if:true={reasonFilteredOptions}>
+                                                <ul class="slds-listbox slds-listbox_vertical slds-dropdown_fluid">
+                                                    <template for:each={reasonFilteredOptions} for:item="option">
+                                                        <li key={option.value} class="slds-listbox__item"
+                                                            onmousedown={handleReasonSelect} data-value={option.value}>
+                                                            <div class="slds-listbox__option slds-listbox__option_plain slds-media"
+                                                                role="option">
+                                                                <span class="slds-media__body">{option.label}</span>
+                                                            </div>
+                                                        </li>
+                                                    </template>
+                                                </ul>
+                                            </template>
+                                        </div>
+                                    </template>
+                                    <template if:true={requiredFields}>
+                                        <template for:each={requiredFields} for:item="field">
+                                            <lightning-input-field style="margin-left: 10px; padding-right: 25px;"
+                                                data-field={field} field-name={field} key={field} required="true">
+                                            </lightning-input-field>
+                                        </template>
+                                    </template>
+                                    <template if:true={queue}>
+                                        <div class="changeowner-box">
+                                            <span><lightning-primitive-icon icon-name="utility:change_owner" variant="bare" size="small"></lightning-primitive-icon>  Escalará a: <strong>{queue}</strong></span>
+                                        </div>     
+                                    </template>
+                                </template>
+                            </lightning-record-edit-form>
+                            <div class="slds-m-top_medium slds-text-aling_center">
+                                <lightning-button variant="brand" label="Guardar" title="Guardar" onclick={handleSave}
+                                    class="slds-m-left_x-small">
+                                </lightning-button>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </lightning-card>
+    </template>
+</template>

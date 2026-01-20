@@ -1,0 +1,30 @@
+/* Estilos generales */
+.container {
+    min-height: 100vh;
+    width: 100vw;
+    background-color: #F0F0F0;
+}
+
+/* Estilos para el header */
+.header {
+    background-color: #FFFF; 
+    padding: 6px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+/* Estilos para el body */
+.body {
+    margin: 3vh 4vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    color: var(--h1-color);
+}

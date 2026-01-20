@@ -1,0 +1,46 @@
+<template>
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+    </template>
+
+    <div class="slds-grid">
+        <div class="slds-col slds-size_1-of-1 slds-var-p-horizontal_medium">
+
+            <h2 class="title"><strong>Historial de Reintegros</strong></h2>
+
+            <div class="slds-grid">
+                <div class="slds-col slds-size_1-of-1 slds-var-p-vertical_large">
+                    <template if:false={reintegrosInfo}>
+                        <div class="text-gray">Sin Información de Reintegros</div>
+                    </template>
+
+                    <template if:true={reintegrosInfo}>
+                        <div class="slds-scrollable_y reintegros-container">
+                            <template for:each={reintegrosInfo} for:item="reintegroRecord">
+                                <div key={reintegroRecord.id} class="slds-var-p-vertical_medium reintegros-item">
+                                    <div class="slds-grid text-primary">
+                                        <div class="slds-col slds-size_1-of-2">
+                                            <div class="text-gray">{reintegroRecord.descripcion}</div>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-2">
+                                            <div class="float-right text-green">{reintegroRecord.monto}</div>
+                                        </div>
+                                    </div>
+                                    <div class="slds-grid text-secondary">
+                                        <div class="slds-col slds-size_1-of-2">
+                                            <div class="text-gray">{reintegroRecord.tipo}</div>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-2 float-right">
+                                            <div class="float-right text-gray">{reintegroRecord.fecha}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</template>

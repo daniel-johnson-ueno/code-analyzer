@@ -1,0 +1,52 @@
+h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+div {
+    font-size: 2.3rem;
+    font-weight: 400;
+    text-align: center;
+}
+
+.title,
+.subtitle {
+    max-width: 70%;
+}
+
+.text-important{
+    font-weight: 600;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    align-items:center;
+}
+
+.button-primary{
+    width: 480px;
+}
+
+.button-secundary{
+    width: 480px;
+    --slds-c-button-brand-color-background: #FFFF;
+    --slds-c-button-brand-color-border: #c9c9c9;
+    --slds-c-button-brand-text-color: #292929;
+}
+
+.icon-x_large{
+    max-width: 160px;
+    max-height: 160px;
+}
+
+.icon-large{
+    max-width: 34rem;
+    max-height: 12rem;
+}
+
+.icon-medium{
+    width: 7rem;
+}

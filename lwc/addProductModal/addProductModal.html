@@ -1,0 +1,136 @@
+<!--
+  @description       : 
+  @author            : Noe Vasquez
+  @group             : 
+  @last modified on  : 05-26-2025
+  @last modified by  : Noe Vasquez
+-->
+<template>
+    <section role="dialog" tabindex="-1" class="slds-fade-in-open">
+        <template if:true={isLoading}>
+            <div class="slds-align_absolute-center slds-m-around_large">
+                <lightning-spinner alternative-text="Cargando" size="large"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- Modal de confirmación -->
+        <template if:true={showDeleteModal}>
+                <div>
+                    <header class="slds-modal__header slds-theme_warning">
+                        <h2 class="slds-modal__title">Confirmar eliminación</h2>
+                    </header>
+
+                    <!-- Body -->
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <p><b>¿Estás seguro de que deseas eliminar todos los productos? Esta acción no se puede deshacer.</b></p>
+                        <p><b>Al eliminar producto, debe volver a elegir la moneda en la Oportunidad. </b></p>
+                    </div>
+
+                    <!-- Footer -->
+                    <footer class="slds-modal__footer">
+                        <lightning-button variant="neutral" label="Cancelar" onclick={handleCancel}></lightning-button>
+                        <lightning-button variant="destructive" label="Eliminar" onclick={confirmDelete}></lightning-button>
+                    </footer>
+                </div>
+            
+        </template>
+
+        <div if:false ={showDeleteModal}>
+            <template if:true={haspricebook2Id}>
+                <div>
+                    <!-- Header unificado -->
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close" onclick={handleCancel}>
+                            <lightning-icon icon-name="utility:close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Cerrar</span>
+                        </button>
+                        
+                        <h2 class="slds-text-heading_medium slds-hyphenate">Agregar Productos</h2>
+
+                        <div class="slds-grid slds-wrap slds-m-top_small">
+                            <div class="slds-col slds-size_3-of-4 padding-search">
+                                <lightning-input type="text" label="Nombre" value={searchName} 
+                                    onchange={handleNombreChange} placeholder="Buscar por nombre...">
+                                </lightning-input>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-4 slds-p-right_x-small">
+                                <lightning-combobox data-name="familia" name="familia"
+                                    label="Familia" value={familySelected} placeholder="Todas las familias"
+                                    options={familiasOptions} onchange={handleFamiliaChange}>
+                                </lightning-combobox>
+                            </div>
+                        </div>
+                    </header>
+
+                    <!-- Contenido -->
+                    <div class="slds-modal__content slds-p-around_medium"
+                        style="min-height: 200px; max-height: 70vh; overflow-y: auto;">
+                        
+                        <template if:true={hasResults}>
+                            <lightning-datatable key-field="id" data={products} columns={columns} 
+                                max-row-selection="1" selected-rows={selectedRowIds} onrowselection={handleSelection}>
+                            </lightning-datatable>
+                        </template>
+
+                        <template if:false={hasResults}>
+                            <div class="slds-p-around_large slds-text-align_center">
+                                <lightning-icon icon-name="utility:search" alternative-text="Sin resultados" size="small"
+                                    class="slds-m-bottom_small slds-icon-text-default">
+                                </lightning-icon>
+                                <p class="slds-text-color_weak slds-text-heading_small">
+                                    No se encontraron resultados.
+                                </p>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Footer unificado -->
+                    <footer class="slds-modal__footer modal-footer-actions">
+                        <lightning-button label="Cancelar" onclick={handleCancel}></lightning-button>
+                        <lightning-button variant="brand" label="Agregar" onclick={handleSave}></lightning-button>
+                    </footer>
+                </div>
+            </template>
+
+            <template if:false={haspricebook2Id}>
+                <div>
+                    <header class="slds-modal__header">
+                        <h2 class="slds-text-heading_medium slds-hyphenate">Seleccionar Pricebook</h2>
+                    </header>
+
+                    <div class="slds-modal__content slds-p-around_medium"
+                        style="min-height: 200px; max-height: 70vh; overflow-y: auto;">
+
+                        <lightning-card title="Selección de Lista de Precios" icon-name="standard:pricebook">
+                            <template if:true={isLoading}>
+                                <div class="slds-align_absolute-center slds-m-around_large">
+                                    <lightning-spinner alternative-text="Cargando" size="large"></lightning-spinner>
+                                </div>
+                            </template>
+
+                            <div class="slds-p-around_medium">
+                                <lightning-combobox name="pricebook" label="Lista de precios"
+                                    value={selectedPricebookId} options={pricebookOptions} 
+                                    onchange={handlePricebookChange} required>
+                                </lightning-combobox>
+                            </div>
+                        </lightning-card>
+                    </div>
+
+                    <footer class="slds-modal__footer modal-footer-actions">
+                        <lightning-button label="Cancelar" onclick={handleCancel}></lightning-button>
+                        <lightning-button variant="brand" label="Guardar y Continuar" 
+                            onclick={handleSavePricebook}>
+                        </lightning-button>
+                    </footer>
+                </div>
+            </template>
+        </div>
+        
+    </section>
+
+            
+
+</template>

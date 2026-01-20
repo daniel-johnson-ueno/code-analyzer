@@ -1,0 +1,69 @@
+.spinner {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.37);
+}
+
+.spinner-outer-div {
+    position: relative;
+}
+
+.card-style{
+    background-color: white !important;
+    border-radius: 20px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #D8D8DE;
+}
+
+.accordion-title{
+    font-size: 14px;
+    padding:20px;
+}
+
+.accordion-button{
+    float:right;
+    margin:15px;
+    cursor: pointer;
+}
+
+.pill {
+    display: inline-block;
+    padding: 0.5em 0.5em;
+    border-radius: 1.2em;
+    color: white;
+    text-align: center;
+}
+
+.white-pill {
+    background-color: white;
+    font-weight: 500;
+    color: white;
+    font-size: smaller;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #D8D8DE;
+}
+
+.faded-line{
+    border: none;
+    border-top: 1px solid #e0e0e0;
+
+    margin-right:20px;
+    margin-left:20px;
+}
+
+.documents-placeholder{
+    min-height: 30px;
+}
+
+.documents-container{
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+.document-item{
+    color:#252529;
+    margin-bottom: 5px;
+}
+
+a:link, a:visited {color:#252529;}

@@ -1,0 +1,80 @@
+.custom-warning {
+    background: #ffffff;
+    border-left: 4px solid #f7c23e;
+    padding: 1rem;
+    margin: 1rem;
+    color: #c49d5a;
+    box-shadow: 0 0 0 1px #ddd;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+}
+
+.custom-warning-content {
+    display: flex;
+    align-items: left;
+    justify-content: left;
+    width: 100%;
+    text-align: left;
+}
+
+.custom-warning-content .slds-icon_container {
+    margin-right: 0.5rem;
+}
+
+.custom-warning-text {
+    font-size: 1.01rem;
+    font-weight: 500;
+}
+
+
+.custom-minimal-table {
+    border: 1px solid #dddbda;
+}
+
+.custom-minimal-table td {
+    padding: 0.5rem;
+}
+
+
+.custom-minimal-table tr:first-child td {
+    border-top: none;
+}
+
+/* Establece el diseño de tabla fijo */
+.fixed-layout {
+    table-layout: fixed;
+    width: 100%;
+}
+
+/* Estilos para las celdas de etiqueta (primera columna) */
+.fixed-label {
+    width: 20%; /* o el ancho que prefieras */
+    max-width: 100px; /* límite máximo */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Estilos para las celdas de contenido (segunda columna) */
+.fixed-content {
+    width: 80%;
+    max-width: 350px; /* límite máximo */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Opcional: para mantener la alineación */
+.custom-minimal-table td {
+    vertical-align: middle;
+}
+
+.currency-label {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #444;
+    padding-top: 0.5rem;
+    padding-right: 0.5rem;
+    
+}

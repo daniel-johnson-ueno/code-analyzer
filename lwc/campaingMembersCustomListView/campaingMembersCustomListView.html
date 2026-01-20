@@ -1,0 +1,81 @@
+<!--
+  @description       : 
+  @author            : Noe Vasquez
+  @group             : 
+  @last modified on  : 06-27-2025
+  @last modified by  : Noe Vasquez
+-->
+
+<template>
+    <template if:true={isLoading}>
+        <div class="slds-align_absolute-center slds-m-around_large">
+            <lightning-spinner alternative-text="Cargando" size="large"></lightning-spinner>
+        </div>
+    </template>
+    <div style="background-color: #ffffff;">
+    <lightning-card class="slds-card__header">
+        <div slot="title" class="slds-media slds-card__header slds-grid ">
+            <header class="card-header-no-bg slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-custom-custom18" title="SearchDetails">
+                        <lightning-icon icon-name="standard:campaign" size="medium"></lightning-icon>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h1 class="slds-card__header-title">Mis Miembros de Campaña </h1>
+                    <p class="slds-text-title slds-text-color_weak">{selectedViewLabel}</p>
+
+                </div>
+            </header>
+
+        </div>
+
+        <!--Botón para modificar ejecutivo-->
+        <div slot="actions">
+            <lightning-button label="Modificar ejecutivo asignado" onclick={openChangeExecutiveModal} disabled={isDisabled}></lightning-button>
+        </div>
+
+        <div class="slds-col slds-size_1-of-3 slds-m-left_medium">
+            <lightning-combobox
+                label="Selecciona una vista"
+                value={selectedView}
+                options={viewOptions}
+                onchange={handleViewChange}>
+            </lightning-combobox>
+        </div>
+        <div>
+            <div class="slds-col slds-size_1-of-3 slds-m-left_medium">
+                <lightning-input 
+                    type="search" 
+                    label="Buscar" 
+                    onchange={handleSearchChange}
+                    class="slds-m-right_medium">
+                </lightning-input>
+            </div>
+            
+        </div>
+        
+        
+    </lightning-card>
+    </div>
+        <div class="datatable-scroll-container">
+            <lightning-datatable
+                key-field="Id"
+                data={members}
+                columns={columns}
+                selected-rows={selectedRows}
+                onrowselection={handleRowSelection}
+                hide-checkbox-column={hideCheckbox}>
+            </lightning-datatable>
+        </div>
+    <template if:false={hasResults}>
+        <div class="slds-p-around_large slds-text-align_center">
+            <lightning-icon icon-name="utility:search" alternative-text="Sin resultados" size="small"
+                class="slds-m-bottom_small slds-icon-text-default">
+            </lightning-icon>
+            <p class="slds-text-color_weak slds-text-heading_small">
+                No se encontraron resultados.
+            </p>
+        </div>
+    </template>
+</template>

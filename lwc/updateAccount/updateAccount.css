@@ -1,0 +1,72 @@
+@import 'c/cssLibrary';
+
+.card-style {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: white;
+    padding: 16px;
+    height: 68px;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    text-align: left;
+    border: 1px solid #D8D8DE;
+    border-radius: 12px;
+}
+
+.card-style:hover {
+    cursor: pointer;
+    box-shadow: 0px 4px 24px rgba(37, 37, 41, 0.08);
+}
+
+.card-style:disabled {
+    background-color: #d3d3d3;
+    cursor: not-allowed;
+}
+
+.card-style:disabled .refresh-icn,
+.card-style:hover .refresh-icn {
+    background-color: #F2F8FF !important;
+}
+
+.update-container {
+    display: flex;
+    align-items: center;
+}
+
+.refresh-icn {
+    width: 36px;
+    height: 36px;
+    border-radius: 1000px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #D9EBFF !important;
+    border: none;
+}
+
+.update-text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 16px;
+    gap: 4px;
+}
+
+.update-title {
+    line-height: 16px;
+    font-size: 12px;
+    color: #252529;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.update-date {
+    line-height: 16px;
+    font-size: 12px;
+    color: #6C6C78;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+}

@@ -1,0 +1,22 @@
+@import 'c/cssLibrary';
+
+.card-title{
+    padding-left: 10px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.datatable-size{
+    max-height: 400px;
+    min-height: 200px;
+}
+
+.modal-datatable-size{
+    max-height: 300px;
+    min-height: 200px;
+}
+
+.slds-modal__container{
+    max-width: 80rem !important;
+    width:80% !important;
+}

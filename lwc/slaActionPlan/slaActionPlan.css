@@ -1,0 +1,133 @@
+.sla-container {
+    padding: 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 0.5rem;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.sla-header {
+    font-size: 1.15rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* Espacio entre el ícono y el texto */
+}
+.sla-card {
+    border: none;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    position: relative;
+    background-color: #fff;
+}
+
+.sla-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: nowrap;
+}
+
+.sla-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.sla-column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.sla-label {
+    font-size: 0.9rem;
+    color: #333;
+    line-height: 1.2;
+    white-space: normal;
+    word-break: break-word;
+    max-width: 100%;
+}
+
+.sla-time {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+
+.sla-progress-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #ccc; /* fallback */
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sla-progress-inner {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background-color: white;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-align: center;
+    z-index: 1;
+}
+
+
+.sla-badge-expired,
+.sla-badge-on-time {
+    font-weight: bold;
+    border-radius: 1rem;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    align-self: flex-start;
+    flex-shrink: 0;
+}
+
+.sla-badge-expired {
+    background-color: #f8d7da;
+    color: #a5284d;
+}
+
+.sla-badge-on-time {
+    background-color: #d4edda;
+    color: #28a745;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+    .sla-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .sla-badge-expired,
+    .sla-badge-on-time {
+        margin-top: 0.5rem;
+        margin-left: 0;
+    }
+
+    .sla-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

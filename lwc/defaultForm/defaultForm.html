@@ -1,0 +1,49 @@
+<template>
+    <lightning-record-edit-form object-api-name="Case">
+                <p class="slds-text-heading_medium slds-text-align_center slds-m-bottom_medium">
+                    Información del Caso
+                 </p>
+</br>
+        <div class='slds-grid slds-wrap slds-gutters'>
+                <div class='slds-col slds-size_3-of-3 slds-medium-size_3-of-3'>
+                        <p class='common-field-label slds-var-p-horizontal_small'><span
+                                class='common-required-field'>*</span> Asunto</p>
+                        <lightning-input-field field-name="Subject" variant="label-hidden"
+                                               data-field="Subject"
+                                               value={caseStructure.Subject}
+                                               onchange={handleInputChange}
+                                               required></lightning-input-field>
+                </div>
+            </br>
+            </br>
+        </br>
+    </br>
+                <div class='slds-col slds-size_3-of-3 slds-medium-size_3-of-3'>
+                        <p class='common-field-label slds-var-p-horizontal_small'><span
+                                class='common-required-field'>*</span> Origen</p>
+                        <lightning-input-field field-name="Origin" variant="label-hidden"
+                                               data-field="Origin"
+                                               value={caseStructure.Origin}
+                                               onchange={handleInputChange}
+                                               required></lightning-input-field>
+                    </div>
+            </br>
+            </br>
+        </br>
+    </br>
+                <div class='slds-col slds-size_3-of-3 slds-medium-size_3-of-3'>
+                        <p class='common-field-label slds-var-p-horizontal_small'><span
+                                class='common-required-field'>*</span> Descripción</p>
+                        <lightning-input-field field-name="Description" variant="label-hidden"
+                                               data-field="Description"
+                                               value={caseStructure.Description}
+                                               onchange={handleInputChange}
+                                               required></lightning-input-field>
+                </div>
+        </br>
+        </br>
+    </br>
+</br>
+        </div>
+    </lightning-record-edit-form>
+</template>

@@ -1,0 +1,28 @@
+.datatable-scroll-container {
+    overflow-x: auto;
+    overflow-y: visible;
+    display: block;
+    max-width: 100%;
+    padding-bottom: 1rem;
+    position: relative;
+}
+
+/* Fuerza que el scrollbar horizontal se muestre siempre */
+.datatable-scroll-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.datatable-scroll-container::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+.datatable-scroll-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.card-header-no-bg {
+    background-color: transparent;
+    padding: 0; /* Opcional: elimina relleno */
+    border-bottom: none; /* Opcional: elimina línea inferior */
+}
