@@ -4,6 +4,7 @@ public class AgentWorkDAO {
         public Shift__c shift { get; set; }
         public Boolean isDayOff { get; set; }
         public Boolean OtherVariable { get; set; }
+        public Boolean OtherVariable { get; set; }
 
         public ShiftWrapper(Shift__c shift, Boolean isDayOff) {
             this.shift = shift;
