@@ -53,7 +53,7 @@ jobs:
           fi
           
           # Obtenemos lista de archivos cambiados
-          CHANGED=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -E '\.(cls|trigger|js|html|xml|css)$' | tr '\n' ',' | sed 's/,$//')
+          CHANGED=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -E '\.(cls|trigger|js|html|xml|css)$' | grep -v 'ruleset.xml' | grep -v 'package.xml' | tr '\n' ',' | sed 's/,$//')
           
           if [[ -z "$CHANGED" ]]; then
             echo "has_files=false" >> "$GITHUB_OUTPUT"
