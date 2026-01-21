@@ -23,7 +23,7 @@ public class RulesetTester {
 
     public void testSecurityAndPerformance() {
         String Input = 'Test';
-        String var;
+        String varString;
 
         // VIOLACIÓN: Category/Apex/Security (ApexSOQLInjection)
         // Estás concatenando variables directamente en la query.

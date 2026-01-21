@@ -20,21 +20,19 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-
+      # Java es lo único que necesita PMD puro
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: zulu
           java-version: "11"
 
-      - name: Install Salesforce CLI and Code Analyzer
+      # Descargamos PMD 6.55.0 (Compatible con tu ruleset actual)
+      - name: Install PMD
         run: |
-          npm install -g @salesforce/cli@latest
-          sf plugins install code-analyzer@latest
+          wget https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.55.0/pmd-bin-6.55.0.zip
+          unzip pmd-bin-6.55.0.zip
+          echo "$(pwd)/pmd-bin-6.55.0/bin" >> $GITHUB_PATH
 
       - name: Get changed files
         id: changes
@@ -51,7 +49,8 @@ jobs:
             BASE_SHA="$(git rev-parse "${HEAD_SHA}^" 2>/dev/null || echo "")"
           fi
           
-          CHANGED=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -E '\.(cls|trigger|js|html|xml|css)$' | grep -v 'meta.xml' | grep -v 'ruleset.xml' | grep -v 'package.xml' | tr '\n' ',' | sed 's/,$//')
+          # Generamos una lista limpia separada por comas
+          CHANGED=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -E '\.(cls|trigger)$' | grep -v 'meta.xml' | tr '\n' ',' | sed 's/,$//')
           
           if [[ -z "$CHANGED" ]]; then
             echo "has_files=false" >> "$GITHUB_OUTPUT"
@@ -60,43 +59,34 @@ jobs:
             echo "files=$CHANGED" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Run Salesforce Code Analyzer (Manual)
+      # Ejecutamos PMD directamente usando tu ruleset.xml
+      - name: Run PMD Analysis
         if: steps.changes.outputs.has_files == 'true'
         run: |
-          echo "Scanning files: ${{ steps.changes.outputs.files }}"
+          echo "Analizando archivos: ${{ steps.changes.outputs.files }}"
           
-          # Ejecutamos el scanner.
-          # Nota: Usamos --normalize-severity para que PMD 1 sea High.
-          sf code-analyzer run \
-            --engine pmd \
-            --pmd-config ruleset.xml \
-            --target "${{ steps.changes.outputs.files }}" \
-            --outfile results.html \
-            --normalize-severity
+          # run.sh pmd -d "archivos" -R reglas.xml -f formato
+          # Nota: PMD requiere comas para listas de archivos en -d
+          run.sh pmd -d "${{ steps.changes.outputs.files }}" -R ruleset.xml -f html -r results.html
 
-      - name: Upload Results Artifact
+      - name: Upload Results
         if: always() && steps.changes.outputs.has_files == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: code-analyzer-results
+          name: pmd-results
           path: results.html
 
-      - name: Check for Failures
+      # Verificación simple de fallos (buscando si el reporte tiene violaciones)
+      # Esta es una forma rústica pero efectiva de fallar el build si hay errores.
+      - name: Check Quality Gate
         if: steps.changes.outputs.has_files == 'true'
         run: |
-          # Buscamos si existe la cadena de Severidad 1 o 2 en el HTML (método rápido)
-          # Ojo: esto depende del formato del HTML de PMD.
-          # Una opción más segura es generar TAMBIÉN un json temporal.
+          # Corremos de nuevo en formato texto para ver en consola y chequear status
+          run.sh pmd -d "${{ steps.changes.outputs.files }}" -R ruleset.xml -f text -r console_output.txt
+          cat console_output.txt
           
-          # Re-ejecución rápida solo para check de fallo (output json)
-          sf code-analyzer run --engine pmd --pmd-config ruleset.xml --target "${{ steps.changes.outputs.files }}" --outfile results.json --normalize-severity
-          
-          # Usamos jq para contar errores severos (Prioridad 1 o 2)
-          COUNT=$(jq '[.[] | .violations[] | select(.severity <= 2)] | length' results.json)
-          
-          echo "Violaciones Críticas encontradas: $COUNT"
-          
-          if [ "$COUNT" -gt "0" ]; then
-            echo "::error::Se encontraron $COUNT violaciones de severidad Alta/Crítica."
+          # Si el archivo tiene contenido (errores), fallamos.
+          if [ -s console_output.txt ]; then
+            echo "::error::PMD encontró violaciones de reglas."
             exit 1
           fi
