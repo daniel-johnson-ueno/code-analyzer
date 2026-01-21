@@ -39,7 +39,6 @@ public class RulesetTester {
     public void testErrorProneAndCustomRule() {
         try {
             // VIOLACIÓN: Category/Apex/ErrorProne (AvoidHardcodingId)
-            // Uso explícito de un ID de 18 caracteres.
             String hardcodedId = '001xx000003DGSWAA4';
 
             Integer division = 1 / 0; // Provocar excepción
