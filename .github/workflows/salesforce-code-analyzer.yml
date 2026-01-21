@@ -47,82 +47,87 @@ jobs:
             BASE_SHA="$(git rev-parse "${HEAD_SHA}^" 2>/dev/null || echo "")"
           fi
           
-          # Excluimos archivos que no sean código fuente relevante
+          # NOTA: Asegurate de que estás editando un archivo .cls, .trigger, etc.
           CHANGED=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -E '\.(cls|trigger|page|component)$' | grep -v 'meta.xml' | grep -v 'ruleset.xml' | grep -v 'package.xml' | tr '\n' ',' | sed 's/,$//')
           
           if [[ -z "$CHANGED" ]]; then
             echo "has_files=false" >> "$GITHUB_OUTPUT"
+            echo "No se encontraron archivos de código modificados."
           else
             echo "has_files=true" >> "$GITHUB_OUTPUT"
             echo "files=$CHANGED" >> "$GITHUB_OUTPUT"
           fi
 
-      # PASO 1: Ejecutar PMD y generar CSV
-      # Usamos '|| true' para que el paso no falle aquí,
-      # queremos procesar el resultado nosotros mismos en el siguiente paso.
       - name: Run PMD Analysis
         if: steps.changes.outputs.has_files == 'true'
         run: |
-          echo "Analizando archivos..."
+          echo "Analizando archivos: ${{ steps.changes.outputs.files }}"
+          # Ejecutamos PMD. El '|| true' evita que el script pare si encuentra errores,
+          # para que podamos procesarlos nosotros mismos.
           run.sh pmd -d "${{ steps.changes.outputs.files }}" -R ruleset.xml -f csv -r results.csv || true
+          
+          echo "--- DEBUG: Contenido del CSV ---"
+          cat results.csv
+          echo "--- FIN DEBUG ---"
 
-      # PASO 2: Generar Tabla en Summary y Bloquear si es necesario
-      # Este script lee el CSV y crea una tabla Markdown visible en GitHub.
       - name: Process Results & Publish Summary
         if: steps.changes.outputs.has_files == 'true'
         run: |
-          # Si el archivo CSV no existe o está vacío (salvo header), salimos éxito.
+          # Chequeo de seguridad: ¿Existe el archivo y tiene más de 1 línea (header)?
           if [ ! -s results.csv ] || [ $(wc -l < results.csv) -le 1 ]; then
-             echo "✅ **Felicidades, código limpio!** No se encontraron violaciones." >> $GITHUB_STEP_SUMMARY
+             echo "✅ **Código Limpio** - No se encontraron violaciones en los archivos modificados." >> $GITHUB_STEP_SUMMARY
              exit 0
           fi
 
           echo "### 🔍 Reporte Detallado PMD" >> $GITHUB_STEP_SUMMARY
-          echo "A continuación se listan todas las violaciones encontradas en los archivos modificados:" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          
-          # Generamos la cabecera de la tabla Markdown
           echo "| Severidad | Regla | Archivo:Linea | Mensaje |" >> $GITHUB_STEP_SUMMARY
           echo "| :---: | :--- | :--- | :--- |" >> $GITHUB_STEP_SUMMARY
 
-          # Usamos AWK para parsear el CSV de PMD y convertirlo a filas de tabla Markdown
-          # Formato CSV PMD: "Problem","Package","File","Priority","Line","Desc","RuleSet","Rule"
+          # AWK mejorado para parsear el CSV de PMD standard
+          # CSV Headers: "Problem","Package","File","Priority","Line","Desc","RuleSet","Rule"
           awk -F '","' '
           NR > 1 {
-            # Limpiamos comillas extra al principio y final de la linea si existen
-            gsub(/^"|"$/, "", $0)
+            # $3 = File path, $4 = Priority, $5 = Line, $6 = Description, $8 = Rule
           
-            # Asignamos variables basadas en columnas (ajusta según versión PMD si varía)
-            fileFull = $3
+            # Limpieza básica de campos por si quedan comillas residuales
             prio = $4
-            line = $5
-            desc = $6
-            rule = $8
+            gsub(/"/, "", prio)
           
-            # Limpiamos el path del archivo para que no sea tan largo (solo nombre)
+            fileFull = $3
+            gsub(/"/, "", fileFull)
+          
+            line = $5
+            gsub(/"/, "", line)
+          
+            desc = $6
+            gsub(/"/, "", desc)
+          
+            rule = $8
+            gsub(/"/, "", rule)
+
+            # Extraer solo nombre de archivo
             n = split(fileFull, pathParts, "/")
             fileName = pathParts[n]
 
-            # Definimos Icono según prioridad
             icon = "🟡"
             if (prio == "1" || prio == "2") icon = "🔴"
 
-            # Imprimimos la fila en formato Markdown
             printf "| %s %s | **%s** | `%s:%s` | %s |\n", icon, prio, rule, fileName, line, desc
           }
           ' results.csv >> $GITHUB_STEP_SUMMARY
-
+          
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "ℹ️ _🔴=Bloqueante (Prio 1-2) | 🟡=Advertencia (Prio 3-5)_" >> $GITHUB_STEP_SUMMARY
 
-          # --- LÓGICA DE BLOQUEO ---
-          # Buscamos si existe alguna linea con prioridad "1" o "2" en el CSV original
-          CRITICAL_COUNT=$(grep -E '","[12]","' results.csv | wc -l)
-          
-          if [ "$CRITICAL_COUNT" -gt 0 ]; then
-            echo "::error::⛔ SE ENCONTRARON $CRITICAL_COUNT ERRORES CRÍTICOS. Revisa el Summary para ver los detalles."
+          # BLOQUEO: Buscamos Prioridad 1 o 2 en el CSV.
+          # Usamos grep buscando el patrón de comillas para asegurar que es la columna de prioridad.
+          # Patrón: ","1"," o ","2","
+          CRITICAL_ERRORS=$(grep -E '","[12]","' results.csv | wc -l)
+
+          if [ "$CRITICAL_ERRORS" -gt 0 ]; then
+            echo "::error::⛔ SE ENCONTRARON $CRITICAL_ERRORS ERRORES CRÍTICOS. El Pull Request ha sido bloqueado."
             exit 1
           else
-            echo "✅ Se encontraron advertencias, pero ningún error bloqueante."
+            echo "✅ Análisis completado. Solo se encontraron advertencias."
             exit 0
           fi
