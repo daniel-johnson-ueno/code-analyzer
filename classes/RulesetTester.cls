@@ -56,7 +56,7 @@ public class RulesetTester {
         try {
             insert new Account(Name='Test');
         } catch (DmlException e) {
-            // VIOLACIÓN: Category/Apex/ErrorProne (EmptyCatchBlock)
+            // VIOLACIÓN: Category/Apex/ErrorProne (EmptyCatchBlock) lalala
         }
     }
     // VIOLACIÓN: Category/Apex/BestPractices (MethodNamingConventions)
