@@ -69,7 +69,7 @@ jobs:
       - name: Run Code Analyzer
         if: steps.changes.outputs.has_files == 'true'
         id: run-code-analyzer
-        uses: forcedotcom/run-code-analyzer@v1
+        uses: forcedotcom/run-code-analyzer@v2
         with:
           run-command: run
           #run-arguments: --normalize-severity --target "${{ steps.changes.outputs.files }}" --outfile results.html
