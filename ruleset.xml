@@ -68,8 +68,7 @@
                     //CatchStatement[
                         not(
                             .//MethodCallExpression[
-                                contains(lower-case(@FullMethodName), 'generatelogevent.generateerrorlogevent') or
-                                contains(lower-case(@FullMethodName), 'generatelogevent.generateintegrationlogevent')
+                                contains(lower-case(@FullMethodName), 'generatelogevent.generateerrorlogevent')
                             ]
                         )
                     ]

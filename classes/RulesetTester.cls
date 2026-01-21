@@ -59,7 +59,6 @@ public class RulesetTester {
             // VIOLACIÓN: Category/Apex/ErrorProne (EmptyCatchBlock)
         }
     }
-
     // VIOLACIÓN: Category/Apex/BestPractices (MethodNamingConventions)
     // Los métodos deben empezar con minúscula (camelCase).
     public void MetodoConMayuscula() {
