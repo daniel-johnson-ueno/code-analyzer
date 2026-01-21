@@ -77,31 +77,6 @@
         </properties>
     </rule>
 
-    <rule name="EnforceLogger2InCatch"
-          language="apex"
-          message="Debes usar GenerateLogEvent.generateErrorLogEvent en el catch"
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <description>
-            TEST
-        </description>
-        <priority>2</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                        //CatchStatement[
-                            not(
-                                .//MethodCallExpression[
-                                    contains(lower-case(@MethodName), 'generateerrorlogevent')
-                                ]
-                            )
-                        ]
-                    ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
-
     <rule name="DebugFailAlways"
           language="apex"
           message="DEBUG: PMD ESTÁ LEYENDO ESTE ARCHIVO"
