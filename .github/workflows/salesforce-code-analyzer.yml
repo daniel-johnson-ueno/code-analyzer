@@ -31,7 +31,6 @@ jobs:
           distribution: zulu
           java-version: "11"
 
-      # Instalamos el plugin NUEVO para soportar PMD 7
       - name: Install Salesforce CLI and Code Analyzer
         run: |
           npm install -g @salesforce/cli@latest
@@ -52,7 +51,6 @@ jobs:
             BASE_SHA="$(git rev-parse "${HEAD_SHA}^" 2>/dev/null || echo "")"
           fi
           
-          # Obtenemos lista de archivos cambiados
           CHANGED=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -E '\.(cls|trigger|js|html|xml|css)$' | grep -v 'ruleset.xml' | grep -v 'package.xml' | tr '\n' ',' | sed 's/,$//')
           
           if [[ -z "$CHANGED" ]]; then
@@ -62,9 +60,6 @@ jobs:
             echo "files=$CHANGED" >> "$GITHUB_OUTPUT"
           fi
 
-      # --- AQUÍ ESTÁ EL CAMBIO CLAVE ---
-      # Ejecutamos manualmente el comando en lugar de usar la Action wrapper.
-      # Esto evita el error de "path undefined" y nos permite sacar el HTML.
       - name: Run Salesforce Code Analyzer (Manual)
         if: steps.changes.outputs.has_files == 'true'
         run: |
@@ -79,7 +74,6 @@ jobs:
             --outfile results.html \
             --normalize-severity
 
-      # Paso opcional: Subir el reporte HTML como artefacto para que puedas descargarlo
       - name: Upload Results Artifact
         if: always() && steps.changes.outputs.has_files == 'true'
         uses: actions/upload-artifact@v4
@@ -87,11 +81,6 @@ jobs:
           name: code-analyzer-results
           path: results.html
 
-      # Paso crítico: Verificar si hubo errores graves
-      # Como corremos manual, necesitamos grepear el resultado o chequear el exit code.
-      # Una forma simple es buscar en el HTML o JSON si hay violaciones de severidad 1 o 2.
-      # Pero sf code-analyzer suele devolver exit code 0 aunque haya fallos.
-      # Esta es una validación básica basada en grep sobre el HTML generado (o puedes generar un JSON adicional).
       - name: Check for Failures
         if: steps.changes.outputs.has_files == 'true'
         run: |
