@@ -66,9 +66,10 @@
                     <![CDATA[
                         //CatchStatement[
                             not(
-                                .//MethodCallExpression[
-                                    contains(lower-case(@FullMethodName), 'generatelogevent.generateerrorlogevent')
-                                ]
+                            .//MethodCallExpression[
+                                contains(lower-case(@FullMethodName), 'generatelogevent.generateerrorlogevent') or
+                                contains(lower-case(@MethodName), 'generateerrorlogevent')
+                            ]
                             )
                         ]
                     ]]>
@@ -80,7 +81,7 @@
     <rule name="EnforceLogger2InCatch"
           language="apex"
           message="Debes usar GenerateLogEvent.generateErrorLogEvent en el catch"
-          lass="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <description>
             TEST
         </description>
@@ -92,7 +93,8 @@
                         //CatchStatement[
                             not(
                                 .//MethodCallExpression[
-                                    contains(lower-case(@FullMethodName), 'generatelogevent.generateerrorlogevent')
+                                    contains(lower-case(@FullMethodName), 'generatelogevent.generateerrorlogevent') or
+                                    contains(lower-case(@MethodName), 'generateerrorlogevent')
                                 ]
                             )
                         ]
