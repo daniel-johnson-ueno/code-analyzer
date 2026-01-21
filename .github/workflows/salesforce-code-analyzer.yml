@@ -13,6 +13,8 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+      security-events: write # Necesario para subir el reporte SARIF
+      actions: read
 
     steps:
       - name: Check out repository
@@ -20,18 +22,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Java es lo único que necesita PMD puro
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: zulu
           java-version: "11"
 
-      # Descargamos PMD 6.55.0 (Compatible con tu ruleset actual)
+      # Instalamos PMD 6.55.0 (Compatible y estable)
       - name: Install PMD
         run: |
-          wget https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.55.0/pmd-bin-6.55.0.zip
-          unzip pmd-bin-6.55.0.zip
+          wget https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.55.0/pmd-bin-6.55.0.zip -q
+          unzip -q pmd-bin-6.55.0.zip
           echo "$(pwd)/pmd-bin-6.55.0/bin" >> $GITHUB_PATH
 
       - name: Get changed files
@@ -49,8 +50,8 @@ jobs:
             BASE_SHA="$(git rev-parse "${HEAD_SHA}^" 2>/dev/null || echo "")"
           fi
           
-          # Generamos una lista limpia separada por comas
-          CHANGED=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -E '\.(cls|trigger)$' | grep -v 'meta.xml' | tr '\n' ',' | sed 's/,$//')
+          # Excluimos meta.xml, ruleset.xml y package.xml
+          CHANGED=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -E '\.(cls|trigger|page|component)$' | grep -v 'meta.xml' | grep -v 'ruleset.xml' | grep -v 'package.xml' | tr '\n' ',' | sed 's/,$//')
           
           if [[ -z "$CHANGED" ]]; then
             echo "has_files=false" >> "$GITHUB_OUTPUT"
@@ -59,34 +60,63 @@ jobs:
             echo "files=$CHANGED" >> "$GITHUB_OUTPUT"
           fi
 
-      # Ejecutamos PMD directamente usando tu ruleset.xml
-      - name: Run PMD Analysis
+      # 1. Ejecución para VISUALIZACIÓN (Formato SARIF)
+      # Esto permite que GitHub pinte los errores en el código y en la pestaña Security.
+      - name: Run PMD (SARIF Report)
         if: steps.changes.outputs.has_files == 'true'
         run: |
-          echo "Analizando archivos: ${{ steps.changes.outputs.files }}"
-          
-          # run.sh pmd -d "archivos" -R reglas.xml -f formato
-          # Nota: PMD requiere comas para listas de archivos en -d
-          run.sh pmd -d "${{ steps.changes.outputs.files }}" -R ruleset.xml -f html -r results.html
+          run.sh pmd -d "${{ steps.changes.outputs.files }}" -R ruleset.xml -f sarif -r results.sarif || true
+          # El '|| true' es importante para que el script no se detenga aquí, 
+          # queremos procesar los resultados nosotros mismos más abajo.
 
-      - name: Upload Results
-        if: always() && steps.changes.outputs.has_files == 'true'
-        uses: actions/upload-artifact@v4
+      # 2. Subir reporte SARIF a GitHub
+      # Esto hace que aparezcan las anotaciones en el PR.
+      - name: Upload SARIF to GitHub
+        if: steps.changes.outputs.has_files == 'true'
+        uses: github/codeql-action/upload-sarif@v3
         with:
-          name: pmd-results
-          path: results.html
+          sarif_file: results.sarif
+          category: pmd-apex
 
-      # Verificación simple de fallos (buscando si el reporte tiene violaciones)
-      # Esta es una forma rústica pero efectiva de fallar el build si hay errores.
-      - name: Check Quality Gate
+      # 3. Ejecución para CONTROL DE CALIDAD (Formato CSV)
+      # Usamos CSV para poder parsear fácilmente la prioridad y decidir si bloqueamos.
+      - name: Check Priorities & Block PR
         if: steps.changes.outputs.has_files == 'true'
         run: |
-          # Corremos de nuevo en formato texto para ver en consola y chequear status
-          run.sh pmd -d "${{ steps.changes.outputs.files }}" -R ruleset.xml -f text -r console_output.txt
-          cat console_output.txt
+          echo "### 🛡️ Resultados del Análisis PMD" >> $GITHUB_STEP_SUMMARY
           
-          # Si el archivo tiene contenido (errores), fallamos.
-          if [ -s console_output.txt ]; then
-            echo "::error::PMD encontró violaciones de reglas."
+          # Generamos reporte CSV temporal
+          run.sh pmd -d "${{ steps.changes.outputs.files }}" -R ruleset.xml -f csv -r results.csv || true
+          
+          # Contamos errores Totales (restando 1 por el header)
+          TOTAL_ERRORS=$(($(wc -l < results.csv) - 1))
+          # Si el archivo está vacío o solo tiene header, es 0
+          if [ "$TOTAL_ERRORS" -lt 0 ]; then TOTAL_ERRORS=0; fi
+          
+          # Buscamos Errores Críticos (Prioridad 1 y 2)
+          # El formato CSV de PMD pone la prioridad entre comillas, ej: "1" o "2"
+          # La columna de prioridad suele ser la 4ta, pero grep es más seguro buscando el patrón.
+          CRITICAL_COUNT=$(grep -E '","[12]","' results.csv | wc -l)
+          WARNING_COUNT=$(($TOTAL_ERRORS - $CRITICAL_COUNT))
+          
+          echo "| Tipo | Cantidad |" >> $GITHUB_STEP_SUMMARY
+          echo "| :--- | :---: |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🔴 **Bloqueantes (Prio 1-2)** | $CRITICAL_COUNT |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🟡 Advertencias (Prio 3-5) | $WARNING_COUNT |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Mostramos detalles de los errores críticos en el log
+          if [ "$CRITICAL_COUNT" -gt 0 ]; then
+            echo "::error::⛔ SE ENCONTRARON $CRITICAL_COUNT ERRORES CRÍTICOS (Prioridad 1 o 2). El PR no puede fusionarse."
+            echo "Detalle de errores críticos:"
+            grep -E '","[12]","' results.csv
+          
+            # BLOQUEO DEL PR
             exit 1
+          else
+            echo "✅ No se encontraron errores bloqueantes. El pipeline pasa."
+            if [ "$WARNING_COUNT" -gt 0 ]; then
+               echo "::warning::Se encontraron $WARNING_COUNT advertencias de baja prioridad."
+            fi
+            exit 0
           fi
