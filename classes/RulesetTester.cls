@@ -47,7 +47,7 @@ public class RulesetTester {
             // VIOLACIÓN: Custom Rule "EnforceLoggerInCatch"
             // Tu regla XPath exige que haya una llamada a 'GenerateLogEvent...'.
             // Al usar solo System.debug, esta regla debería saltar.
-            System.debug('Error: ' + e.getMessage());
+            System.debug('Error 2: ' + e.getMessage());
         }
     }
 
