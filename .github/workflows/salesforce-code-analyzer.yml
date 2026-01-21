@@ -31,11 +31,6 @@ jobs:
           distribution: zulu
           java-version: "11"
 
-      - name: Install Salesforce CLI and Code Analyzer v4
-        run: |
-          npm install -g @salesforce/cli@latest
-          sf plugins install @salesforce/sfdx-scanner@latest
-
       - name: Get changed files
         id: changes
         run: |
@@ -72,7 +67,7 @@ jobs:
         uses: forcedotcom/run-code-analyzer@v1
         with:
           run-command: run
-          run-arguments: --normalize-severity --target "${{ steps.changes.outputs.files }}" --outfile results.html
+          run-arguments: --normalize-severity --pmdconfig ruleset.xml --engine "pmd" --target "${{ steps.changes.outputs.files }}" --outfile results.html
           results-artifact-name: code-analyzer-results
 
       - name: Fail on Critical or High
