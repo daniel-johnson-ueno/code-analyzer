@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Ueno Bank Custom Ruleset"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+
+    <description>
+        Reglas customizadas para el proyecto de migración. Enfocadas en Seguridad y Performance.
+    </description>
+
+    <rule ref="category/apex/security.xml" />
+    <rule ref="category/apex/performance.xml" />
+
+    <rule ref="category/apex/bestpractices.xml">
+        <exclude name="AvoidLogicInTrigger" /> <exclude name="DebugsShouldUseLoggingLevel" />
+    </rule>
+
+    <rule ref="category/apex/errorprone.xml/EmptyCatchBlock" /> <rule ref="category/apex/errorprone.xml/AvoidHardcodingId" />
+</ruleset>
