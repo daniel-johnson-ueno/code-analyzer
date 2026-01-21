@@ -51,7 +51,7 @@ jobs:
             BASE_SHA="$(git rev-parse "${HEAD_SHA}^" 2>/dev/null || echo "")"
           fi
           
-          CHANGED=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -E '\.(cls|trigger|js|html|xml|css)$' | grep -v 'ruleset.xml' | grep -v 'package.xml' | tr '\n' ',' | sed 's/,$//')
+          CHANGED=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -E '\.(cls|trigger|js|html|xml|css)$' | grep -v 'meta.xml' | grep -v 'ruleset.xml' | grep -v 'package.xml' | tr '\n' ',' | sed 's/,$//')
           
           if [[ -z "$CHANGED" ]]; then
             echo "has_files=false" >> "$GITHUB_OUTPUT"
