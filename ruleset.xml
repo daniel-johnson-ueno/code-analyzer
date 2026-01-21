@@ -9,10 +9,7 @@
     </description>
 
     <rule ref="category/apex/security.xml" />
-    <rule ref="category/apex/performance.xml/OperationWithLimitsInLoop" />
-    <rule ref="category/apex/performance.xml/AvoidSoqlInLoops" />
-    <rule ref="category/apex/performance.xml/AvoidDmlInLoops" />
-    <rule ref="category/apex/performance.xml/AvoidSoslInLoops" />
+    <rule ref="category/apex/performance.xml" />
 
     <rule ref="category/apex/bestpractices.xml">
         <exclude name="AvoidLogicInTrigger" /> <exclude name="DebugsShouldUseLoggingLevel" />

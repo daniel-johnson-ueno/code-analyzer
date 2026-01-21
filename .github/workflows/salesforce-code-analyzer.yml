@@ -72,6 +72,7 @@ jobs:
         uses: forcedotcom/run-code-analyzer@v1
         with:
           run-command: run
+          #run-arguments: --normalize-severity --target "${{ steps.changes.outputs.files }}" --outfile results.html
           run-arguments: --normalize-severity --pmdconfig ruleset.xml --engine "pmd" --target "${{ steps.changes.outputs.files }}" --outfile results.html
           results-artifact-name: code-analyzer-results
 
