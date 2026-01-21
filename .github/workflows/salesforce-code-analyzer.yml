@@ -31,10 +31,10 @@ jobs:
           distribution: zulu
           java-version: "11"
 
-      - name: Install Salesforce CLI and Code Analyzer v4
+      - name: Install Salesforce CLI and Code Analyzer Plugin
         run: |
           npm install -g @salesforce/cli@latest
-          sf plugins install @salesforce/sfdx-scanner@latest
+          sf plugins install code-analyzer@latest
 
       - name: Get changed files
         id: changes
@@ -56,7 +56,6 @@ jobs:
             exit 0
           fi
           
-          # Get changed files matching our patterns
           CHANGED=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -E '\.(cls|trigger|js|html|xml|css)$' | tr '\n' ',' | sed 's/,$//')
           
           if [[ -z "$CHANGED" ]]; then
@@ -71,9 +70,7 @@ jobs:
         id: run-code-analyzer
         uses: forcedotcom/run-code-analyzer@v2
         with:
-          run-command: run
-          #run-arguments: --normalize-severity --target "${{ steps.changes.outputs.files }}" --outfile results.html
-          run-arguments: --normalize-severity --pmdconfig ruleset.xml --engine "pmd" --target "${{ steps.changes.outputs.files }}" --outfile results.html
+          run-arguments: --normalize-severity --pmdconfig ruleset.xml --engine pmd --target "${{ steps.changes.outputs.files }}" --outfile results.html
           results-artifact-name: code-analyzer-results
 
       - name: Fail on Critical or High
