@@ -52,10 +52,9 @@
         </properties>
     </rule>
 
-
     <rule name="EnforceLoggerInCatch"
           language="apex"
-          message="Debes usar GenerateLogEvent.generateErrorLogEvent o generateIntegrationLogEvent en el catch"
+          message="Debes usar GenerateLogEvent.generateErrorLogEvent en el catch"
           class="net.sourceforge.pmd.lang.apex.rule.ApexXPathRule">
         <description>
             Valida que se utilice el logger corporativo dentro de los bloques catch.
@@ -65,14 +64,39 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //CatchStatement[
-                        not(
-                            .//MethodCallExpression[
-                                contains(lower-case(@FullMethodName), 'generatelogevent.generateerrorlogevent')
-                            ]
-                        )
-                    ]
-                ]]>
+                        //CatchStatement[
+                            not(
+                                .//MethodCallExpression[
+                                    contains(lower-case(@FullMethodName), 'generatelogevent.generateerrorlogevent')
+                                ]
+                            )
+                        ]
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <rule name="EnforceLogger2InCatch"
+          language="apex"
+          message="Debes usar GenerateLogEvent.generateErrorLogEvent en el catch"
+          lass="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            TEST
+        </description>
+        <priority>2</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                        //CatchStatement[
+                            not(
+                                .//MethodCallExpression[
+                                    contains(lower-case(@FullMethodName), 'generatelogevent.generateerrorlogevent')
+                                ]
+                            )
+                        ]
+                    ]]>
                 </value>
             </property>
         </properties>
