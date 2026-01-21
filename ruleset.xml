@@ -26,7 +26,6 @@
     </rule>
 
     <rule ref="category/apex/errorprone.xml">
-        <exclude name="AvoidStatefulDatabaseResult" />
         <exclude name="OverrideBothEqualsAndHashcode" />
     </rule>
 
@@ -76,5 +75,4 @@
         </properties>
     </rule>
 
-    <rule ref="category/apex/errorprone.xml/EmptyCatchBlock" /> <rule ref="category/apex/errorprone.xml/AvoidHardcodingId" />
 </ruleset>
