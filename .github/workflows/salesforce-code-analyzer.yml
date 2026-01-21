@@ -31,7 +31,8 @@ jobs:
           distribution: zulu
           java-version: "11"
 
-      - name: Install Salesforce CLI and Code Analyzer Plugin
+      # Instalamos el plugin NUEVO para soportar PMD 7
+      - name: Install Salesforce CLI and Code Analyzer
         run: |
           npm install -g @salesforce/cli@latest
           sf plugins install code-analyzer@latest
@@ -51,11 +52,7 @@ jobs:
             BASE_SHA="$(git rev-parse "${HEAD_SHA}^" 2>/dev/null || echo "")"
           fi
           
-          if [[ -z "${BASE_SHA}" ]]; then
-            echo "has_files=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          
+          # Obtenemos lista de archivos cambiados
           CHANGED=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -E '\.(cls|trigger|js|html|xml|css)$' | tr '\n' ',' | sed 's/,$//')
           
           if [[ -z "$CHANGED" ]]; then
@@ -65,20 +62,52 @@ jobs:
             echo "files=$CHANGED" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Run Code Analyzer
+      # --- AQUÍ ESTÁ EL CAMBIO CLAVE ---
+      # Ejecutamos manualmente el comando en lugar de usar la Action wrapper.
+      # Esto evita el error de "path undefined" y nos permite sacar el HTML.
+      - name: Run Salesforce Code Analyzer (Manual)
         if: steps.changes.outputs.has_files == 'true'
-        id: run-code-analyzer
-        uses: forcedotcom/run-code-analyzer@v2
-        with:
-          run-arguments: --normalize-severity --pmdconfig ruleset.xml --engine pmd --target "${{ steps.changes.outputs.files }}" --outfile results.html
-          results-artifact-name: code-analyzer-results
-
-      - name: Fail on Critical or High
-        if: steps.changes.outputs.has_files == 'true' && (steps.run-code-analyzer.outputs.num-sev1-violations > 0 || steps.run-code-analyzer.outputs.num-sev2-violations > 0)
         run: |
-          echo "::error::Build failed: Critical or High severity violations found."
-          exit 1
+          echo "Scanning files: ${{ steps.changes.outputs.files }}"
+          
+          # Ejecutamos el scanner.
+          # Nota: Usamos --normalize-severity para que PMD 1 sea High.
+          sf code-analyzer run \
+            --engine pmd \
+            --pmd-config ruleset.xml \
+            --target "${{ steps.changes.outputs.files }}" \
+            --outfile results.html \
+            --normalize-severity
 
-      - name: No files to scan
-        if: steps.changes.outputs.has_files == 'false'
-        run: echo "No Apex/JS/HTML/XML/CSS changes - skipping scan"
+      # Paso opcional: Subir el reporte HTML como artefacto para que puedas descargarlo
+      - name: Upload Results Artifact
+        if: always() && steps.changes.outputs.has_files == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-analyzer-results
+          path: results.html
+
+      # Paso crítico: Verificar si hubo errores graves
+      # Como corremos manual, necesitamos grepear el resultado o chequear el exit code.
+      # Una forma simple es buscar en el HTML o JSON si hay violaciones de severidad 1 o 2.
+      # Pero sf code-analyzer suele devolver exit code 0 aunque haya fallos.
+      # Esta es una validación básica basada en grep sobre el HTML generado (o puedes generar un JSON adicional).
+      - name: Check for Failures
+        if: steps.changes.outputs.has_files == 'true'
+        run: |
+          # Buscamos si existe la cadena de Severidad 1 o 2 en el HTML (método rápido)
+          # Ojo: esto depende del formato del HTML de PMD.
+          # Una opción más segura es generar TAMBIÉN un json temporal.
+          
+          # Re-ejecución rápida solo para check de fallo (output json)
+          sf code-analyzer run --engine pmd --pmd-config ruleset.xml --target "${{ steps.changes.outputs.files }}" --outfile results.json --normalize-severity
+          
+          # Usamos jq para contar errores severos (Prioridad 1 o 2)
+          COUNT=$(jq '[.[] | .violations[] | select(.severity <= 2)] | length' results.json)
+          
+          echo "Violaciones Críticas encontradas: $COUNT"
+          
+          if [ "$COUNT" -gt "0" ]; then
+            echo "::error::Se encontraron $COUNT violaciones de severidad Alta/Crítica."
+            exit 1
+          fi
