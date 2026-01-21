@@ -67,7 +67,6 @@
                         //CatchStatement[
                             not(
                             .//MethodCallExpression[
-                                contains(lower-case(@FullMethodName), 'generatelogevent.generateerrorlogevent') or
                                 contains(lower-case(@MethodName), 'generateerrorlogevent')
                             ]
                             )
@@ -93,11 +92,26 @@
                         //CatchStatement[
                             not(
                                 .//MethodCallExpression[
-                                    contains(lower-case(@FullMethodName), 'generatelogevent.generateerrorlogevent') or
                                     contains(lower-case(@MethodName), 'generateerrorlogevent')
                                 ]
                             )
                         ]
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <rule name="DebugFailAlways"
+          language="apex"
+          message="DEBUG: PMD ESTÁ LEYENDO ESTE ARCHIVO"
+          class="net.sourceforge.pmd.lang.apex.rule.ApexXPathRule">
+        <priority>1</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                    //CatchStatement
                     ]]>
                 </value>
             </property>
