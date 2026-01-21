@@ -1,18 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ruleset name="Ueno Bank Custom Ruleset"
+<ruleset name="Itti Custom Ruleset"
          xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
 
     <description>
-        Reglas customizadas para el proyecto de migración. Enfocadas en Seguridad y Performance.
+        Reglas customizadas para CRM.
     </description>
 
     <rule ref="category/apex/security.xml" />
-    <rule ref="category/apex/performance.xml" />
+
+    <rule ref="category/apex/performance.xml" >
+        <exclude name="AvoidDebugStatements" />
+    </rule>
 
     <rule ref="category/apex/bestpractices.xml">
-        <exclude name="AvoidLogicInTrigger" /> <exclude name="DebugsShouldUseLoggingLevel" />
+        <exclude name="AvoidLogicInTrigger" />
+        <exclude name="DebugsShouldUseLoggingLevel" />
+        <exclude name="ApexUnitTestClassShouldHaveRunAs" />
+        <exclude name="AvoidGlobalModifier" />
+    </rule>
+
+    <rule ref="category/apex/codestyle.xml">
+        <exclude name="AnnotationsNamingConventions" />
+        <exclude name="FieldDeclarationsShouldBeAtStart" />
+    </rule>
+
+    <rule ref="category/apex/errorprone.xml">
+        <exclude name="AvoidStatefulDatabaseResult" />
+        <exclude name="OverrideBothEqualsAndHashcode" />
+    </rule>
+
+    <rule ref="category/apex/design.xml/AvoidDeeplyNestedIfStmts">
+        <properties>
+            <property name="problemDepth" value="3" />
+        </properties>
+    </rule>
+    <rule ref="category/apex/design.xml/CognitiveComplexity">
+        <properties>
+            <property name="classReportLevel" value="50" />
+            <property name="methodReportLevel" value="15" />
+        </properties>
+    </rule>
+    <rule ref="category/apex/design.xml/CyclomaticComplexity">
+        <properties>
+            <property name="classReportLevel" value="40" />
+            <property name="methodReportLevel" value="10" />
+        </properties>
+    </rule>
+    <rule ref="category/apex/design.xml/ExcessiveParameterList">
+        <properties>
+            <property name="minimum" value="4" />
+        </properties>
+    </rule>
+    <rule ref="category/apex/design.xml/NcssCount">
+        <properties>
+            <property name="methodReportLevel" value="40" />
+            <property name="classReportLevel" value="500" />
+        </properties>
+    </rule>
+
+
+    <rule name="EnforceLoggerInCatch"
+          language="apex"
+          message="Debes usar GenerateLogEvent.generateErrorLogEvent o GenerateLogEvent.generateIntegrationLogEvent en el catch"
+          class="net.sourceforge.pmd.lang.apex.rule.ApexXPathRule">
+        <priority>2</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                        //CatchStatement[
+                            not(
+                                .//MethodCallExpression[
+                                    contains(lower-case(@FullMethodName), 'GenerateLogEvent.generateErrorLogEvent') or
+                                    contains(lower-case(@FullMethodName), 'GenerateLogEvent.generateIntegrationLogEvent')
+                                ]
+                            )
+                        ]
+                    ]]>
+                </value>
+            </property>
+        </properties>
     </rule>
 
     <rule ref="category/apex/errorprone.xml/EmptyCatchBlock" /> <rule ref="category/apex/errorprone.xml/AvoidHardcodingId" />
