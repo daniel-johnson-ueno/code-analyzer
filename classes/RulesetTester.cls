@@ -57,7 +57,6 @@ public class RulesetTester {
             insert new Account(Name='Test');
         } catch (DmlException e) {
             // VIOLACIÓN: Category/Apex/ErrorProne (EmptyCatchBlock)
-            // El bloque está vacío (incluso los comentarios no cuentan como código para PMD a veces).
         }
     }
 
