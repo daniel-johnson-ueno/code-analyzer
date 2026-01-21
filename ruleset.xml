@@ -22,7 +22,6 @@
     </rule>
 
     <rule ref="category/apex/codestyle.xml">
-        <exclude name="AnnotationsNamingConventions" />
         <exclude name="FieldDeclarationsShouldBeAtStart" />
     </rule>
 
@@ -53,32 +52,26 @@
             <property name="minimum" value="4" />
         </properties>
     </rule>
-    <rule ref="category/apex/design.xml/NcssCount">
-        <properties>
-            <property name="methodReportLevel" value="40" />
-            <property name="classReportLevel" value="500" />
-        </properties>
-    </rule>
 
 
     <rule name="EnforceLoggerInCatch"
           language="apex"
           message="Debes usar GenerateLogEvent.generateErrorLogEvent o GenerateLogEvent.generateIntegrationLogEvent en el catch"
-          class="net.sourceforge.pmd.lang.apex.rule.ApexXPathRule">
+          class="net.sourceforge.pmd.lang.rule.XPathRule">
         <priority>2</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                        //CatchStatement[
-                            not(
-                                .//MethodCallExpression[
-                                    contains(lower-case(@FullMethodName), 'GenerateLogEvent.generateErrorLogEvent') or
-                                    contains(lower-case(@FullMethodName), 'GenerateLogEvent.generateIntegrationLogEvent')
-                                ]
-                            )
-                        ]
-                    ]]>
+                    //CatchStatement[
+                        not(
+                            .//MethodCallExpression[
+                                contains(lower-case(@FullMethodName), 'generatelogevent.generateerrorlogevent') or
+                                contains(lower-case(@FullMethodName), 'generatelogevent.generateintegrationlogevent')
+                            ]
+                        )
+                    ]
+                ]]>
                 </value>
             </property>
         </properties>
