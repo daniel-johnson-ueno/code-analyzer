@@ -66,4 +66,12 @@ public class RulesetTester {
         // Las llaves faltantes suelen ser detectadas.
         if (true) System.debug('Faltan llaves');
     }
+
+    public void testEmptyCatch2() {
+        try {
+            String variable;
+        } catch (DmlException e) {
+
+        }
+    }
 }
