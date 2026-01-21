@@ -55,21 +55,25 @@
 
     <rule name="EnforceLoggerInCatch"
           language="apex"
-          message="Debes usar GenerateLogEvent..."
-          class="net.sourceforge.pmd.lang.rule.XPathRule"> <priority>2</priority>
+          message="Debes usar GenerateLogEvent.generateErrorLogEvent o generateIntegrationLogEvent en el catch"
+          class="net.sourceforge.pmd.lang.apex.rule.ApexXPathRule">
+        <description>
+            Valida que se utilice el logger corporativo dentro de los bloques catch.
+        </description>
+        <priority>2</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                        //CatchStatement[
-                            not(
-                                .//MethodCallExpression[
-                                    contains(lower-case(@FullMethodName), 'generatelogevent.generateerrorlogevent') or
-                                    contains(lower-case(@FullMethodName), 'generatelogevent.generateintegrationlogevent')
-                                ]
-                            )
-                        ]
-                    ]]>
+                    //CatchStatement[
+                        not(
+                            .//MethodCallExpression[
+                                contains(lower-case(@FullMethodName), 'generatelogevent.generateerrorlogevent') or
+                                contains(lower-case(@FullMethodName), 'generatelogevent.generateintegrationlogevent')
+                            ]
+                        )
+                    ]
+                ]]>
                 </value>
             </property>
         </properties>
