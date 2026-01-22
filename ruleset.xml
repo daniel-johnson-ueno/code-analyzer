@@ -55,7 +55,7 @@
     <rule name="DontCallBossShort"
           language="apex"
           message="Boss wants to talk to you."
-          class="net.sourceforge.pmd.lang.rule.XPathRule">
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <description>
             TODO
         </description>
@@ -64,7 +64,13 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                        //VariableId[@Name = "bill"][../../Type[@TypeImage="Integer"]]
+                        //CatchStatement[
+                            not(
+                                .//MethodCallExpression[
+                                    matches(@MethodName, '(?i).*generate.*logevent.*')
+                                ]
+                            )
+                        ]
                     ]]>
                 </value>
             </property>
