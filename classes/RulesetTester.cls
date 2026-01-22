@@ -22,7 +22,7 @@ public class RulesetTester {
     }
 
     public void testSecurityAndPerformance() {
-        String Input = 'Test';
+        String input = 'Test';
         String varStrings;
 
         // VIOLACIÓN: Category/Apex/Security (ApexSOQLInjection)
@@ -60,7 +60,7 @@ public class RulesetTester {
     }
     // VIOLACIÓN: Category/Apex/BestPractices (MethodNamingConventions)
     // Los métodos deben empezar con minúscula (camelCase).
-    public void MetodoConMayuscula() {
+    public void metodoConMayuscula() {
         // VIOLACIÓN: Category/Apex/CodeStyle (IfStmtsMustUseBraces)
         // Las llaves faltantes suelen ser detectadas.
         if (true) System.debug('Faltan llaves');
