@@ -55,7 +55,7 @@
     <rule name="DebugFailAlways"
           language="apex"
           message="DEBUG: PMD ESTA LEYENDO ESTE ARCHIVO"
-          class="net.sourceforge.pmd.lang.rule.XPathRule">
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <priority>3</priority>
         <properties>
             <property name="xpath">
