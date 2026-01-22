@@ -61,8 +61,7 @@ public class RulesetTester {
     // VIOLACIÓN: Category/Apex/BestPractices (MethodNamingConventions)
     // Los métodos deben empezar con minúscula (camelCase).
     public void MetodoConMayuscula() {
-        // VIOLACIÓN: Category/Apex/CodeStyle (IfStmtsMustUseBraces)
-        // Aunque incluiste CodeStyle, solo excluiste FieldDeclarations.
+        // VIOLACIÓN: Category/Apex/CodeStyle (IfStmtsMustUseBraces
         // Las llaves faltantes suelen ser detectadas.
         if (true) System.debug('Faltan llaves');
     }
