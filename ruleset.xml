@@ -52,39 +52,16 @@
         </properties>
     </rule>
 
-    <rule name="EnforceLoggerInCatch"
-          language="apex"
-          message="Debes usar GenerateLogEvent.generateErrorLogEvent en el catch"
-          class="net.sourceforge.pmd.lang.rule.XPathRule">
-        <description>Valida logger corporativo.</description>
-        <priority>2</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                        //CatchStatement[
-                            not(
-                                .//MethodCallExpression[
-                                    matches(@MethodName, '(?i).*generate.*logevent.*')
-                                ]
-                            )
-                        ]
-                        ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
-
     <rule name="DebugFailAlways"
           language="apex"
           message="DEBUG: PMD ESTA LEYENDO ESTE ARCHIVO"
           class="net.sourceforge.pmd.lang.rule.XPathRule">
-        <priority>1</priority>
+        <priority>3</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //CatchStatement
+                        //VariableId[@Name = "bill"][../../Type[@TypeImage="Integer"]]
                     ]]>
                 </value>
             </property>
