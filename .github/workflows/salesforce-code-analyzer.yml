@@ -1,4 +1,4 @@
-name: Salesforce Code Analyzer (PMD 7 Latest)
+name: Salesforce Code Analyzer
 
 on:
   workflow_dispatch:
@@ -24,9 +24,8 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: zulu
-          java-version: "17" # PMD 7 funciona mejor con Java 17+
+          java-version: "17"
 
-      # DESCARGA DE PMD 7 (Última versión estable)
       - name: Install PMD 7
         run: |
           # Descargamos PMD 7.0.0 (Puedes cambiar el número si sale una más nueva)
@@ -59,12 +58,10 @@ jobs:
             echo "files=$CHANGED" >> "$GITHUB_OUTPUT"
           fi
 
-      # EJECUCIÓN CON SINTAXIS PMD 7
       - name: Run PMD Analysis
         if: steps.changes.outputs.has_files == 'true'
         run: |
           echo "Analizando archivos..."
-          # NUEVO COMANDO: 'pmd check'
           pmd check -d "${{ steps.changes.outputs.files }}" -R ruleset.xml -f csv -r results.csv --force-language apex || true
 
       - name: Process Results & Publish Summary
