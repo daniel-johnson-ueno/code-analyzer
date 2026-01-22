@@ -53,7 +53,7 @@
     </rule>
 
     <rule name="DontCallBossShort"
-          language="java"
+          language="apex"
           message="Boss wants to talk to you."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <description>
