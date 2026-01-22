@@ -69,7 +69,7 @@ public class RulesetTester {
 
     public void testEmptyCatch2() {
         try {
-            String variable;
+            Integer bill;
         } catch (DmlException e) {
 
         }
