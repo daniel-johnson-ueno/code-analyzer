@@ -6,6 +6,7 @@ global with sharing class BatchableClass implements Database.Batchable<SObject>,
                      FROM Account
                     WHERE Note__c = TRUE
             ]);
+
         }
 
         global void execute(Database.BatchableContext BC, List<Account> accounts) {
