@@ -241,7 +241,6 @@
         <description>Es obligatorio documentar campos y objetos.</description>
         <priority>3</priority>
         <properties>
-            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
                     <![CDATA[
@@ -260,7 +259,6 @@
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <priority>3</priority>
         <properties>
-            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
                     <![CDATA[
@@ -287,7 +285,6 @@
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <priority>3</priority>
         <properties>
-            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
                     <![CDATA[
@@ -308,7 +305,6 @@
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <priority>3</priority>
         <properties>
-            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
                     <![CDATA[
