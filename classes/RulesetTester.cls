@@ -42,6 +42,7 @@ public class RulesetTester {
         try {
             insert new Account(Name='Test');
         } catch (DmlException e) {
+
         }
     }
 
@@ -58,6 +59,7 @@ public class RulesetTester {
         try {
             Integer bill;
         } catch (DmlException e) {
+
         }
     }
 }
