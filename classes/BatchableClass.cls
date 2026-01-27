@@ -2,7 +2,9 @@ global with sharing class BatchableClass implements Database.Batchable<SObject>,
 
         global static Database.QueryLocator start(Database.BatchableContext BC) {
             return Database.getQueryLocator([
-                    SELECT Id, Note__c, Linea__c, Tipo_Tarjeta__c, Contrato_Unico__c  FROM Account WHERE Note__c = TRUE
+                    SELECT Id, Note__c, Linea__c, Tipo_Tarjeta__c, Contrato_Unico__c
+                     FROM Account
+                    WHERE Note__c = TRUE
             ]);
         }
 
