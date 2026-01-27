@@ -9,14 +9,14 @@
     </description>
 
 <!-- REGLAS CUSTOM -->
-    <rule name="EnforceErrorLogging"
+    <rule name="EnforceGenerateErrorLogEvent"
           language="apex"
           message="Todo bloque Catch debe llamar a GenerateLogEvent.generateErrorLogEvent(...)"
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <description>
             Asegura que no se silencien errores. Se requiere el uso del logger estándar.
         </description>
-        <priority>2</priority>
+        <priority>1</priority>
         <properties>
             <property name="xpath">
                 <value>
@@ -34,22 +34,43 @@
         </properties>
     </rule>
 
-    <rule name="DebugCatchNuclear"
+<!-- Por el momento queda solo en warning, pero lo vamos a ajustar a error en el futuro -->
+    <rule name="EnforceDAOPattern"
           language="apex"
-          message="DEBUG: Encontré un nodo Catch"
+          message="No se permiten SOQLs (ni Database.query) en esta clase. Mueve la consulta a una clase DAO."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>1</priority>
+        <description>
+            Centraliza el acceso a datos. Las consultas SOQL ([SELECT...]) y Dynamic SOQL (Database.query)
+            solo están permitidas en clases que contengan 'DAO' en su nombre, o en procesos Batch/Queueable/Schedulable.
+        </description>
+        <priority>3</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[contains(local-name(), 'Catch')]
+                    //UserClass[
+                        not(contains(lower-case(@Image), 'dao'))
+                    ]
+                    [
+                        count(ImplementsList/ClassOrInterfaceType[
+                            contains(lower-case(@Image), 'batchable') or
+                            contains(lower-case(@Image), 'queueable') or
+                            contains(lower-case(@Image), 'schedulable')
+                        ]) = 0
+                    ]
+                    [
+                        .//SoqlExpression
+                        or
+                        .//MethodCallExpression[
+                            lower-case(@MethodName) = 'query' and
+                            .//ReferenceExpression[lower-case(@Image) = 'database']
+                        ]
+                    ]
                     ]]>
                 </value>
             </property>
         </properties>
     </rule>
-
 
 <!-- SECURITY: https://pmd.github.io/pmd/pmd_rules_apex_security.html -->
 <!-- Por el momento queda solo en warning, pero lo vamos a ajustar a error en el futuro -->
