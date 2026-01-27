@@ -52,7 +52,7 @@ public class RulesetTester {
         if (true) System.debug('Faltan llaves');
     }
 
-    
+
     public void testEmptyCatch2() {
 
         try {
