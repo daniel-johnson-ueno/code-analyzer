@@ -21,12 +21,6 @@
 
 <!-- DESIGN: https://pmd.github.io/pmd/pmd_rules_apex_design.html -->
 <!-- Por el momento queda solo en warning, pero lo vamos a ajustar a error en el futuro -->
-    <rule ref="category/apex/design.xml/NcssCount">
-        <properties>
-            <property name="methodReportLevel" value="50" />
-            <property name="classReportLevel" value="500" />
-        </properties>
-    </rule>
     <rule ref="category/apex/design.xml/ExcessiveParameterList">
         <properties>
             <property name="minimum" value="4" />
@@ -64,9 +58,6 @@
     <rule ref="category/apex/bestpractices.xml/UnusedLocalVariable">
         <priority>1</priority>
     </rule>
-
-    <!-- Por el momento queda solo en warning, pero lo vamos a ajustar a error en el futuro -->
-    <rule ref="category/apex/bestpractices.xml/AvoidFutureAnnotation" />
 
 
 <!-- CODE STYLE: https://pmd.github.io/pmd/pmd_rules_apex_codestyle.html -->
@@ -125,9 +116,6 @@
         <priority>1</priority>
     </rule>
     <rule ref="category/apex/errorprone.xml/MethodWithSameNameAsEnclosingClass">
-        <priority>1</priority>
-    </rule>
-    <rule ref="category/apex/errorprone.xml/TypeShadowsBuiltInNamespace">
         <priority>1</priority>
     </rule>
 
