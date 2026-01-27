@@ -64,7 +64,7 @@ jobs:
             # Esto ignora el delta gigante que pueda haber con UATGV.
             
             echo "Obteniendo referencia de main..."
-            git fetch origin main --depth=1
+            git fetch origin main
             
             PR_HEAD_SHA="${{ github.event.pull_request.head.sha }}"
             
