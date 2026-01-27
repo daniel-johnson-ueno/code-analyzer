@@ -53,6 +53,7 @@ public class RulesetTester {
     }
 
     public void testEmptyCatch2() {
+
         try {
             Integer bill;
         } catch (DmlException e) {
