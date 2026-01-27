@@ -9,49 +9,47 @@
     </description>
 
 <!-- REGLAS CUSTOM -->
-    <rule name="DebugCatchDetection"
-          language="apex"
-          message="DEBUG: Encontré un bloque Catch"
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>1</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                    //CatchStatement
-                    ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
-
     <rule name="EnforceErrorLogging"
           language="apex"
           message="Todo bloque Catch debe llamar a GenerateLogEvent.generateErrorLogEvent(...)"
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <description>
-            Asegura que no se silencien errores. Se requiere el uso del logger estándar
-            GenerateLogEvent.generateErrorLogEvent en cualquier excepción capturada.
+            Asegura que no se silencien errores. Se requiere el uso del logger estándar.
         </description>
         <priority>2</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //CatchStatement[
-                        not(
-                            .//MethodCallExpression[
-                                (@MethodName = 'generateErrorLogEvent')
-                                and
-                                .//ReferenceExpression[lower-case(@Image) = 'generatelogevent']
-                            ]
-                        )
+                    //CatchBlockStatement[
+                        count(
+                           .//MethodCallExpression[
+                               lower-case(@MethodName) = 'generateerrorlogevent'
+                           ]
+                        ) = 0
                     ]
                     ]]>
                 </value>
             </property>
         </properties>
     </rule>
+
+    <rule name="DebugCatchNuclear"
+          language="apex"
+          message="DEBUG: Encontré un nodo Catch"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <priority>1</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                    //*[contains(local-name(), 'Catch')]
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
 
 <!-- SECURITY: https://pmd.github.io/pmd/pmd_rules_apex_security.html -->
 <!-- Por el momento queda solo en warning, pero lo vamos a ajustar a error en el futuro -->
