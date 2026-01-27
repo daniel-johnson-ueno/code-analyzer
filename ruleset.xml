@@ -47,7 +47,6 @@
                     ]]>
                 </value>
             </property>
-            <property name="version" value="2.0"/>
         </properties>
     </rule>
 
