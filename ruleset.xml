@@ -51,11 +51,12 @@
                         not(contains(lower-case(@Image), 'dao'))
                     ]
                     [
-                        not(ImplementsList[
-                            contains(lower-case(string(.)), 'batchable') or
-                            contains(lower-case(string(.)), 'queueable') or
-                            contains(lower-case(string(.)), 'schedulable')
-                        ])
+                        count(
+                            child::node()
+                            [not(contains(local-name(), 'Method'))]  [not(contains(local-name(), 'Field'))]   [not(contains(local-name(), 'Block'))]   [contains(lower-case(string(.)), 'batchable') or
+                             contains(lower-case(string(.)), 'queueable') or
+                             contains(lower-case(string(.)), 'schedulable')]
+                        ) = 0
                     ]
                     [
                         .//SoqlExpression
