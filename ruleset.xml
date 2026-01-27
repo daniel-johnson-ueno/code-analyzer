@@ -230,10 +230,69 @@
 
 
     <!-- ================================================================= -->
+    <!-- REGLAS DE METADATOS (FLOWS Y VALIDATION RULES)                    -->
+    <!-- ================================================================= -->
+
+    <!-- 5. Flows: Descripción Obligatoria -->
+    <rule name="FlowDescriptionRequired"
+          language="xml"
+          message="⚠️ FLOW: El Flow debe tener una descripción completa."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>Es obligatorio documentar qué hace el Flow.</description>
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                    //*[local-name()='Flow']
+                       [
+                         count(.//*[local-name()='description']) = 0
+                         or
+                         normalize-space(.//*[local-name()='description']) = ''
+                       ]
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- 6. Validation Rules: Mensaje de Error en Español -->
+    <rule name="ValidationRuleErrorMessageSpanish"
+          language="xml"
+          message="⚠️ VALIDATION: El mensaje de error debe estar en ESPAÑOL."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>Los mensajes de error visibles para el usuario no pueden estar en inglés.</description>
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                    //*[local-name()='errorMessage']
+                    [
+                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'error') or
+                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'value') or
+                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'field') or
+                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'required') or
+                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'invalid') or
+                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'please') or
+                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'must be')
+                    ]
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+
+    <!-- ================================================================= -->
     <!-- REGLAS PARA CAMPOS Y OBJETOS                                      -->
     <!-- ================================================================= -->
 
-    <!-- 1. Descripción Obligatoria (Busca CustomField/Object recursivamente) -->
+    <!-- ================================================================= -->
+    <!-- REGLAS DE METADATOS (SELECCIÓN DIRECTA / DIRECT SELECTION)        -->
+    <!-- ================================================================= -->
+
+    <!-- 1. Descripción Obligatoria: Check existence using descendant axis (.//) to bypass namespace issues -->
     <rule name="MetadataDescriptionRequired"
           language="xml"
           message="⚠️ ADMIN: El Objeto/Campo debe tener una descripción completa."
@@ -244,11 +303,11 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='CustomField' or local-name()='CustomObject']
+                    //*[local-name()='CustomField' or local-name()='CustomObject' or local-name()='fields']
                        [
-                         not(*[local-name()='description'])
+                         count(.//*[local-name()='description']) = 0
                          or
-                         normalize-space(*[local-name()='description']) = ''
+                         normalize-space(.//*[local-name()='description']) = ''
                        ]
                     ]]>
                 </value>
@@ -256,7 +315,7 @@
         </properties>
     </rule>
 
-    <!-- 2. Naming Convention: PascalCase (Directo al nodo fullName) -->
+    <!-- 2. Naming Convention: PascalCase (Selección directa de fullName) -->
     <rule name="ApiNamePascalCase"
           language="xml"
           message="⚠️ NAMING: El API Name debe usar Mayúsculas al inicio y después de cada guion bajo."
@@ -282,7 +341,7 @@
         </properties>
     </rule>
 
-    <!-- 3. Idioma: Detectar Español en API Names (Directo al nodo fullName) -->
+    <!-- 3. Idioma: Detectar Español en API Names (Selección directa de fullName) -->
     <rule name="NoSpanishInApiName"
           language="xml"
           message="⚠️ NAMING: El API Name parece estar en español. Debe ser en INGLÉS."
@@ -314,7 +373,7 @@
         </properties>
     </rule>
 
-    <!-- 4. Idioma: Detectar Inglés en Labels (Directo al nodo label) -->
+    <!-- 4. Idioma: Detectar Inglés en Labels (Selección directa de label) -->
     <rule name="NoEnglishInLabel"
           language="xml"
           message="⚠️ LABEL: El Label parece estar en inglés. Debe ser en ESPAÑOL."
