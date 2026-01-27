@@ -19,7 +19,7 @@ public class RulesetTester {
 
     public void testSecurityAndPerformance() {
         String Input = 'Test';
-        String varStrings; 
+        String varStrings;
 
         List<Account> accs = Database.query('SELECT Id FROM Account WHERE Name = \'' + input + '\'');
 
