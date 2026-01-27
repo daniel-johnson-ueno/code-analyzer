@@ -33,6 +33,7 @@ public class RulesetTester {
             String hardcodedId = '001xx000003DGSWAA4';
             Integer division = 1 / 0;
 
+
         } catch (Exception e) {
             System.debug('Error 23: ' + e.getMessage());
         }

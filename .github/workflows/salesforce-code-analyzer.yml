@@ -28,7 +28,7 @@ jobs:
 
       - name: Install PMD 7
         run: |
-          # Descargamos PMD 7.0.0 (Puedes cambiar el número si sale una más nueva)
+          # Descargamos PMD 7.0.0 (Puedes cambiar el número si sale una más nueva) -
           wget https://github.com/pmd/pmd/releases/download/pmd_releases%2F7.0.0/pmd-dist-7.0.0-bin.zip -q
           unzip -q pmd-dist-7.0.0-bin.zip
           # Agregamos al PATH. Nota: La carpeta extraída se llama pmd-bin-7.0.0
