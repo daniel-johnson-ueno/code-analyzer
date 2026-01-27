@@ -8,24 +8,33 @@
         Reglas customizadas para CRM.
     </description>
 
-
-    <rule name="TestCustomValidation"
+<!-- REGLAS CUSTOM -->
+    <rule name="EnforceErrorLogging"
           language="apex"
-          message="✅ ÉXITO: El ruleset custom está funcionando (Regla de prueba)."
+          message="Todo bloque Catch debe llamar a GenerateLogEvent.generateErrorLogEvent(...)"
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <description>
-            Esta regla detecta cualquier clase Apex. Su único propósito es validar que
-            PMD está leyendo y ejecutando reglas custom definidas en este XML.
+            Asegura que no se silencien errores. Se requiere el uso del logger estándar
+            GenerateLogEvent.generateErrorLogEvent en cualquier excepción capturada.
         </description>
-        <priority>2</priority> <properties>
-        <property name="xpath">
-            <value>
-                <![CDATA[
-                    //UserClass
+        <priority>2</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                    //CatchStatement[
+                        not(
+                            .//MethodCallExpression[
+                                (@MethodName = 'generateErrorLogEvent')
+                                and
+                                .//ReferenceExpression[lower-case(@Image) = 'generatelogevent']
+                            ]
+                        )
+                    ]
                     ]]>
-            </value>
-        </property>
-    </properties>
+                </value>
+            </property>
+        </properties>
     </rule>
 
 <!-- SECURITY: https://pmd.github.io/pmd/pmd_rules_apex_security.html -->

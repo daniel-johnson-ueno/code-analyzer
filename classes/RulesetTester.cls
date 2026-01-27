@@ -11,7 +11,7 @@ public class RulesetTester {
                 if (p3 != null) {
                     if (p5) {
                         System.debug('Demasiado anidamiento bross');
-                    } 
+                    }
                 }
             }
         }
@@ -58,7 +58,6 @@ public class RulesetTester {
         try {
             Integer bill;
         } catch (DmlException e) {
-
         }
     }
 }
