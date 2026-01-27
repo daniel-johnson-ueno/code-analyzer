@@ -25,6 +25,7 @@ public class RulesetTester {
 
         for (Account a : accs) {
             List<Contact> cons = [SELECT Id FROM Contact WHERE AccountId = :a.Id];
+            
         }
     }
 
