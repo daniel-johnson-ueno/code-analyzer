@@ -262,17 +262,16 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='CustomField' or local-name()='CustomObject']
-                        /*[local-name()='fullName']
-                        [
-                            contains(text(), '__c')
-                            and
-                            (
-                                matches(text(), '^[a-z]')
-                                or
-                                matches(text(), '_[a-z]')
-                            )
-                        ]
+                    //*[local-name()='fullName'][parent::*[local-name()='CustomField' or local-name()='CustomObject']]
+                    [
+                        contains(string(.), '__c')
+                        and
+                        (
+                            matches(string(.), '^[a-z]')
+                            or
+                            matches(string(.), '_[a-z]')
+                        )
+                    ]
                     ]]>
                 </value>
             </property>
@@ -289,11 +288,10 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='CustomField' or local-name()='CustomObject']
-                        /*[local-name()='fullName']
-                        [
-                            matches(lower-case(text()), '.*(_|^)(fecha|nombre|apellido|direccion|telefono|estado|tipo|codigo|descripcion|precio|costo|cuenta|usuario)(_|$).*')
-                        ]
+                    //*[local-name()='fullName'][parent::*[local-name()='CustomField' or local-name()='CustomObject']]
+                    [
+                        matches(lower-case(string(.)), '.*(_|^)(fecha|nombre|apellido|direccion|telefono|estado|tipo|codigo|descripcion|precio|costo|cuenta|usuario)(_|$).*')
+                    ]
                     ]]>
                 </value>
             </property>
@@ -310,11 +308,10 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='CustomField' or local-name()='CustomObject']
-                        /*[local-name()='label']
-                        [
-                            matches(lower-case(text()), '.*\m(date|name|last|first|status|type|code|description|price|cost|address|phone|user|account|manager|custom)\M.*')
-                        ]
+                    //*[local-name()='label'][parent::*[local-name()='CustomField' or local-name()='CustomObject']]
+                    [
+                        matches(lower-case(string(.)), '(^|[^a-z])(date|name|last|first|status|type|code|description|price|cost|address|phone|user|account|manager|custom)([^a-z]|$)')
+                    ]
                     ]]>
                 </value>
             </property>
