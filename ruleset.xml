@@ -262,14 +262,15 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='fullName'][parent::*[local-name()='CustomField' or local-name()='CustomObject']]
+                    /*[local-name()='CustomField' or local-name()='CustomObject']
+                        /*[local-name()='fullName']
                     [
                         contains(string(.), '__c')
                         and
                         (
-                            contains('abcdefghijklmnopqrstuvwxyz', substring(string(.), 1, 1))
+                            contains('abcdefghijklmnopqrstuvwxyz', substring(substring-before(string(.), '__c'), 1, 1))
                             or
-                            contains(translate(string(.), 'abcdefghijklmnopqrstuvwxyz', '00000000000000000000000000'), '_0')
+                            contains(translate(substring-before(string(.), '__c'), 'abcdefghijklmnopqrstuvwxyz', '00000000000000000000000000'), '_0')
                         )
                     ]
                     ]]>
@@ -288,7 +289,8 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='fullName'][parent::*[local-name()='CustomField' or local-name()='CustomObject']]
+                    /*[local-name()='CustomField' or local-name()='CustomObject']
+                        /*[local-name()='fullName']
                     [
                         contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'fecha') or
                         contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'nombre') or
@@ -320,7 +322,8 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='label'][parent::*[local-name()='CustomField' or local-name()='CustomObject']]
+                    /*[local-name()='CustomField' or local-name()='CustomObject']
+                        /*[local-name()='label']
                     [
                         contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'date') or
                         contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'name') or
