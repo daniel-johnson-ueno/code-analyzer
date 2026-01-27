@@ -52,7 +52,7 @@
                         not(contains(lower-case(@Image), 'dao'))
                     ]
                     [
-                        count(ImplementsList//ClassOrInterfaceType[
+                        count(ImplementsList//*[
                             contains(lower-case(@Image), 'batchable') or
                             contains(lower-case(@Image), 'queueable') or
                             contains(lower-case(@Image), 'schedulable')
