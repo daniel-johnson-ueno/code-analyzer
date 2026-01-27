@@ -233,24 +233,66 @@
     <!-- REGLAS PARA CAMPOS Y OBJETOS                                      -->
     <!-- ================================================================= -->
 
-    <rule name="MetadataDescriptionRequired"
+    <!-- ================================================================= -->
+    <!-- REGLAS DE DEBUG (Sondas para detectar estructura)                 -->
+    <!-- ================================================================= -->
+
+    <rule name="DebugRootIsCustomField"
           language="xml"
-          message="⚠️ ADMIN: El Objeto/Campo debe tener una descripción completa."
+          message="DEBUG: El nodo raíz es CustomField"
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <description>Es obligatorio documentar campos y objetos.</description>
-        <priority>3</priority>
+        <priority>5</priority>
         <properties>
             <property name="xpath">
-                <value>
-                    <![CDATA[
-                    //*[local-name()='CustomField' or local-name()='CustomObject' or local-name()='fields']
-                       [
-                         count(.//*[local-name()='description']) = 0
-                         or
-                         normalize-space(.//*[local-name()='description']) = ''
-                       ]
-                    ]]>
-                </value>
+                <value><![CDATA[/*[local-name()='CustomField']]]></value>
+            </property>
+        </properties>
+    </rule>
+
+    <rule name="DebugRootIsCustomObject"
+          language="xml"
+          message="DEBUG: El nodo raíz es CustomObject"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <priority>5</priority>
+        <properties>
+            <property name="xpath">
+                <value><![CDATA[/*[local-name()='CustomObject']]]></value>
+            </property>
+        </properties>
+    </rule>
+
+    <rule name="DebugRootIsFields"
+          language="xml"
+          message="DEBUG: El nodo raíz es fields (Metadata API)"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <priority>5</priority>
+        <properties>
+            <property name="xpath">
+                <value><![CDATA[/*[local-name()='fields']]]></value>
+            </property>
+        </properties>
+    </rule>
+
+    <rule name="DebugChildFullName"
+          language="xml"
+          message="DEBUG: Encontré un nodo fullName en alguna profundidad"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <priority>5</priority>
+        <properties>
+            <property name="xpath">
+                <value><![CDATA[//*[local-name()='fullName']]]></value>
+            </property>
+        </properties>
+    </rule>
+
+    <rule name="DebugChildLabel"
+          language="xml"
+          message="DEBUG: Encontré un nodo label en alguna profundidad"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <priority>5</priority>
+        <properties>
+            <property name="xpath">
+                <value><![CDATA[//*[local-name()='label']]]></value>
             </property>
         </properties>
     </rule>
