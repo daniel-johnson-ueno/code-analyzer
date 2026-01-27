@@ -14,7 +14,7 @@
           message="Todo bloque Catch debe llamar a GenerateLogEvent.generateErrorLogEvent(...)"
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <description>
-            Asegura que no se silencien errores. Se requiere el uso del logger estándar.
+            Asegura que no se silencien errores. Se requiere el uso del logger estandar.
         </description>
         <priority>1</priority>
         <properties>
@@ -37,13 +37,13 @@
     <!-- Por el momento queda solo en warning, pero lo vamos a ajustar a error en el futuro -->
     <rule name="EnforceDAOPattern"
           language="apex"
-          message="No se permiten SOQLs (ni Database.query) en esta clase. Mueve la consulta a una clase DAO."
+          message="No se permiten SOQLs (ni Database.query) en esta clase. Mover la consulta a una clase DAO."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <description>
             Permite SOQL solo en:
             1. Clases con 'DAO' en el nombre.
-            2. Clases que tengan un método 'execute' (Batch, Queueable, Schedulable).
-            3. Clases que tengan un método 'start' (Batch).
+            2. Clases que tengan un metodo 'execute' (Batch, Queueable, Schedulable).
+            3. Clases que tengan un metodo 'start' (Batch).
         </description>
         <priority>3</priority>
         <properties>
@@ -77,10 +77,10 @@
     <!-- Por el momento queda solo en warning, pero lo vamos a ajustar a error en el futuro -->
     <rule name="EnforceSOQLHelperInDAO"
           language="apex"
-          message="⛔ SEGURIDAD: Los métodos DAO con queries deben utilizar SOQLHelper para garantizar FLS y sanitizacion."
+          message="Los metodos DAO con queries deben utilizar SOQLHelper para garantizar FLS y sanitizacion."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <description>
-            Para asegurar que se respeten los permisos de campos (FLS) y se evite la inyección SOQL,
+            Para asegurar que se respeten los permisos de campos (FLS) y se evite la inyeccion SOQL,
             cualquier consulta en un DAO debe construirse utilizando las utilidades de la clase SOQLHelper.
         </description>
         <priority>3</priority>
