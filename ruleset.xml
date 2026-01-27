@@ -36,11 +36,10 @@
 
     <rule name="EnforceDAOPattern"
           language="apex"
-          message="⛔ ARQUITECTURA: No se permiten SOQLs (ni Database.query) en esta clase. Mueve la consulta a una clase DAO."
+          message="⛔: No se permiten SOQLs (ni Database.query) en esta clase. Mueve la consulta a una clase DAO."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <description>
-            Centraliza el acceso a datos. Las consultas SOQL solo están permitidas en clases DAO
-            o procesos asíncronos (Batch/Queueable/Schedulable).
+            Centraliza el acceso a datos.
         </description>
         <priority>2</priority>
         <properties>
@@ -52,11 +51,11 @@
                         not(contains(lower-case(@Image), 'dao'))
                     ]
                     [
-                        count(.//ClassOrInterfaceType[
-                            contains(lower-case(@Image), 'batchable') or
-                            contains(lower-case(@Image), 'queueable') or
-                            contains(lower-case(@Image), 'schedulable')
-                        ]) = 0
+                        not(ImplementsList[
+                            contains(lower-case(string(.)), 'batchable') or
+                            contains(lower-case(string(.)), 'queueable') or
+                            contains(lower-case(string(.)), 'schedulable')
+                        ])
                     ]
                     [
                         .//SoqlExpression
