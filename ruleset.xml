@@ -34,9 +34,10 @@
         </properties>
     </rule>
 
+    <!-- Por el momento queda solo en warning, pero lo vamos a ajustar a error en el futuro -->
     <rule name="EnforceDAOPattern"
           language="apex"
-          message="⛔ ARQUITECTURA: SOQL detectado fuera de DAO o Batch/Job. Mueve la consulta."
+          message="No se permiten SOQLs (ni Database.query) en esta clase. Mueve la consulta a una clase DAO."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <description>
             Permite SOQL solo en:
@@ -44,7 +45,7 @@
             2. Clases que tengan un método 'execute' (Batch, Queueable, Schedulable).
             3. Clases que tengan un método 'start' (Batch).
         </description>
-        <priority>2</priority>
+        <priority>3</priority>
         <properties>
             <property name="xpath">
                 <value>
@@ -72,6 +73,43 @@
             </property>
         </properties>
     </rule>
+
+    <!-- Por el momento queda solo en warning, pero lo vamos a ajustar a error en el futuro -->
+    <rule name="EnforceSOQLHelperInDAO"
+          language="apex"
+          message="⛔ SEGURIDAD: Los métodos DAO con queries deben utilizar SOQLHelper para garantizar FLS y sanitizacion."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            Para asegurar que se respeten los permisos de campos (FLS) y se evite la inyección SOQL,
+            cualquier consulta en un DAO debe construirse utilizando las utilidades de la clase SOQLHelper.
+        </description>
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                    //UserClass[contains(lower-case(@Image), 'dao')]
+                      //Method
+                      [
+                        (
+                          .//SoqlExpression
+                          or
+                          .//MethodCallExpression[
+                              lower-case(@MethodName) = 'query'
+                              and
+                              .//ReferenceExpression[lower-case(@Image) = 'database']
+                          ]
+                        )
+                      ]
+                      [
+                        count(.//ReferenceExpression[lower-case(@Image) = 'soqlhelper']) = 0
+                      ]
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
 
 <!-- SECURITY: https://pmd.github.io/pmd/pmd_rules_apex_security.html -->
 <!-- Por el momento queda solo en warning, pero lo vamos a ajustar a error en el futuro -->
