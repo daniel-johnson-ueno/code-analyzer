@@ -233,80 +233,80 @@
     <!-- REGLAS PARA CAMPOS Y OBJETOS                                      -->
     <!-- ================================================================= -->
 
-    <!-- 1. Descripción Obligatoria -->
-    <rule name="MetadataDescriptionRequired"
-          language="xml"
-          message="⚠️ ADMIN: El Objeto/Campo debe tener una descripción completa."
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <description>Es obligatorio documentar campos y objetos.</description>
-        <priority>3</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                    //*[local-name()='CustomField' or local-name()='CustomObject']
-                       [not(*[local-name()='description']) or normalize-space(*[local-name()='description']) = '']
-                    ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
+        <!-- 1. Descripción Obligatoria -->
+        <rule name="MetadataDescriptionRequired"
+              language="xml"
+              message="⚠️ ADMIN: El Objeto/Campo debe tener una descripción completa."
+              class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+            <description>Es obligatorio documentar campos y objetos.</description>
+            <priority>3</priority>
+            <properties>
+                <property name="xpath">
+                    <value>
+                        <![CDATA[
+                        //*[local-name()='CustomField' or local-name()='CustomObject']
+                           [not(*[local-name()='description']) or normalize-space(*[local-name()='description']) = '']
+                        ]]>
+                    </value>
+                </property>
+            </properties>
+        </rule>
 
-    <!-- 2. Naming Convention: PascalCase (Start with Upper, Upper after _) -->
+    <!-- 2. Naming Convention: PascalCase -->
     <rule name="ApiNamePascalCase"
           language="xml"
           message="⚠️ NAMING: El API Name debe usar Mayúsculas al inicio y después de cada guion bajo."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>Los API Names deben seguir PascalCase (Ej: My_Custom_Field__c)</description>
         <priority>3</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    /*[local-name()='CustomField' or local-name()='CustomObject']
-                        /*[local-name()='fullName']
-                    [
-                        contains(string(.), '__c')
-                        and
-                        (
-                            contains('abcdefghijklmnopqrstuvwxyz', substring(substring-before(string(.), '__c'), 1, 1))
-                            or
-                            contains(translate(substring-before(string(.), '__c'), 'abcdefghijklmnopqrstuvwxyz', '00000000000000000000000000'), '_0')
-                        )
-                    ]
-                    ]]>
+                //*[local-name()='fullName'][parent::*[local-name()='CustomField' or local-name()='CustomObject']]
+                [
+                    contains(string(.), '__c')
+                    and
+                    (
+                        translate(substring(string(.), 1, 1), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', '') = substring(string(.), 1, 1)
+                        or
+                        contains(string(.), '_') and translate(substring-after(string(.), '_'), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', '') = substring-after(string(.), '_')
+                    )
+                ]
+                ]]>
                 </value>
             </property>
         </properties>
     </rule>
 
-    <!-- 3. Idioma: Detectar Español en API Names (Translate trick for lowercase) -->
+    <!-- 3. Idioma: Detectar Español en API Names -->
     <rule name="NoSpanishInApiName"
           language="xml"
           message="⚠️ NAMING: El API Name parece estar en español. Debe ser en INGLÉS."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>Los API Names deben estar en inglés</description>
         <priority>3</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    /*[local-name()='CustomField' or local-name()='CustomObject']
-                        /*[local-name()='fullName']
-                    [
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'fecha') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'nombre') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'apellido') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'direccion') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'telefono') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'estado') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'tipo') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'codigo') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'descripcion') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'precio') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'costo') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'cuenta') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'usuario')
-                    ]
-                    ]]>
+                //*[local-name()='fullName'][parent::*[local-name()='CustomField' or local-name()='CustomObject']]
+                [
+                    contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'fecha')
+                    or contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'nombre')
+                    or contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'apellido')
+                    or contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'direccion')
+                    or contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'telefono')
+                    or contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'estado')
+                    or contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'tipo')
+                    or contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'codigo')
+                    or contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'descripcion')
+                    or contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'precio')
+                    or contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'costo')
+                    or contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'cuenta')
+                    or contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'usuario')
+                ]
+                ]]>
                 </value>
             </property>
         </properties>
@@ -317,29 +317,28 @@
           language="xml"
           message="⚠️ LABEL: El Label parece estar en inglés. Debe ser en ESPAÑOL."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>Los Labels deben estar en español</description>
         <priority>3</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    /*[local-name()='CustomField' or local-name()='CustomObject']
-                        /*[local-name()='label']
-                    [
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'date') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'name') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'status') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'type') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'code') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'price') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'cost') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'address') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'phone') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'user') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'account') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'manager') or
-                        contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'custom')
-                    ]
-                    ]]>
+                //*[local-name()='label'][parent::*[local-name()='CustomField' or local-name()='CustomObject']]
+                [
+                    contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), ' date')
+                    or contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), ' name')
+                    or contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), ' status')
+                    or contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), ' type')
+                    or contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), ' code')
+                    or contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), ' description')
+                    or contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), ' price')
+                    or contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), ' address')
+                    or contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), ' phone')
+                    or contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), ' user')
+                    or contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), ' account')
+                    or contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), ' manager')
+                ]
+                ]]>
                 </value>
             </property>
         </properties>
