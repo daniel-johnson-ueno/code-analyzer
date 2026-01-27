@@ -34,16 +34,38 @@
         </properties>
     </rule>
 
-    <rule name="DebugImplements"
+    <rule name="EnforceDAOPattern"
           language="apex"
-          message="DEBUG: Viendo interfaces..."
+          message="⛔ ARQUITECTURA: No se permiten SOQLs (ni Database.query) en esta clase. Mueve la consulta a una clase DAO."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>1</priority>
+        <description>
+            Centraliza el acceso a datos. Las consultas SOQL solo están permitidas en clases DAO
+            o procesos asíncronos (Batch/Queueable/Schedulable).
+        </description>
+        <priority>2</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //ImplementsList//*
+                    //UserClass
+                    [
+                        not(contains(lower-case(@Image), 'dao'))
+                    ]
+                    [
+                        count(.//ClassOrInterfaceType[
+                            contains(lower-case(@Image), 'batchable') or
+                            contains(lower-case(@Image), 'queueable') or
+                            contains(lower-case(@Image), 'schedulable')
+                        ]) = 0
+                    ]
+                    [
+                        .//SoqlExpression
+                        or
+                        .//MethodCallExpression[
+                            lower-case(@MethodName) = 'query' and
+                            .//ReferenceExpression[lower-case(@Image) = 'database']
+                        ]
+                    ]
                     ]]>
                 </value>
             </property>
