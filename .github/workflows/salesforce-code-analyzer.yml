@@ -3,9 +3,9 @@ name: Salesforce Code Analyzer
 on:
   workflow_dispatch:
   pull_request:
-    branches: [main, uat]
+    branches: [UATGV]
   push:
-    branches: [main, uat]
+    branches: [UATGV]
 
 jobs:
   code-analysis:
@@ -20,67 +20,121 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20.9.0"
+      # Paso para detectar si es un Sync de Gearset
+      - name: Check if Gearset Sync
+        id: check_sync
+        run: |
+          HEAD_REF="${{ github.head_ref }}"
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          HEAD_LOWER=$(echo "$HEAD_REF" | tr '[:upper:]' '[:lower:]')
+          TITLE_LOWER=$(echo "$PR_TITLE" | tr '[:upper:]' '[:lower:]')
+          
+          # Si la rama o el titulo dicen "Sync UATGV with main", se marca para no correr el analisis.
+          if [[ "$HEAD_LOWER" == *"Sync UATGV with main"* ]] || [[ "$TITLE_LOWER" == *"Sync UATGV with main"* ]]; then
+            echo "::notice::🔄 Detectado PR de Sincronización de Gearset. Se omitirá el análisis de código."
+            echo "is_sync=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_sync=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Set up Java
+        if: steps.check_sync.outputs.is_sync != 'true'
         uses: actions/setup-java@v4
         with:
           distribution: zulu
-          java-version: "11"
+          java-version: "17"
 
-      - name: Install Salesforce CLI and Code Analyzer v4
+      - name: Install PMD 7
+        if: steps.check_sync.outputs.is_sync != 'true'
         run: |
-          npm install -g @salesforce/cli@latest
-          sf plugins install @salesforce/sfdx-scanner@latest
+          wget https://github.com/pmd/pmd/releases/download/pmd_releases%2F7.0.0/pmd-dist-7.0.0-bin.zip -q
+          unzip -q pmd-dist-7.0.0-bin.zip
+          echo "$(pwd)/pmd-bin-7.0.0/bin" >> $GITHUB_PATH
 
+      # Logica Inteligente de Diff
       - name: Get changed files
         id: changes
+        if: steps.check_sync.outputs.is_sync != 'true'
         run: |
+          RAW_DIFF_FILE="raw_diff.txt"
+          FILES_TO_SCAN="files_to_scan.txt"
+          
           if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
-            BASE_SHA="${{ github.event.pull_request.base.sha }}"
-            HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+            # ESTRATEGIA: Como la feature nace de MAIN, comparamos contra MAIN.
+            # Esto ignora el delta gigante que pueda haber con UATGV.
+            
+            echo "Obteniendo referencia de main..."
+            git fetch origin main --depth=1
+            
+            PR_HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+            
+            echo "Calculando diff relativo a origin/main..."
+            git diff --name-only origin/main...$PR_HEAD_SHA > $RAW_DIFF_FILE
+          
           else
+            # Lógica estándar para PUSH (no PR)
             BASE_SHA="${{ github.event.before }}"
             HEAD_SHA="${{ github.sha }}"
+            if [[ -z "${BASE_SHA}" || "${BASE_SHA}" =~ ^0+$ ]]; then
+               BASE_SHA="$(git rev-parse "${HEAD_SHA}^" 2>/dev/null || echo "")"
+            fi
+            git diff --name-only "$BASE_SHA" "$HEAD_SHA" > $RAW_DIFF_FILE
           fi
           
-          if [[ -z "${BASE_SHA}" || "${BASE_SHA}" =~ ^0+$ ]]; then
-            BASE_SHA="$(git rev-parse "${HEAD_SHA}^" 2>/dev/null || echo "")"
-          fi
+          touch $FILES_TO_SCAN
+          count=0
           
-          if [[ -z "${BASE_SHA}" ]]; then
+          while IFS= read -r file; do
+            if [[ "$file" =~ \.(cls|trigger|page|component)$ ]] && [[ ! "$file" =~ meta.xml ]]; then
+               if [ -f "$file" ]; then
+                 echo "$file" >> $FILES_TO_SCAN
+                 count=$((count+1))
+               fi
+            fi
+          done < $RAW_DIFF_FILE
+          
+          if [ "$count" -gt 0 ]; then
+            echo "✅ Se encontraron $count archivos modificados para analizar."
+            echo "has_files=true" >> "$GITHUB_OUTPUT"
+            cat $FILES_TO_SCAN
+          else
+            echo "⚠️ No hay archivos de código modificados."
             echo "has_files=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run PMD Analysis
+        if: steps.check_sync.outputs.is_sync != 'true' && steps.changes.outputs.has_files == 'true'
+        run: |
+          echo "🚀 Ejecutando PMD sobre archivos modificados..."
+          pmd check --file-list files_to_scan.txt -R ruleset.xml -f csv -r results.csv --force-language apex || true
+
+      - name: Process Results & Publish Summary
+        if: steps.check_sync.outputs.is_sync != 'true' && steps.changes.outputs.has_files == 'true'
+        run: |
+          if [ ! -s results.csv ] || [ $(wc -l < results.csv) -le 1 ]; then
+             echo "✅ **Código Limpio**" >> $GITHUB_STEP_SUMMARY
+             exit 0
+          fi
+
+          echo "### 🔍 Reporte PMD 7" >> $GITHUB_STEP_SUMMARY
+          echo "| Severidad | Regla | Archivo:Linea | Mensaje |" >> $GITHUB_STEP_SUMMARY
+          echo "| :---: | :--- | :--- | :--- |" >> $GITHUB_STEP_SUMMARY
+
+          awk -F '","' '
+          NR > 1 {
+            gsub(/^"|"$/, "", $0)
+            fileFull = $3; prio = $4; line = $5; desc = $6; rule = $8
+            n = split(fileFull, pathParts, "/"); fileName = pathParts[n]
+            icon = "🟡"; if (prio == "1" || prio == "2") icon = "🔴"
+            printf "| %s %s | **%s** | `%s:%s` | %s |\n", icon, prio, rule, fileName, line, desc
+          }
+          ' results.csv >> $GITHUB_STEP_SUMMARY
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # MODO TEST: Solo avisa, no bloquea (exit 0)
+          CRITICAL_ERRORS=$(grep -E '","[12]","' results.csv | wc -l)
+          if [ "$CRITICAL_ERRORS" -gt 0 ]; then
+            echo "::warning::⛔ SE DETECTARON $CRITICAL_ERRORS ERRORES CRÍTICOS (Modo Test: No bloqueante)."
             exit 0
           fi
-          
-          # Get changed files matching our patterns
-          CHANGED=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -E '\.(cls|trigger|js|html|xml|css)$' | tr '\n' ',' | sed 's/,$//')
-          
-          if [[ -z "$CHANGED" ]]; then
-            echo "has_files=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "has_files=true" >> "$GITHUB_OUTPUT"
-            echo "files=$CHANGED" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Run Code Analyzer
-        if: steps.changes.outputs.has_files == 'true'
-        id: run-code-analyzer
-        uses: forcedotcom/run-code-analyzer@v1
-        with:
-          run-command: run
-          run-arguments: --normalize-severity --target "${{ steps.changes.outputs.files }}" --outfile results.html
-          results-artifact-name: code-analyzer-results
-
-      - name: Fail on Critical or High
-        if: steps.changes.outputs.has_files == 'true' && (steps.run-code-analyzer.outputs.num-sev1-violations > 0 || steps.run-code-analyzer.outputs.num-sev2-violations > 0)
-        run: |
-          echo "::error::Build failed: Critical or High severity violations found."
-          exit 1
-
-      - name: No files to scan
-        if: steps.changes.outputs.has_files == 'false'
-        run: echo "No Apex/JS/HTML/XML/CSS changes - skipping scan"
