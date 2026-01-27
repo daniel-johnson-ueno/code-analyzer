@@ -36,7 +36,6 @@ public class RulesetTester {
         } catch (Exception e) {
             System.debug('Error 23: ' + e.getMessage());
         }
-        
     }
 
     public void testEmptyCatch() {
