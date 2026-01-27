@@ -91,5 +91,5 @@ jobs:
           CRITICAL_ERRORS=$(grep -E '","[12]","' results.csv | wc -l)
           if [ "$CRITICAL_ERRORS" -gt 0 ]; then
             echo "::error::⛔ $CRITICAL_ERRORS ERRORES CRÍTICOS."
-            exit 0
+            exit 1
           fi
