@@ -6,7 +6,8 @@
        1. ApiNamePascalCase: Empieza con minúscula ('fecha...')
        2. NoSpanishInApiName: Contiene la palabra 'fecha'
        3. MetadataDescriptionRequired: No tiene tag <description>
-       4. NoEnglishInLabel: El label contiene 'Start Date' l
+       4. NoEnglishInLabel: El label contiene 'Start Date'
+
     -->
     <fullName>fecha_inicio__c</fullName>
     <description>fecha_inicio__c</description>
