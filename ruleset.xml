@@ -9,6 +9,22 @@
     </description>
 
 <!-- REGLAS CUSTOM -->
+    <rule name="DebugCatchDetection"
+          language="apex"
+          message="DEBUG: Encontré un bloque Catch"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <priority>1</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                    //CatchStatement
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
     <rule name="EnforceErrorLogging"
           language="apex"
           message="Todo bloque Catch debe llamar a GenerateLogEvent.generateErrorLogEvent(...)"
