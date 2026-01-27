@@ -82,9 +82,6 @@
     <rule ref="category/apex/codestyle.xml/FormalParameterNamingConventions">
         <priority>1</priority>
     </rule>
-    <rule ref="category/apex/codestyle.xml/IfElseStmtsMustUseBraces">
-        <priority>1</priority>
-    </rule>
     <rule ref="category/apex/codestyle.xml/OneDeclarationPerLine">
         <priority>1</priority>
     </rule>
