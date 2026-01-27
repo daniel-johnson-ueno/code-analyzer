@@ -28,5 +28,9 @@
         <members>*</members>
         <name>StaticResource</name>
     </types>
+    <types>
+        <members>BadField</members>
+        <name>CustomField</name>
+    </types>
     <version>65.0</version>
 </Package>
