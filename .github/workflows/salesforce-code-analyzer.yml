@@ -85,11 +85,13 @@ jobs:
           count=0
           
           while IFS= read -r file; do
-            if [[ "$file" =~ \.(cls|trigger|page|component)$ ]] && [[ ! "$file" =~ meta.xml ]]; then
-               if [ -f "$file" ]; then
-                 echo "$file" >> $FILES_TO_SCAN
-                 count=$((count+1))
-               fi
+            # Aceptamos Apex, Triggers, Pages, Campos y Objetos
+            if [[ "$file" =~ \.(cls|trigger|page|component)$ ]] && [[ ! "$file" =~ -meta.xml ]]; then
+               if [ -f "$file" ]; then echo "$file" >> $FILES_TO_SCAN; count=$((count+1)); fi
+          
+            # Detectar Campos (.field-meta.xml) y Objetos (.object-meta.xml)
+            elif [[ "$file" =~ \.field-meta\.xml$ ]] || [[ "$file" =~ \.object-meta\.xml$ ]]; then
+               if [ -f "$file" ]; then echo "$file" >> $FILES_TO_SCAN; count=$((count+1)); fi
             fi
           done < $RAW_DIFF_FILE
           
@@ -106,7 +108,7 @@ jobs:
         if: steps.check_sync.outputs.is_sync != 'true' && steps.changes.outputs.has_files == 'true'
         run: |
           echo "🚀 Ejecutando PMD sobre archivos modificados..."
-          pmd check --file-list files_to_scan.txt -R ruleset.xml -f csv -r results.csv --force-language apex || true
+          pmd check --file-list files_to_scan.txt -R ruleset.xml -f csv -r results.csv || true
 
       - name: Process Results & Publish Summary
         if: steps.check_sync.outputs.is_sync != 'true' && steps.changes.outputs.has_files == 'true'

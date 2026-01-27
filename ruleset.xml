@@ -8,6 +8,10 @@
         Reglas customizadas para CRM.
     </description>
 
+    <!-- ================================================================= -->
+    <!-- REGLAS PARA APEX                                                  -->
+    <!-- ================================================================= -->
+
 <!-- REGLAS CUSTOM -->
     <rule name="EnforceGenerateErrorLogEvent"
           language="apex"
@@ -224,5 +228,104 @@
         <priority>1</priority>
     </rule>
 
+
+    <!-- ================================================================= -->
+    <!-- REGLAS PARA CAMPOS Y OBJETOS                                      -->
+    <!-- ================================================================= -->
+
+    <!-- 1. Descripción Obligatoria (Campos y Objetos) -->
+    <rule name="MetadataDescriptionRequired"
+          language="xml"
+          message="El Objeto/Campo debe tener una descripción completa."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            Es obligatorio documentar campos y objetos.
+        </description>
+        <priority>1</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                    //*[self::CustomField or self::CustomObject]
+                       [not(description) or normalize-space(description) = '']
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- 2. Naming Convention: PascalCase (Mayúscula al inicio y después de _) -->
+    <rule name="ApiNamePascalCase"
+          language="xml"
+          message="El API Name debe usar Mayúsculas al inicio y después de cada guion bajo. Ej: 'Start_Date__c'."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            Valida que los nombres de API custom:
+            1. Empiecen con mayúscula.
+            2. Cada letra que siga a un guion bajo sea mayúscula.
+        </description>
+        <priority>1</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                    //*[self::CustomField or self::CustomObject]/fullName[
+                        contains(text(), '__c')
+                        and
+                        (
+                            matches(text(), '^[a-z]')
+                            or
+                            matches(text(), '_[a-z]')
+                        )
+                    ]
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- 3. Detectar Español en API Names (Blacklist) -->
+    <rule name="NoSpanishInApiName"
+          language="xml"
+          message="El API Name parece estar en español. Debe ser en Inglés."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            Busca palabras comunes en español dentro del API Name.
+        </description>
+        <priority>1</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                    //*[self::CustomField or self::CustomObject]/fullName[
+                        matches(lower-case(text()), '.*(_|^)(fecha|nombre|apellido|direccion|telefono|estado|tipo|codigo|descripcion|precio|costo|cuenta|usuario|empresa|codigo)(_|$).*')
+                    ]
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- 4. Detectar Inglés en Labels (Blacklist) -->
+    <rule name="NoEnglishInLabel"
+          language="xml"
+          message="El Label parece estar en inglés. Debe ser en Español."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            Busca palabras comunes en inglés dentro del Label visible al usuario.
+        </description>
+        <priority>1</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                    //*[self::CustomField or self::CustomObject]/label[
+                        matches(lower-case(text()), '.*\m(date|name|last|first|status|type|code|description|price|cost|address|phone|user|account|manager|custom|company)\M.*')
+                    ]
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
 
 </ruleset>
