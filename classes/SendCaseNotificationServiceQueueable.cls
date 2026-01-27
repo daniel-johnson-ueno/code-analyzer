@@ -8,6 +8,7 @@ public class SendCaseNotificationServiceQueueable implements Queueable, Database
         this.caseByCaseId = caseByCaseId;
         this.newCases = newCases;
         this.oldCases = oldCases;
+
     }
     
     public void execute(QueueableContext context) {
