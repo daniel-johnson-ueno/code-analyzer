@@ -409,41 +409,6 @@
     <!-- REGLAS DE DEBUG (SONDAS)                                          -->
     <!-- ================================================================= -->
 
-    <rule name="DebugRootIsCustomField"
-          language="xml"
-          message="DEBUG: El nodo raíz es CustomField (/*)"
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>5</priority>
-        <properties>
-            <property name="xpath">
-                <value><![CDATA[/*[local-name()='CustomField']]]></value>
-            </property>
-        </properties>
-    </rule>
-
-    <rule name="DebugRootIsCustomObject"
-          language="xml"
-          message="DEBUG: El nodo raíz es CustomObject (/*)"
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>5</priority>
-        <properties>
-            <property name="xpath">
-                <value><![CDATA[/*[local-name()='CustomObject']]]></value>
-            </property>
-        </properties>
-    </rule>
-
-    <rule name="DebugRootIsFields"
-          language="xml"
-          message="DEBUG: El nodo raíz es fields (Metadata API) (/*)"
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>5</priority>
-        <properties>
-            <property name="xpath">
-                <value><![CDATA[/*[local-name()='fields']]]></value>
-            </property>
-        </properties>
-    </rule>
 
     <rule name="DebugChildFullName"
           language="xml"
@@ -469,4 +434,20 @@
         </properties>
     </rule>
 
+    <!-- 1. ESCANEO TOTAL: Reporta CADA nodo que encuentra en el archivo -->
+    <rule name="DebugDumpAllNodes"
+          language="xml"
+          message="DEBUG: Nodo encontrado (verificar línea para saber cuál es)"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            Esta regla matchea con CUALQUIER elemento (//*).
+            Úsala para ver qué nodos está leyendo realmente el parser.
+        </description>
+        <priority>5</priority>
+        <properties>
+            <property name="xpath">
+                <value><![CDATA[//*]]></value>
+            </property>
+        </properties>
+    </rule>
 </ruleset>
