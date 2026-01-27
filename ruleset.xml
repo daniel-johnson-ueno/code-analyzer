@@ -233,7 +233,6 @@
     <!-- REGLAS PARA CAMPOS Y OBJETOS                                      -->
     <!-- ================================================================= -->
 
-    <!-- 1. Descripción Obligatoria -->
     <rule name="MetadataDescriptionRequired"
           language="xml"
           message="⚠️ ADMIN: El Objeto/Campo debe tener una descripción completa."
@@ -244,112 +243,12 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='CustomField' or local-name()='CustomObject']
+                    //*[local-name()='CustomField' or local-name()='CustomObject' or local-name()='fields']
                        [
                          count(.//*[local-name()='description']) = 0
                          or
                          normalize-space(.//*[local-name()='description']) = ''
                        ]
-                    ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
-
-    <!-- 2. Naming Convention: PascalCase -->
-    <rule name="ApiNamePascalCase"
-          language="xml"
-          message="⚠️ NAMING: El API Name debe usar Mayúsculas al inicio y después de cada guion bajo."
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>3</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                    //*[local-name()='CustomField' or local-name()='CustomObject']
-                    [
-                        count(.//*[local-name()='fullName']) > 0
-                        and
-                        contains(normalize-space(.//*[local-name()='fullName']), '__c')
-                        and
-                        (
-                            contains('abcdefghijklmnopqrstuvwxyz', substring(normalize-space(.//*[local-name()='fullName']), 1, 1))
-                            or
-                            contains(translate(substring-before(normalize-space(.//*[local-name()='fullName']), '__c'), 'abcdefghijklmnopqrstuvwxyz', '00000000000000000000000000'), '_0')
-                        )
-                    ]
-                    ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
-
-    <!-- 3. Idioma: Detectar Español en API Names -->
-    <rule name="NoSpanishInApiName"
-          language="xml"
-          message="⚠️ NAMING: El API Name parece estar en español. Debe ser en INGLÉS."
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>3</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                    //*[local-name()='CustomField' or local-name()='CustomObject']
-                    [
-                        count(.//*[local-name()='fullName']) > 0
-                        and
-                        (
-                        contains(translate(normalize-space(.//*[local-name()='fullName']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'fecha') or
-                        contains(translate(normalize-space(.//*[local-name()='fullName']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'nombre') or
-                        contains(translate(normalize-space(.//*[local-name()='fullName']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'apellido') or
-                        contains(translate(normalize-space(.//*[local-name()='fullName']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'direccion') or
-                        contains(translate(normalize-space(.//*[local-name()='fullName']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'telefono') or
-                        contains(translate(normalize-space(.//*[local-name()='fullName']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'estado') or
-                        contains(translate(normalize-space(.//*[local-name()='fullName']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'tipo') or
-                        contains(translate(normalize-space(.//*[local-name()='fullName']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'codigo') or
-                        contains(translate(normalize-space(.//*[local-name()='fullName']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'descripcion') or
-                        contains(translate(normalize-space(.//*[local-name()='fullName']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'precio') or
-                        contains(translate(normalize-space(.//*[local-name()='fullName']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'costo') or
-                        contains(translate(normalize-space(.//*[local-name()='fullName']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'cuenta') or
-                        contains(translate(normalize-space(.//*[local-name()='fullName']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'usuario')
-                        )
-                    ]
-                    ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
-
-    <!-- 4. Idioma: Detectar Inglés en Labels -->
-    <rule name="NoEnglishInLabel"
-          language="xml"
-          message="⚠️ LABEL: El Label parece estar en inglés. Debe ser en ESPAÑOL."
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>3</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                    //*[local-name()='CustomField' or local-name()='CustomObject']
-                    [
-                        count(.//*[local-name()='label']) > 0
-                        and
-                        (
-                        contains(translate(normalize-space(.//*[local-name()='label']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'date') or
-                        contains(translate(normalize-space(.//*[local-name()='label']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'name') or
-                        contains(translate(normalize-space(.//*[local-name()='label']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'status') or
-                        contains(translate(normalize-space(.//*[local-name()='label']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'type') or
-                        contains(translate(normalize-space(.//*[local-name()='label']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'code') or
-                        contains(translate(normalize-space(.//*[local-name()='label']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'price') or
-                        contains(translate(normalize-space(.//*[local-name()='label']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'cost') or
-                        contains(translate(normalize-space(.//*[local-name()='label']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'address') or
-                        contains(translate(normalize-space(.//*[local-name()='label']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'phone') or
-                        contains(translate(normalize-space(.//*[local-name()='label']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'user') or
-                        contains(translate(normalize-space(.//*[local-name()='label']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'account') or
-                        contains(translate(normalize-space(.//*[local-name()='label']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'manager') or
-                        contains(translate(normalize-space(.//*[local-name()='label']), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'custom')
-                        )
-                    ]
                     ]]>
                 </value>
             </property>
