@@ -20,7 +20,6 @@ global with sharing class BatchableClass implements Database.Batchable<SObject>,
                 note.Content = Blob.valueOf(System.Label.APX_NoteBody);
                 acc.Note__c = false;
                 noteByAccount.put(acc.Id, note);
-
             }
             
             if (noteByAccount.size() > 0) {
