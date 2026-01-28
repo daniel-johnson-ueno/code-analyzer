@@ -4,4 +4,5 @@
     <description>fecha_inicio__c</description>
     <label>Start Date</label>
     <type>Date</type>
+
 </CustomField>
