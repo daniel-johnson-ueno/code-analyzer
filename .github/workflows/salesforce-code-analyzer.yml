@@ -29,8 +29,8 @@ jobs:
           HEAD_LOWER=$(echo "$HEAD_REF" | tr '[:upper:]' '[:lower:]')
           TITLE_LOWER=$(echo "$PR_TITLE" | tr '[:upper:]' '[:lower:]')
           
-          # Si la rama o el titulo dicen "Sync UATGV with main", se marca para no correr el analisis.
-          if [[ "$HEAD_LOWER" == *"Sync UATGV with main"* ]] || [[ "$TITLE_LOWER" == *"Sync UATGV with main"* ]]; then
+          # Si la rama o el titulo dicen "sync uatgv with main", se marca para no correr el analisis.
+          if [[ "$HEAD_LOWER" == *"sync uatgv with main"* ]] || [[ "$TITLE_LOWER" == *"sync uatgv with main"* ]]; then
             echo "::notice::🔄 Detectado PR de Sincronización de Gearset. Se omitirá el análisis de código."
             echo "is_sync=true" >> $GITHUB_OUTPUT
           else
