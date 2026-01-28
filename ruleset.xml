@@ -288,7 +288,7 @@
     <!-- REGLAS PARA CAMPOS Y OBJETOS                                      -->
     <!-- ================================================================= -->
 
-    <!-- 1. Descripción Vacía: Valida el nodo description usando . en vez de text() -->
+    <!-- 1. Descripción Vacía: Valida explícitamente la longitud del nodo de texto hijo -->
     <rule name="MetadataDescriptionRequired"
           language="xml"
           message="⚠️ ADMIN: El campo/objeto tiene una descripción vacía."
@@ -300,14 +300,14 @@
                 <value>
                     <![CDATA[
                     //*[local-name()='description']
-                       [normalize-space(.) = '']
+                       [string-length(normalize-space(text())) = 0]
                     ]]>
                 </value>
             </property>
         </properties>
     </rule>
 
-    <!-- 2. Naming Convention: PascalCase (Usa . directamente) -->
+    <!-- 2. Naming Convention: PascalCase (Aplica la validación sobre /text()) -->
     <rule name="ApiNamePascalCase"
           language="xml"
           message="⚠️ NAMING: El API Name debe usar Mayúsculas al inicio y después de cada guion bajo."
@@ -317,9 +317,9 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='fullName']
+                    //*[local-name()='fullName']/text()
                     [
-                        contains(normalize-space(.), '__c')
+                        contains(., '__c')
                         and
                         (
                             contains('abcdefghijklmnopqrstuvwxyz', substring(normalize-space(.), 1, 1))
@@ -333,7 +333,7 @@
         </properties>
     </rule>
 
-    <!-- 3. Idioma: Detectar Español en API Names (Usa . directamente) -->
+    <!-- 3. Idioma: Detectar Español en API Names (Aplica sobre /text()) -->
     <rule name="NoSpanishInApiName"
           language="xml"
           message="⚠️ NAMING: El API Name parece estar en español. Debe ser en INGLÉS."
@@ -343,7 +343,7 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='fullName']
+                    //*[local-name()='fullName']/text()
                     [
                         contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'fecha') or
                         contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'nombre') or
@@ -365,7 +365,7 @@
         </properties>
     </rule>
 
-    <!-- 4. Idioma: Detectar Inglés en Labels (Usa . directamente) -->
+    <!-- 4. Idioma: Detectar Inglés en Labels (Aplica sobre /text()) -->
     <rule name="NoEnglishInLabel"
           language="xml"
           message="⚠️ LABEL: El Label parece estar en inglés. Debe ser en ESPAÑOL."
@@ -375,7 +375,7 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='label']
+                    //*[local-name()='label']/text()
                     [
                         contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'date') or
                         contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'name') or
