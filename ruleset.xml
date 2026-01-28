@@ -288,11 +288,7 @@
     <!-- REGLAS PARA CAMPOS Y OBJETOS                                      -->
     <!-- ================================================================= -->
 
-    <!-- ================================================================= -->
-    <!-- REGLAS DE METADATOS (SELECCIÓN DIRECTA / DIRECT SELECTION)        -->
-    <!-- ================================================================= -->
-
-    <!-- 1. Descripción Obligatoria: Check existence using direct child axis (*) -->
+    <!-- 1. Descripción Obligatoria -->
     <rule name="MetadataDescriptionRequired"
           language="xml"
           message="⚠️ ADMIN: El Objeto/Campo debe tener una descripción completa."
@@ -305,9 +301,9 @@
                     <![CDATA[
                     //*[local-name()='CustomField' or local-name()='CustomObject' or local-name()='fields']
                        [
-                         count(*[local-name()='description']) = 0
+                         count(descendant::*[local-name()='description']) = 0
                          or
-                         normalize-space(*[local-name()='description']) = ''
+                         normalize-space(descendant::*[local-name()='description']) = ''
                        ]
                     ]]>
                 </value>
@@ -315,7 +311,7 @@
         </properties>
     </rule>
 
-    <!-- 2. Naming Convention: PascalCase (Selección directa de fullName y uso de text()) -->
+    <!-- 2. Naming Convention: PascalCase (Usa string(.) en vez de text()) -->
     <rule name="ApiNamePascalCase"
           language="xml"
           message="⚠️ NAMING: El API Name debe usar Mayúsculas al inicio y después de cada guion bajo."
@@ -327,12 +323,12 @@
                     <![CDATA[
                     //*[local-name()='fullName']
                     [
-                        contains(normalize-space(text()), '__c')
+                        contains(normalize-space(string(.)), '__c')
                         and
                         (
-                            contains('abcdefghijklmnopqrstuvwxyz', substring(normalize-space(text()), 1, 1))
+                            contains('abcdefghijklmnopqrstuvwxyz', substring(normalize-space(string(.)), 1, 1))
                             or
-                            contains(translate(substring-before(normalize-space(text()), '__c'), 'abcdefghijklmnopqrstuvwxyz', '00000000000000000000000000'), '_0')
+                            contains(translate(substring-before(normalize-space(string(.)), '__c'), 'abcdefghijklmnopqrstuvwxyz', '00000000000000000000000000'), '_0')
                         )
                     ]
                     ]]>
@@ -341,7 +337,7 @@
         </properties>
     </rule>
 
-    <!-- 3. Idioma: Detectar Español en API Names (Selección directa de fullName y uso de text()) -->
+    <!-- 3. Idioma: Detectar Español en API Names (Usa string(.) en vez de text()) -->
     <rule name="NoSpanishInApiName"
           language="xml"
           message="⚠️ NAMING: El API Name parece estar en español. Debe ser en INGLÉS."
@@ -353,19 +349,19 @@
                     <![CDATA[
                     //*[local-name()='fullName']
                     [
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'fecha') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'nombre') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'apellido') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'direccion') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'telefono') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'estado') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'tipo') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'codigo') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'descripcion') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'precio') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'costo') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'cuenta') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'usuario')
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'fecha') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'nombre') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'apellido') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'direccion') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'telefono') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'estado') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'tipo') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'codigo') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'descripcion') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'precio') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'costo') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'cuenta') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'usuario')
                     ]
                     ]]>
                 </value>
@@ -373,7 +369,7 @@
         </properties>
     </rule>
 
-    <!-- 4. Idioma: Detectar Inglés en Labels (Selección directa de label y uso de text()) -->
+    <!-- 4. Idioma: Detectar Inglés en Labels (Usa string(.) en vez de text()) -->
     <rule name="NoEnglishInLabel"
           language="xml"
           message="⚠️ LABEL: El Label parece estar en inglés. Debe ser en ESPAÑOL."
@@ -385,19 +381,19 @@
                     <![CDATA[
                     //*[local-name()='label']
                     [
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'date') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'name') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'status') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'type') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'code') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'price') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'cost') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'address') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'phone') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'user') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'account') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'manager') or
-                        contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'custom')
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'date') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'name') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'status') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'type') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'code') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'price') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'cost') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'address') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'phone') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'user') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'account') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'manager') or
+                        contains(translate(normalize-space(string(.)), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'custom')
                     ]
                     ]]>
                 </value>
