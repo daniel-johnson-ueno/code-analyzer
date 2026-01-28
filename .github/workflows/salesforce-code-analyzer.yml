@@ -51,28 +51,26 @@ jobs:
           unzip -q pmd-dist-7.0.0-bin.zip
           echo "$(pwd)/pmd-bin-7.0.0/bin" >> $GITHUB_PATH
 
-      # Logica Inteligente de Diff
+      # Logica para obtener archivos (Vía API de GitHub)
       - name: Get changed files
         id: changes
         if: steps.check_sync.outputs.is_sync != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           RAW_DIFF_FILE="raw_diff.txt"
           FILES_TO_SCAN="files_to_scan.txt"
           
           if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
-            # ESTRATEGIA: Como la feature nace de MAIN, comparamos contra MAIN.
-            # Esto ignora el delta gigante que pueda haber con UATGV.
-            
-            echo "Obteniendo referencia de main..."
-            git fetch origin main
-            
-            PR_HEAD_SHA="${{ github.event.pull_request.head.sha }}"
-            
-            echo "Calculando diff relativo a origin/main..."
-            git diff --name-only origin/main...$PR_HEAD_SHA > $RAW_DIFF_FILE
+            echo "📥 Consultando a la API de GitHub los archivos del PR #${{ github.event.pull_request.number }}..."
+          
+            # COMANDO CLAVE: gh pr diff
+            # Esto obtiene la lista exacta de archivos que ves en la UI web "Files Changed".
+            # No importa de dónde nació la rama ni a dónde va.
+            gh pr diff "${{ github.event.pull_request.number }}" --name-only > $RAW_DIFF_FILE
           
           else
-            # Lógica estándar para PUSH (no PR)
+            # Lógica para Pushes directos (cuando no hay PR, ej: merge a main)
             BASE_SHA="${{ github.event.before }}"
             HEAD_SHA="${{ github.sha }}"
             if [[ -z "${BASE_SHA}" || "${BASE_SHA}" =~ ^0+$ ]]; then
