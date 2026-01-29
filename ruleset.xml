@@ -288,156 +288,73 @@
     <!-- REGLAS PARA CAMPOS Y OBJETOS                                      -->
     <!-- ================================================================= -->
 
-    <!-- 1. Descripción Vacía: Valida explícitamente la longitud del nodo de texto hijo -->
-    <rule name="MetadataDescriptionRequired"
+    <!-- SONDA 1: Intenta leer usando el punto '.' (Valor de string del nodo) -->
+    <rule name="ProbeDot"
           language="xml"
-          message="⚠️ ADMIN: El campo/objeto tiene una descripción vacía."
+          message="EXITO: PMD puede leer texto usando '.'"
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <description>Si se incluye la etiqueta descripción, no debe estar vacía.</description>
-        <priority>3</priority>
+        <priority>1</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    /*[local-name()='CustomField']/*[local-name()='description']
-                        [string-length(normalize-space(string(.))) = 0]
+                    //*[local-name()='description'][contains(., 'fecha')]
                     ]]>
                 </value>
             </property>
         </properties>
     </rule>
 
-    <!-- 2. Naming Convention: PascalCase (Aplica la validación sobre /text()) -->
-    <rule name="ApiNamePascalCase"
+    <!-- SONDA 2: Intenta leer usando 'text()' (Nodo de texto hijo) -->
+    <rule name="ProbeTextNode"
           language="xml"
-          message="⚠️ NAMING: El API Name debe usar Mayúsculas al inicio y después de cada guion bajo."
+          message="EXITO: PMD puede leer texto usando 'text()'"
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>3</priority>
+        <priority>1</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='fullName']/text()
-                    [
-                        contains(., '__c')
-                        and
-                        (
-                            contains('abcdefghijklmnopqrstuvwxyz', substring(normalize-space(.), 1, 1))
-                            or
-                            contains(translate(substring-before(normalize-space(.), '__c'), 'abcdefghijklmnopqrstuvwxyz', '00000000000000000000000000'), '_0')
-                        )
-                    ]
+                    //*[local-name()='description'][contains(text(), 'fecha')]
                     ]]>
                 </value>
             </property>
         </properties>
     </rule>
 
-    <!-- 3. Idioma: Detectar Español en API Names (Aplica sobre /text()) -->
-    <rule name="NoSpanishInApiName"
+    <!-- SONDA 3: Intenta leer usando 'data()' (Función XPath 2.0/3.1) -->
+    <rule name="ProbeData"
           language="xml"
-          message="⚠️ NAMING: El API Name parece estar en español. Debe ser en INGLÉS."
+          message="EXITO: PMD puede leer texto usando 'data(.)'"
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>3</priority>
+        <priority>1</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='fullName']/text()
-                    [
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'fecha') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'nombre') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'apellido') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'direccion') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'telefono') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'estado') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'tipo') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'codigo') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'descripcion') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'precio') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'costo') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'cuenta') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'usuario')
-                    ]
+                    //*[local-name()='description'][contains(data(.), 'fecha')]
                     ]]>
                 </value>
             </property>
         </properties>
     </rule>
 
-    <!-- 4. Idioma: Detectar Inglés en Labels (Aplica sobre /text()) -->
-    <rule name="NoEnglishInLabel"
+    <!-- REGLA TESTIGO: Verifica si siquiera encuentra el nodo descripción, sin mirar texto -->
+    <rule name="ProbeNodeExists"
           language="xml"
-          message="⚠️ LABEL: El Label parece estar en inglés. Debe ser en ESPAÑOL."
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>3</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                    //*[local-name()='label']/text()
-                    [
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'date') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'name') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'status') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'type') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'code') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'price') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'cost') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'address') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'phone') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'user') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'account') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'manager') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'custom')
-                    ]
-                    ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
-
-    <!-- ================================================================= -->
-    <!-- REGLAS DE DEBUG (SONDAS)                                          -->
-    <!-- =================================================================
-    <rule name="DebugChildFullName"
-          language="xml"
-          message="DEBUG: Encontré un nodo fullName en alguna profundidad (//*)"
+          message="INFO: El nodo description existe (pero quizás PMD lo ve vacío)"
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <priority>5</priority>
         <properties>
             <property name="xpath">
-                <value><![CDATA[//*[local-name()='fullName']]]></value>
+                <value>
+                    <![CDATA[
+                    //*[local-name()='description']
+                    ]]>
+                </value>
             </property>
         </properties>
     </rule>
 
-    <rule name="DebugChildLabel"
-          language="xml"
-          message="DEBUG: Encontré un nodo label en alguna profundidad (//*)"
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>5</priority>
-        <properties>
-            <property name="xpath">
-                <value><![CDATA[//*[local-name()='label']]]></value>
-            </property>
-        </properties>
-    </rule>
 
-    <rule name="DebugDumpAllNodes"
-          language="xml"
-          message="DEBUG: Nodo encontrado (verificar línea para saber cuál es)"
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <description>
-            Esta regla matchea con CUALQUIER elemento (//*).
-            Úsala para ver qué nodos está leyendo realmente el parser.
-        </description>
-        <priority>5</priority>
-        <properties>
-            <property name="xpath">
-                <value><![CDATA[//*]]></value>
-            </property>
-        </properties>
-    </rule>
-    -->
 </ruleset>
