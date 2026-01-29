@@ -90,9 +90,6 @@ jobs:
                if [ -f "$file" ]; then 
                   echo "$file" >> $FILES_TO_SCAN
                   count=$((count+1))
-                  echo "  --> ✅ Agregado (Código)"
-               else
-                  echo "  --> ⚠️ Ignorado (No existe física en disco, quizás borrado)"
                fi
           
             # 2. Metadatos: Campos, Objetos y Flows (Regex Unificado)
@@ -100,12 +97,7 @@ jobs:
                if [ -f "$file" ]; then 
                   echo "$file" >> $FILES_TO_SCAN
                   count=$((count+1))
-                  echo "  --> ✅ Agregado (Metadatos/Flow)"
-               else
-                  echo "  --> ⚠️ Ignorado (No existe física en disco, quizás borrado)"
                fi
-            else
-               echo "  --> ⚪ Ignorado (No coincide con los tipos soportados)"
             fi
           done < $RAW_DIFF_FILE
           
