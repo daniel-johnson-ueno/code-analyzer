@@ -47,9 +47,9 @@ jobs:
       - name: Install PMD 7
         if: steps.check_sync.outputs.is_sync != 'true'
         run: |
-          wget https://github.com/pmd/pmd/releases/download/pmd_releases%2F7.0.0/pmd-dist-7.0.0-bin.zip -q
-          unzip -q pmd-dist-7.0.0-bin.zip
-          echo "$(pwd)/pmd-bin-7.0.0/bin" >> $GITHUB_PATH
+          wget https://github.com/pmd/pmd/releases/download/pmd_releases%2F7.6.0/pmd-dist-7.6.0-bin.zip -q
+          unzip -q pmd-dist-7.6.0-bin.zip
+          echo "$(pwd)/pmd-bin-7.6.0/bin" >> $GITHUB_PATH
 
       # Logica para obtener archivos (Vía API de GitHub)
       - name: Get changed files
