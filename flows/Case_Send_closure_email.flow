@@ -87,7 +87,7 @@
             <targetReference>User_has_flow_bypass</targetReference>
         </connector>
         <filterFormula>AND(
-NOT({!$Permission.ByPass_Flow_}),
+NOT({!$Permission.ByPass_Flow_r}),
 ISPICKVAL({!$Record.Status}, &quot;Cerrado&quot;),
 {!$Record.CaseAnnulled__c},
 NOT(ISBLANK(TEXT({!$Record.CancellationReason__c}))),
