@@ -260,35 +260,72 @@
     <!-- REGLAS PARA FLOW Y VALIDATION RULES                               -->
     <!-- ================================================================= -->
 
-    <!--
-        PRUEBA 1: Validación de Descripción
-        Usamos funciones estándar sin prefijo 'fn:'.
-        Usamos local-name() porque sabemos que detecta el nodo.
-    -->
-    <rule name="XP_Compat_Description"
+    <!-- ================================================================= -->
+    <!-- NIVEL 0: SONDAS ESTRUCTURALES (Solo existencia)                   -->
+    <!-- Objetivo: Confirmar que PMD ve los nodos, sin importar el texto.  -->
+    <!-- ================================================================= -->
+
+    <rule name="L0_Probe_Root"
           language="xml"
-          message="[XP] Éxito: Se leyó descripción con contenido."
+          message="[L0] ROOT: Se encontró CustomField (usando local-name)"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <priority>5</priority>
+        <properties>
+            <property name="xpath">
+                <value><![CDATA[//*[local-name()='CustomField']]]></value>
+            </property>
+        </properties>
+    </rule>
+
+    <rule name="L0_Probe_Child_Desc"
+          language="xml"
+          message="[L0] CHILD: Se encontró description (usando local-name)"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <priority>5</priority>
+        <properties>
+            <property name="xpath">
+                <value><![CDATA[//*[local-name()='description']]]></value>
+            </property>
+        </properties>
+    </rule>
+
+    <rule name="L0_Probe_Child_FullName"
+          language="xml"
+          message="[L0] CHILD: Se encontró fullName (usando local-name)"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <priority>5</priority>
+        <properties>
+            <property name="xpath">
+                <value><![CDATA[//*[local-name()='fullName']]]></value>
+            </property>
+        </properties>
+    </rule>
+
+
+    <!-- ================================================================= -->
+    <!-- NIVEL 1: XPATH 1.0 (Compatibilidad)                               -->
+    <!-- Objetivo: Leer texto sin usar funciones modernas.                   -->
+    <!-- ================================================================= -->
+
+    <rule name="L1_Desc_StringLength"
+          language="xml"
+          message="[L1] CONTENT: description tiene largo > 0 (string-length .)"
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <priority>3</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='description']
-                        [string-length(normalize-space(string(.))) > 0]
+                    //*[local-name()='description'][string-length(normalize-space(.)) > 0]
                     ]]>
                 </value>
             </property>
         </properties>
     </rule>
 
-    <!--
-        PRUEBA 2: Validación de Naming con Regex
-        Usamos matches() directamente (XPath 2.0 standard).
-    -->
-    <rule name="XP_Compat_Naming"
+    <rule name="L1_FullName_Translate"
           language="xml"
-          message="[XP] Naming: El API Name empieza con minúscula (Regex)."
+          message="[L1] MATCH: fullName detectado con translate (simula lower-case)"
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <priority>3</priority>
         <properties>
@@ -296,27 +333,124 @@
                 <value>
                     <![CDATA[
                     //*[local-name()='fullName']
-                        [matches(string(.), '^[a-z]')]
+                    [contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'fecha')]
                     ]]>
                 </value>
             </property>
         </properties>
     </rule>
 
-    <!--
-        PRUEBA 3: Debug de Estructura (Testigo)
-        Verifica si ve el nodo CustomField raíz.
-    -->
-    <rule name="XP_Compat_Root"
+
+    <!-- ================================================================= -->
+    <!-- NIVEL 2: XPATH 2.0 (Estándar Moderno)                             -->
+    <!-- Objetivo: Usar matches, lower-case y text().                      -->
+    <!-- ================================================================= -->
+
+    <rule name="L2_Desc_TextNode"
           language="xml"
-          message="[XP] Debug: Nodo raíz CustomField encontrado."
+          message="[L2] CONTENT: description leída usando /text()"
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>5</priority>
+        <priority>3</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='CustomField']
+                    //*[local-name()='description'][string-length(normalize-space(text())) > 0]
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <rule name="L2_FullName_Matches"
+          language="xml"
+          message="[L2] MATCH: fullName detectado con matches (Regex)"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                    //*[local-name()='fullName'][matches(lower-case(.), 'fecha.*')]
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+
+    <!-- ================================================================= -->
+    <!-- NIVEL 3: XPATH 3.0 / 3.1 (Avanzado PMD 7)                         -->
+    <!-- Objetivo: Usar fn:data, wildcard de namespace y operadores nuevos.-->
+    <!-- ================================================================= -->
+
+    <rule name="L3_Wildcard_Namespace"
+          language="xml"
+          message="[L3] STRUCT: Nodo encontrado usando Wildcard '*:Tag'"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                    //*:description
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <rule name="L3_FnData_Content"
+          language="xml"
+          message="[L3] CONTENT: Contenido leído usando fn:data()"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                    //*:description[fn:string-length(fn:data(.)) > 0]
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <rule name="L3_MapOperator"
+          language="xml"
+          message="[L3] OP: Operador de mapa '!' funcionó"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                    //*:CustomField ! *:description
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+
+    <!-- ================================================================= -->
+    <!-- NIVEL NAMESPACE: Definición Explícita                             -->
+    <!-- Objetivo: Ver si el mapeo manual 'm=' funciona.                   -->
+    <!-- ================================================================= -->
+
+    <rule name="NS_Explicit_Definition"
+          language="xml"
+          message="[NS] NAMESPACE: Se encontró nodo usando prefijo 'm:'"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <priority>3</priority>
+        <properties>
+            <property name="namespaces">
+                <value>m=http://soap.sforce.com/2006/04/metadata</value>
+            </property>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                    //m:CustomField/m:description
                     ]]>
                 </value>
             </property>
