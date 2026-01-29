@@ -299,8 +299,7 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='description']
-                       [string-length(normalize-space(text())) = 0]
+                        string-length(//*[local-name()='CustomField']//*[local-name()='description']) = 0
                     ]]>
                 </value>
             </property>
