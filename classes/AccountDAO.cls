@@ -13,6 +13,7 @@ public with sharing class AccountDAO {
         soql = soql + ' WHERE Id =: accountId';
 
         return Database.query(soql);
+
     }
 
     public static List<Informacion_Financiera__c> getCompanyFinancialInfo(String accountId){
