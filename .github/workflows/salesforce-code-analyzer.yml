@@ -63,14 +63,8 @@ jobs:
           
           if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
             echo "📥 Consultando a la API de GitHub los archivos del PR #${{ github.event.pull_request.number }}..."
-          
-            # COMANDO CLAVE: gh pr diff
-            # Esto obtiene la lista exacta de archivos que ves en la UI web "Files Changed".
-            # No importa de dónde nació la rama ni a dónde va.
             gh pr diff "${{ github.event.pull_request.number }}" --name-only > $RAW_DIFF_FILE
-          
           else
-            # Lógica para Pushes directos (cuando no hay PR, ej: merge a main)
             BASE_SHA="${{ github.event.before }}"
             HEAD_SHA="${{ github.sha }}"
             if [[ -z "${BASE_SHA}" || "${BASE_SHA}" =~ ^0+$ ]]; then
@@ -79,17 +73,39 @@ jobs:
             git diff --name-only "$BASE_SHA" "$HEAD_SHA" > $RAW_DIFF_FILE
           fi
           
+          # --- DEBUG: Ver qué encontró git/gh ---
+          echo "🔎 Archivos crudos encontrados en el Diff:"
+          cat $RAW_DIFF_FILE
+          echo "----------------------------------------"
+          
           touch $FILES_TO_SCAN
           count=0
           
-          while IFS= read -r file; do
-            # Aceptamos Apex, Triggers, Pages, Campos, Objetos, flows
-            if [[ "$file" =~ \.(cls|trigger|page|component)$ ]] && [[ ! "$file" =~ -meta.xml ]]; then
-               if [ -f "$file" ]; then echo "$file" >> $FILES_TO_SCAN; count=$((count+1)); fi
+          # Fix: '|| [ -n "$file" ]' asegura que se procese la última línea aunque no tenga salto de línea
+          while IFS= read -r file || [ -n "$file" ]; do
+            echo "Procesando archivo: '$file'"
           
-            # Detectar Campos (.field-meta.xml), Objetos (.object-meta.xml) y Flows (.flow-meta.xml)
+            # 1. Apex, Triggers, Pages, Componentes
+            if [[ "$file" =~ \.(cls|trigger|page|component)$ ]] && [[ ! "$file" =~ -meta.xml ]]; then
+               if [ -f "$file" ]; then 
+                  echo "$file" >> $FILES_TO_SCAN
+                  count=$((count+1))
+                  echo "  --> ✅ Agregado (Código)"
+               else
+                  echo "  --> ⚠️ Ignorado (No existe física en disco, quizás borrado)"
+               fi
+          
+            # 2. Metadatos: Campos, Objetos y Flows (Regex Unificado)
             elif [[ "$file" =~ \.(field-meta|object-meta|flow-meta)\.xml$ ]]; then
-               if [ -f "$file" ]; then echo "$file" >> $FILES_TO_SCAN; count=$((count+1)); fi
+               if [ -f "$file" ]; then 
+                  echo "$file" >> $FILES_TO_SCAN
+                  count=$((count+1))
+                  echo "  --> ✅ Agregado (Metadatos/Flow)"
+               else
+                  echo "  --> ⚠️ Ignorado (No existe física en disco, quizás borrado)"
+               fi
+            else
+               echo "  --> ⚪ Ignorado (No coincide con los tipos soportados)"
             fi
           done < $RAW_DIFF_FILE
           
