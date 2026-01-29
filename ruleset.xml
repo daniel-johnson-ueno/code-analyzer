@@ -261,20 +261,21 @@
     <!-- ================================================================= -->
 
     <!--
-        PRUEBA 1: Validación de Descripción usando wildcard (*:)
-        Busca 'description' en cualquier namespace y verifica si tiene texto.
+        PRUEBA 1: Validación de Descripción
+        Usamos funciones estándar sin prefijo 'fn:'.
+        Usamos local-name() porque sabemos que detecta el nodo.
     -->
-    <rule name="XP_Wildcard_Description"
+    <rule name="XP_Compat_Description"
           language="xml"
-          message="[XP*] Éxito: Se leyó descripción con contenido."
+          message="[XP] Éxito: Se leyó descripción con contenido."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <priority>3</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*:description
-                        [fn:string-length(fn:normalize-space(fn:string(.))) > 0]
+                    //*[local-name()='description']
+                        [string-length(normalize-space(string(.))) > 0]
                     ]]>
                 </value>
             </property>
@@ -282,20 +283,20 @@
     </rule>
 
     <!--
-        PRUEBA 2: Validación de Naming con Regex y Wildcard (*:)
-        Busca 'fullName' en cualquier namespace.
+        PRUEBA 2: Validación de Naming con Regex
+        Usamos matches() directamente (XPath 2.0 standard).
     -->
-    <rule name="XP_Wildcard_Naming"
+    <rule name="XP_Compat_Naming"
           language="xml"
-          message="[XP*] Naming: El API Name empieza con minúscula (Regex)."
+          message="[XP] Naming: El API Name empieza con minúscula (Regex)."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <priority>3</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*:fullName
-                        [matches(fn:string(.), '^[a-z]')]
+                    //*[local-name()='fullName']
+                        [matches(string(.), '^[a-z]')]
                     ]]>
                 </value>
             </property>
@@ -303,19 +304,19 @@
     </rule>
 
     <!--
-        PRUEBA 3: Debug de Estructura (Wildcard Root)
+        PRUEBA 3: Debug de Estructura (Testigo)
         Verifica si ve el nodo CustomField raíz.
     -->
-    <rule name="XP_Wildcard_Root"
+    <rule name="XP_Compat_Root"
           language="xml"
-          message="[XP*] Debug: Nodo raíz CustomField encontrado."
+          message="[XP] Debug: Nodo raíz CustomField encontrado."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <priority>5</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*:CustomField
+                    //*[local-name()='CustomField']
                     ]]>
                 </value>
             </property>
