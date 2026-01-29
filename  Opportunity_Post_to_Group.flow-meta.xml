@@ -22,7 +22,7 @@
         <connector>
             <targetReference>Get_Notification</targetReference>
         </connector>
-
+        <filterFormula>NOT({!$Permission.ByPass_Flow_other})</filterFormula>
         <object>Opportunity__c</object>
         <recordTriggerType>Update</recordTriggerType>
         <triggerType>RecordAfterSave</triggerType>
