@@ -432,29 +432,4 @@
         </properties>
     </rule>
 
-
-    <!-- ================================================================= -->
-    <!-- NIVEL NAMESPACE: Definición Explícita                             -->
-    <!-- Objetivo: Ver si el mapeo manual 'm=' funciona.                   -->
-    <!-- ================================================================= -->
-
-    <rule name="NS_Explicit_Definition"
-          language="xml"
-          message="[NS] NAMESPACE: Se encontró nodo usando prefijo 'm:'"
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>3</priority>
-        <properties>
-            <property name="namespaces">
-                <value>m=http://soap.sforce.com/2006/04/metadata</value>
-            </property>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                    //m:CustomField/m:description
-                    ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
-
 </ruleset>
