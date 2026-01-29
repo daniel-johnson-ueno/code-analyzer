@@ -299,7 +299,7 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                        string-length(//*[local-name()='description']) = 0
+                        [string-length(//*[local-name()='description']) = 0]
                     ]]>
                 </value>
             </property>
