@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>start_date__c</fullName>
-    <description>testse</description>
+    <!--
+       VIOLACIONES ESPERADAS CON EL RULESET ACTUAL:
+
+       1. ApiNamePascalCase: 'fecha_inicio__c' empieza con minúscula.
+       2. NoSpanishInApiName: Contiene la palabra 'fecha'.
+       3. MetadataDescriptionRequired: La etiqueta <description> está presente pero vacía.
+       4. NoEnglishInLabel: El label contiene 'Start Date' (Inglés).
+    -->
+    <fullName>fecha_inicio__c</fullName>
+    <description></description>
     <label>Start Date</label>
     <type>Date</type>
 </CustomField>
