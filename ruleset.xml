@@ -342,7 +342,7 @@
     <!-- REGLA TESTIGO: Verifica si siquiera encuentra el nodo descripción, sin mirar texto -->
     <rule name="ProbeNodeExists"
           language="xml"
-          message="INFO: El nodo description existe (pero quizás PMD lo ve vacío)"
+          message="INFO: El nodo description existe (pero quizás PMD lo ve vacío) "
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <priority>5</priority>
         <properties>
