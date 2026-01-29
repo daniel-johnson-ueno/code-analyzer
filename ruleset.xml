@@ -261,25 +261,20 @@
     <!-- ================================================================= -->
 
     <!--
-    PRUEBA 1: Usando el operador '!' (Map Operator) de XPath 3.0
-    y la función fn:data() para extraer contenido.
--->
-    <rule name="XPath3_Probe_Data"
+        PRUEBA 1: Validación de Descripción usando wildcard (*:)
+        Busca 'description' en cualquier namespace y verifica si tiene texto.
+    -->
+    <rule name="XP_Wildcard_Description"
           language="xml"
-          message="[XP3] Éxito: Se leyó la descripción usando XPath 3.1 (fn:data)"
+          message="[XP*] Éxito: Se leyó descripción con contenido."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <priority>3</priority>
         <properties>
-            <!-- Definimos el namespace 'm' explícitamente -->
-            <property name="namespaces">
-                <value>m=http://soap.sforce.com/2006/04/metadata</value>
-            </property>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    (: Comentario estilo XPath 2+ :)
-                    //m:CustomField
-                    ! m:description[fn:string-length(fn:normalize-space(fn:data(.))) > 0]
+                    //*:description
+                        [fn:string-length(fn:normalize-space(fn:string(.))) > 0]
                     ]]>
                 </value>
             </property>
@@ -287,21 +282,40 @@
     </rule>
 
     <!--
-        PRUEBA 2: Validación de Naming usando matches (Regex) y sintaxis 3.0
+        PRUEBA 2: Validación de Naming con Regex y Wildcard (*:)
+        Busca 'fullName' en cualquier namespace.
     -->
-    <rule name="XPath3_Naming_Regex"
+    <rule name="XP_Wildcard_Naming"
           language="xml"
-          message="[XP3] Naming: El API Name empieza con minúscula (detectado con matches)"
+          message="[XP*] Naming: El API Name empieza con minúscula (Regex)."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <priority>3</priority>
         <properties>
-            <property name="namespaces">
-                <value>m=http://soap.sforce.com/2006/04/metadata</value>
-            </property>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //m:fullName[matches(fn:data(.), '^[a-z]')]
+                    //*:fullName
+                        [matches(fn:string(.), '^[a-z]')]
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <!--
+        PRUEBA 3: Debug de Estructura (Wildcard Root)
+        Verifica si ve el nodo CustomField raíz.
+    -->
+    <rule name="XP_Wildcard_Root"
+          language="xml"
+          message="[XP*] Debug: Nodo raíz CustomField encontrado."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <priority>5</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                    //*:CustomField
                     ]]>
                 </value>
             </property>
