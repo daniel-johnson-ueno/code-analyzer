@@ -260,81 +260,66 @@
     <!-- REGLAS PARA CAMPOS Y OBJETOS                                      -->
     <!-- ================================================================= -->
 
-    <!-- VARIANTE A: Namespace Estricto (m:description) -->
-    <rule name="R1_VarA_Namespace"
+    <!-- DEBUG BASE: ¿PMD ve el nodo CustomField? (Debe saltar SIEMPRE) -->
+    <rule name="R1_Debug_ParentExists"
           language="xml"
-          message="[VarA] Descripción vacía usando Namespace 'm:'"
+          message="[DEBUG] Se encontró un nodo CustomField raíz"
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>3</priority>
+        <priority>5</priority>
         <properties>
-            <property name="namespaces">
-                <value>m=http://soap.sforce.com/2006/04/metadata</value>
-            </property>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //m:CustomField[normalize-space(m:description) = '']
+                    //*[local-name()='CustomField']
                     ]]>
                 </value>
             </property>
         </properties>
     </rule>
 
-    <!-- VARIANTE B: Local-name en Padre e Hijo + string(.) -->
-    <rule name="R1_VarB_LocalName_String"
+    <!-- CASO 1: DETECTAR AUSENCIA (Debe dispararse si borras la etiqueta) -->
+
+    <!-- Variante A: Count children = 0 -->
+    <rule name="R1_Missing_VarA_Count"
           language="xml"
-          message="[VarB] Descripción vacía usando local-name y string(.)"
+          message="[Missing-A] Falta descripción (count=0)"
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <priority>3</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='CustomField']/*[local-name()='description'][string-length(normalize-space(string(.))) = 0]
+                    //*[local-name()='CustomField'][count(*[local-name()='description']) = 0]
                     ]]>
                 </value>
             </property>
         </properties>
     </rule>
 
-    <!-- VARIANTE C: Local-name en Padre e Hijo + text() -->
-    <rule name="R1_VarC_LocalName_Text"
+    <!-- Variante B: Not child exists -->
+    <rule name="R1_Missing_VarB_Not"
           language="xml"
-          message="[VarC] Descripción vacía usando local-name y text()"
+          message="[Missing-B] Falta descripción (not existence)"
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <priority>3</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='CustomField']/*[local-name()='description'][normalize-space(text()) = '']
+                    //*[local-name()='CustomField'][not(*[local-name()='description'])]
                     ]]>
                 </value>
             </property>
         </properties>
     </rule>
 
-    <!-- VARIANTE D: Descendiente (.//) + Punto (.) -->
-    <rule name="R1_VarD_Descendant_Dot"
-          language="xml"
-          message="[VarD] Descripción vacía usando descendientes (.//) y punto (.)"
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>3</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                    //*[local-name()='CustomField']//*[local-name()='description'][normalize-space(.) = '']
-                    ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
 
-    <!-- VARIANTE E: Selección Directa del nodo description (Sin importar padre) -->
-    <rule name="R1_VarE_DirectNode"
+    <!-- CASO 2: DETECTAR VACIO (Debe dispararse con <description></description>) -->
+
+    <!-- Variante C: String Length del nodo (.) -->
+    <rule name="R1_Empty_VarC_StringLen"
           language="xml"
-          message="[VarE] Descripción vacía seleccionando directamente el nodo description"
+          message="[Empty-C] Descripción vacía (string-length . = 0)"
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <priority>3</priority>
         <properties>
@@ -348,17 +333,34 @@
         </properties>
     </rule>
 
-    <!-- VARIANTE F: Negación de Texto (not(text())) -->
-    <rule name="R1_VarF_NotText"
+    <!-- Variante D: Not Text Node -->
+    <rule name="R1_Empty_VarD_NotText"
           language="xml"
-          message="[VarF] Descripción vacía usando not(text())"
+          message="[Empty-D] Descripción vacía (not text())"
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <priority>3</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='CustomField']/*[local-name()='description'][not(text())]
+                    //*[local-name()='description'][not(text())]
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- Variante E: Equals Empty String -->
+    <rule name="R1_Empty_VarE_EqualsEmpty"
+          language="xml"
+          message="[Empty-E] Descripción vacía (equal '')"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                    //*[local-name()='description'][normalize-space(.) = '']
                     ]]>
                 </value>
             </property>
