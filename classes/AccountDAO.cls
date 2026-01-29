@@ -9,11 +9,10 @@ public with sharing class AccountDAO {
         List<String> lstFields = new List<String>(Schema.getGlobalDescribe().get('Account').getDescribe().fields.getMap().keySet());
 
         String soql = 'SELECT ' + String.join(lstFields,',');
-        soql = soql + '  FROM Account ';
+        soql = soql + '  FROM Account';
         soql = soql + ' WHERE Id =: accountId';
 
         return Database.query(soql);
-
     }
 
     public static List<Informacion_Financiera__c> getCompanyFinancialInfo(String accountId){

@@ -2,12 +2,8 @@ global with sharing class BatchableClass implements Database.Batchable<SObject>,
 
         global static Database.QueryLocator start(Database.BatchableContext BC) {
             return Database.getQueryLocator([
-                    SELECT Id, Note__c, Linea__c, Tipo_Tarjeta__c, Contrato_Unico__c
-                     FROM Account
-                    WHERE Note__c = TRUE
-
+                    SELECT Id, Note__c, Linea__c, Tipo_Tarjeta__c, Contrato_Unico__c  FROM Account WHERE Note__c = TRUE
             ]);
-
         }
 
         global void execute(Database.BatchableContext BC, List<Account> accounts) {
@@ -21,6 +17,7 @@ global with sharing class BatchableClass implements Database.Batchable<SObject>,
                 note.Content = Blob.valueOf(System.Label.APX_NoteBody);
                 acc.Note__c = false;
                 noteByAccount.put(acc.Id, note);
+
             }
             
             if (noteByAccount.size() > 0) {
