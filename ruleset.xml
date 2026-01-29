@@ -260,172 +260,131 @@
     <!-- REGLAS PARA FLOW Y VALIDATION RULES                               -->
     <!-- ================================================================= -->
 
-    <!-- ================================================================= -->
-    <!-- NIVEL 0: SONDAS ESTRUCTURALES (Solo existencia)                   -->
-    <!-- Objetivo: Confirmar que PMD ve los nodos, sin importar el texto.  -->
-    <!-- ================================================================= -->
-
-    <rule name="L0_Probe_Root"
+    <!-- 1. Descripción Obligatoria (Objetos y Campos) -->
+    <rule name="MetadataDescriptionRequired"
           language="xml"
-          message="[L0] ROOT: Se encontró CustomField (usando local-name)"
+          message="⚠️ ADMIN: El Objeto/Campo debe tener una descripción completa."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>5</priority>
-        <properties>
-            <property name="xpath">
-                <value><![CDATA[//*[local-name()='CustomField']]]></value>
-            </property>
-        </properties>
-    </rule>
-
-    <rule name="L0_Probe_Child_Desc"
-          language="xml"
-          message="[L0] CHILD: Se encontró description (usando local-name)"
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>5</priority>
-        <properties>
-            <property name="xpath">
-                <value><![CDATA[//*[local-name()='description']]]></value>
-            </property>
-        </properties>
-    </rule>
-
-    <rule name="L0_Probe_Child_FullName"
-          language="xml"
-          message="[L0] CHILD: Se encontró fullName (usando local-name)"
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>5</priority>
-        <properties>
-            <property name="xpath">
-                <value><![CDATA[//*[local-name()='fullName']]]></value>
-            </property>
-        </properties>
-    </rule>
-
-
-    <!-- ================================================================= -->
-    <!-- NIVEL 1: XPATH 1.0 (Compatibilidad)                               -->
-    <!-- Objetivo: Leer texto sin usar funciones modernas.                   -->
-    <!-- ================================================================= -->
-
-    <rule name="L1_Desc_StringLength"
-          language="xml"
-          message="[L1] CONTENT: description tiene largo > 0 (string-length .)"
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>Valida que exista la etiqueta description y no esté vacía.</description>
         <priority>3</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='description'][string-length(normalize-space(.)) > 0]
+                    ( //*:CustomField | //*:CustomObject | //*:fields )
+                    [
+                        not(*:description)
+                        or
+                        string-length(normalize-space(*:description/string())) = 0
+                    ]
                     ]]>
                 </value>
             </property>
         </properties>
     </rule>
 
-    <rule name="L1_FullName_Translate"
+    <!-- 2. Naming Convention: PascalCase (API Names) -->
+    <rule name="ApiNamePascalCase"
           language="xml"
-          message="[L1] MATCH: fullName detectado con translate (simula lower-case)"
+          message="⚠️ NAMING: El API Name debe usar Mayúsculas al inicio y después de cada guion bajo."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <priority>3</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='fullName']
-                    [contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'fecha')]
+                    //*:fullName
+                    [
+                        contains(string(.), '__c')
+                        and
+                        (
+                            matches(string(.), '^[a-z]')
+                            or
+                            matches(string(.), '_[a-z]')
+                        )
+                    ]
                     ]]>
                 </value>
             </property>
         </properties>
     </rule>
 
-
-    <!-- ================================================================= -->
-    <!-- NIVEL 2: XPATH 2.0 (Estándar Moderno)                             -->
-    <!-- Objetivo: Usar matches, lower-case y text().                      -->
-    <!-- ================================================================= -->
-
-    <rule name="L2_Desc_TextNode"
+    <!-- 3. Idioma: Detectar Español en API Names -->
+    <rule name="NoSpanishInApiName"
           language="xml"
-          message="[L2] CONTENT: description leída usando /text()"
+          message="⚠️ NAMING: El API Name parece estar en español. Debe ser en INGLÉS."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <priority>3</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='description'][string-length(normalize-space(text())) > 0]
+                    //*:fullName
+                    [
+                        matches(lower-case(string(.)), '.*(_|^)(fecha|nombre|apellido|direccion|telefono|estado|tipo|codigo|descripcion|precio|costo|cuenta|usuario)(_|$).*')
+                    ]
                     ]]>
                 </value>
             </property>
         </properties>
     </rule>
 
-    <rule name="L2_FullName_Matches"
+    <!-- 4. Idioma: Detectar Inglés en Labels -->
+    <rule name="NoEnglishInLabel"
           language="xml"
-          message="[L2] MATCH: fullName detectado con matches (Regex)"
+          message="⚠️ LABEL: El Label parece estar en inglés. Debe ser en ESPAÑOL."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <priority>3</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='fullName'][matches(lower-case(.), 'fecha.*')]
+                    //*:label
+                    [
+                        matches(lower-case(string(.)), '(^|[^a-z])(date|name|last|first|status|type|code|description|price|cost|address|phone|user|account|manager|custom)([^a-z]|$)')
+                    ]
                     ]]>
                 </value>
             </property>
         </properties>
     </rule>
 
-
-    <!-- ================================================================= -->
-    <!-- NIVEL 3: XPATH 3.0 / 3.1 (Avanzado PMD 7)                         -->
-    <!-- Objetivo: Usar fn:data, wildcard de namespace y operadores nuevos.-->
-    <!-- ================================================================= -->
-
-    <rule name="L3_Wildcard_Namespace"
+    <!-- 5. Flows: Descripción Obligatoria -->
+    <rule name="FlowDescriptionRequired"
           language="xml"
-          message="[L3] STRUCT: Nodo encontrado usando Wildcard '*:Tag'"
+          message="⚠️ FLOW: El Flow debe tener una descripción completa."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <priority>3</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*:description
+                    //*:Flow
+                    [
+                        not(*:description)
+                        or
+                        string-length(normalize-space(*:description/string())) = 0
+                    ]
                     ]]>
                 </value>
             </property>
         </properties>
     </rule>
 
-    <rule name="L3_FnData_Content"
+    <!-- 6. Validation Rules: Mensaje de Error en Español -->
+    <rule name="ValidationRuleErrorMessageSpanish"
           language="xml"
-          message="[L3] CONTENT: Contenido leído usando fn:data()"
+          message="⚠️ VALIDATION: El mensaje de error debe estar en ESPAÑOL."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <priority>3</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*:description[fn:string-length(fn:data(.)) > 0]
-                    ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
-
-    <rule name="L3_MapOperator"
-          language="xml"
-          message="[L3] OP: Operador de mapa '!' funcionó"
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>3</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                    //*:CustomField ! *:description
+                    //*:errorMessage
+                    [
+                        matches(lower-case(string(.)), '(^|[^a-z])(error|value|field|required|invalid|please|must be)([^a-z]|$)')
+                    ]
                     ]]>
                 </value>
             </property>
