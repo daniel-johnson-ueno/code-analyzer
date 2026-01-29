@@ -29,11 +29,7 @@
         <name>StaticResource</name>
     </types>
     <types>
-        <members>BadField</members>
-        <name>CustomField</name>
-    </types>
-    <types>
-        <members> Opportunity_Post_to_Group.flow-meta.xml</members>
+        <members>*</members>
         <name>Flow</name>
     </types>
     <version>65.0</version>
