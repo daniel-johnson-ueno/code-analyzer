@@ -260,25 +260,105 @@
     <!-- REGLAS PARA CAMPOS Y OBJETOS                                      -->
     <!-- ================================================================= -->
 
-    <rule name="MetadataDescriptionRequired"
+    <!-- VARIANTE A: Namespace Estricto (m:description) -->
+    <rule name="R1_VarA_Namespace"
           language="xml"
-          message="⚠️ ADMIN: El Objeto/Campo debe tener una descripción completa."
+          message="[VarA] Descripción vacía usando Namespace 'm:'"
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <description>Es obligatorio documentar campos y objetos.</description>
         <priority>3</priority>
         <properties>
-            <!-- Definimos 'm' como el namespace de Metadata API -->
             <property name="namespaces">
-                <value>
-                    m=http://soap.sforce.com/2006/04/metadata
-                </value>
+                <value>m=http://soap.sforce.com/2006/04/metadata</value>
             </property>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //m:CustomField[not(m:description) or normalize-space(m:description) = '']
-                    |
-                    //m:CustomObject[not(m:description) or normalize-space(m:description) = '']
+                    //m:CustomField[normalize-space(m:description) = '']
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- VARIANTE B: Local-name en Padre e Hijo + string(.) -->
+    <rule name="R1_VarB_LocalName_String"
+          language="xml"
+          message="[VarB] Descripción vacía usando local-name y string(.)"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                    //*[local-name()='CustomField']/*[local-name()='description'][string-length(normalize-space(string(.))) = 0]
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- VARIANTE C: Local-name en Padre e Hijo + text() -->
+    <rule name="R1_VarC_LocalName_Text"
+          language="xml"
+          message="[VarC] Descripción vacía usando local-name y text()"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                    //*[local-name()='CustomField']/*[local-name()='description'][normalize-space(text()) = '']
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- VARIANTE D: Descendiente (.//) + Punto (.) -->
+    <rule name="R1_VarD_Descendant_Dot"
+          language="xml"
+          message="[VarD] Descripción vacía usando descendientes (.//) y punto (.)"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                    //*[local-name()='CustomField']//*[local-name()='description'][normalize-space(.) = '']
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- VARIANTE E: Selección Directa del nodo description (Sin importar padre) -->
+    <rule name="R1_VarE_DirectNode"
+          language="xml"
+          message="[VarE] Descripción vacía seleccionando directamente el nodo description"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                    //*[local-name()='description'][string-length(normalize-space(.)) = 0]
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- VARIANTE F: Negación de Texto (not(text())) -->
+    <rule name="R1_VarF_NotText"
+          language="xml"
+          message="[VarF] Descripción vacía usando not(text())"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                    //*[local-name()='CustomField']/*[local-name()='description'][not(text())]
                     ]]>
                 </value>
             </property>
