@@ -237,6 +237,36 @@
     <!-- ================================================================= -->
 
 
+    <!-- Flow Bypass Check Rule -->
+    <rule name="FlowMustHaveBypassCheck"
+          language="xml"
+          message="⚠️ FLOW: All flows must include a bypass check using $Permission.ByPass_Flow in either the entry criteria (filterFormula) or first decision node."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            Ensures all Salesforce Flows have a bypass mechanism using the custom permission ByPass_Flow.
+            This allows administrators to disable flows without deactivating them.
 
+            The bypass check should be in one of these locations:
+            1. In the start element's filterFormula: NOT({!$Permission.ByPass_Flow})
+            2. In a decision element that checks: {!$Permission.ByPass_Flow}
+        </description>
+        <priority>2</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                //Flow[
+                    local-name() = 'Flow'
+                    and not(
+                        .//start/filterFormula[
+                            contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'bypass_flow')
+                        ]
+                    )
+                ]
+                ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
 
 </ruleset>
