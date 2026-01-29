@@ -83,7 +83,7 @@ jobs:
           count=0
           
           while IFS= read -r file; do
-            # Aceptamos Apex, Triggers, Pages, Campos y Objetos
+            # Aceptamos Apex, Triggers, Pages, Campos, Objetos, flows
             if [[ "$file" =~ \.(cls|trigger|page|component)$ ]] && [[ ! "$file" =~ -meta.xml ]]; then
                if [ -f "$file" ]; then echo "$file" >> $FILES_TO_SCAN; count=$((count+1)); fi
           
