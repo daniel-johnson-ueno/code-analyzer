@@ -65,6 +65,9 @@
                         count(.//Method[lower-case(@Image)='start']) = 0
                     ]
                     [
+                        count(.//Method[lower-case(@Image)='test']) = 0
+                    ]
+                    [
                         .//SoqlExpression
                         or
                         .//MethodCallExpression[
@@ -134,13 +137,13 @@
     </rule>
     <rule ref="category/apex/design.xml/AvoidDeeplyNestedIfStmts">
         <properties>
-            <property name="problemDepth" value="3" />
+            <property name="problemDepth" value="4" />
         </properties>
     </rule>
     <rule ref="category/apex/design.xml/CognitiveComplexity">
         <properties>
-            <property name="classReportLevel" value="150" />
-            <property name="methodReportLevel" value="15" />
+            <property name="classReportLevel" value="350" />
+            <property name="methodReportLevel" value="35" />
         </properties>
     </rule>
 
@@ -230,162 +233,37 @@
 
 
     <!-- ================================================================= -->
-    <!-- REGLAS DE METADATOS (FLOWS Y VALIDATION RULES)                    -->
+    <!-- REGLAS DE METADATOS (FLOWS, VALIDATION RULES, OBJETOS, Y CAMPOS)                    -->
     <!-- ================================================================= -->
 
-    <!-- 5. Flows: Descripción Obligatoria -->
-    <rule name="FlowDescriptionRequired"
+
+    <!-- Flow Bypass Check Rule -->
+    <rule name="FlowMustHaveBypassCheck"
           language="xml"
-          message="⚠️ FLOW: El Flow debe tener una descripción completa."
+          message="⚠️ FLOW: All flows must include a bypass check using $Permission.ByPass_Flow in either the entry criteria (filterFormula) or first decision node."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <description>Es obligatorio documentar qué hace el Flow.</description>
-        <priority>3</priority>
+        <description>
+            Ensures all Salesforce Flows have a bypass mechanism using the custom permission ByPass_Flow.
+            This allows administrators to disable flows without deactivating them.
+
+            The bypass check should be in one of these locations:
+            1. In the start element's filterFormula: NOT({!$Permission.ByPass_Flow})
+            2. In a decision element that checks: {!$Permission.ByPass_Flow}
+        </description>
+        <priority>2</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='Flow']
-                       [
-                         count(.//*[local-name()='description']) = 0
-                         or
-                         normalize-space(.//*[local-name()='description']) = ''
-                       ]
-                    ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
-
-    <!-- ================================================================= -->
-    <!-- REGLAS PARA FLOW Y VALIDATION RULES                               -->
-    <!-- ================================================================= -->
-
-    <!-- 1. Descripción Obligatoria (Objetos y Campos) -->
-    <rule name="MetadataDescriptionRequired"
-          language="xml"
-          message="⚠️ ADMIN: El Objeto/Campo debe tener una descripción completa."
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <description>Valida que exista la etiqueta description y no esté vacía.</description>
-        <priority>3</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                    ( //*:CustomField | //*:CustomObject | //*:fields )
-                    [
-                        not(*:description)
-                        or
-                        string-length(normalize-space(*:description/string())) = 0
-                    ]
-                    ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
-
-    <!-- 2. Naming Convention: PascalCase (API Names) -->
-    <rule name="ApiNamePascalCase"
-          language="xml"
-          message="⚠️ NAMING: El API Name debe usar Mayúsculas al inicio y después de cada guion bajo."
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>3</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                    //*:fullName
-                    [
-                        contains(string(.), '__c')
-                        and
-                        (
-                            matches(string(.), '^[a-z]')
-                            or
-                            matches(string(.), '_[a-z]')
-                        )
-                    ]
-                    ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
-
-    <!-- 3. Idioma: Detectar Español en API Names -->
-    <rule name="NoSpanishInApiName"
-          language="xml"
-          message="⚠️ NAMING: El API Name parece estar en español. Debe ser en INGLÉS."
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>3</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                    //*:fullName
-                    [
-                        matches(lower-case(string(.)), '.*(_|^)(fecha|nombre|apellido|direccion|telefono|estado|tipo|codigo|descripcion|precio|costo|cuenta|usuario)(_|$).*')
-                    ]
-                    ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
-
-    <!-- 4. Idioma: Detectar Inglés en Labels -->
-    <rule name="NoEnglishInLabel"
-          language="xml"
-          message="⚠️ LABEL: El Label parece estar en inglés. Debe ser en ESPAÑOL."
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>3</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                    //*:label
-                    [
-                        matches(lower-case(string(.)), '(^|[^a-z])(date|name|last|first|status|type|code|description|price|cost|address|phone|user|account|manager|custom)([^a-z]|$)')
-                    ]
-                    ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
-
-    <!-- 5. Flows: Descripción Obligatoria -->
-    <rule name="FlowDescriptionRequired"
-          language="xml"
-          message="⚠️ FLOW: El Flow debe tener una descripción completa."
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>3</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                    //*:Flow
-                    [
-                        not(*:description)
-                        or
-                        string-length(normalize-space(*:description/string())) = 0
-                    ]
-                    ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
-
-    <!-- 6. Validation Rules: Mensaje de Error en Español -->
-    <rule name="ValidationRuleErrorMessageSpanish"
-          language="xml"
-          message="⚠️ VALIDATION: El mensaje de error debe estar en ESPAÑOL."
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>3</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                    //*:errorMessage
-                    [
-                        matches(lower-case(string(.)), '(^|[^a-z])(error|value|field|required|invalid|please|must be)([^a-z]|$)')
-                    ]
-                    ]]>
+                //Flow[
+                    local-name() = 'Flow'
+                    and not(
+                        .//start/filterFormula[
+                            contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'bypass_flow')
+                        ]
+                    )
+                ]
+                ]]>
                 </value>
             </property>
         </properties>

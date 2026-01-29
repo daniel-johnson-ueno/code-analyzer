@@ -87,8 +87,8 @@ jobs:
             if [[ "$file" =~ \.(cls|trigger|page|component)$ ]] && [[ ! "$file" =~ -meta.xml ]]; then
                if [ -f "$file" ]; then echo "$file" >> $FILES_TO_SCAN; count=$((count+1)); fi
           
-            # Detectar Campos (.field-meta.xml) y Objetos (.object-meta.xml)
-            elif [[ "$file" =~ \.field-meta\.xml$ ]] || [[ "$file" =~ \.object-meta\.xml$ ]]; then
+            # Detectar Campos (.field-meta.xml), Objetos (.object-meta.xml) y Flows (.flow-meta.xml)
+            elif [[ "$file" =~ \.field-meta\.xml$ ]] || [[ "$file" =~ \.object-meta\.xml$ ]] || [[ "$file" =~ \.flow-meta\.xml$ ]]; then
                if [ -f "$file" ]; then echo "$file" >> $FILES_TO_SCAN; count=$((count+1)); fi
             fi
           done < $RAW_DIFF_FILE
