@@ -5,6 +5,7 @@ global with sharing class BatchableClass implements Database.Batchable<SObject>,
                     SELECT Id, Note__c, Linea__c, Tipo_Tarjeta__c, Contrato_Unico__c
                      FROM Account
                     WHERE Note__c = TRUE
+
             ]);
 
         }
