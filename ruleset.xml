@@ -256,100 +256,29 @@
         </properties>
     </rule>
 
-    <!-- 6. Validation Rules: Mensaje de Error en Español -->
-    <rule name="ValidationRuleErrorMessageSpanish"
-          language="xml"
-          message="⚠️ VALIDATION: El mensaje de error debe estar en ESPAÑOL."
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <description>Los mensajes de error visibles para el usuario no pueden estar en inglés.</description>
-        <priority>3</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                    //*[local-name()='errorMessage']
-                    [
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'error') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'value') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'field') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'required') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'invalid') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'please') or
-                        contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'must be')
-                    ]
-                    ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
-
-
     <!-- ================================================================= -->
     <!-- REGLAS PARA CAMPOS Y OBJETOS                                      -->
     <!-- ================================================================= -->
 
-    <!-- SONDA 1: Intenta leer usando el punto '.' (Valor de string del nodo) -->
-    <rule name="ProbeDot"
+    <rule name="MetadataDescriptionRequired"
           language="xml"
-          message="EXITO: PMD puede leer texto usando '.'"
+          message="⚠️ ADMIN: El Objeto/Campo debe tener una descripción completa."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>1</priority>
+        <description>Es obligatorio documentar campos y objetos.</description>
+        <priority>3</priority>
         <properties>
-            <property name="xpath">
+            <!-- Definimos 'm' como el namespace de Metadata API -->
+            <property name="namespaces">
                 <value>
-                    <![CDATA[
-                    //*[local-name()='description'][contains(., 'fecha')]
-                    ]]>
+                    m=http://soap.sforce.com/2006/04/metadata
                 </value>
             </property>
-        </properties>
-    </rule>
-
-    <!-- SONDA 2: Intenta leer usando 'text()' (Nodo de texto hijo) -->
-    <rule name="ProbeTextNode"
-          language="xml"
-          message="EXITO: PMD puede leer texto usando 'text()'"
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>1</priority>
-        <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //*[local-name()='description'][contains(text(), 'fecha')]
-                    ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
-
-    <!-- SONDA 3: Intenta leer usando 'data()' (Función XPath 2.0/3.1) -->
-    <rule name="ProbeData"
-          language="xml"
-          message="EXITO: PMD puede leer texto usando 'data(.)'"
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>1</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                    //*[local-name()='description'][contains(data(.), 'fecha')]
-                    ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
-
-    <!-- REGLA TESTIGO: Verifica si siquiera encuentra el nodo descripción, sin mirar texto -->
-    <rule name="ProbeNodeExists"
-          language="xml"
-          message="INFO: El nodo description existe (pero quizás PMD lo ve vacío) "
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <priority>5</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                    //*[local-name()='description']
+                    //m:CustomField[not(m:description) or normalize-space(m:description) = '']
+                    |
+                    //m:CustomObject[not(m:description) or normalize-space(m:description) = '']
                     ]]>
                 </value>
             </property>
