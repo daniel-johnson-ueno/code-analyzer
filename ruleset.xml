@@ -233,11 +233,28 @@
 
 
     <!-- ================================================================= -->
-    <!-- REGLAS DE METADATOS (FLOWS, VALIDATION RULES, OBJETOS, Y CAMPOS)                    -->
+    <!-- REGLAS DE METADATOS (FLOWS, VALIDATION RULES, OBJETOS, Y CAMPOS)  -->
+    <!-- por algun motivo no estoy logrando que las reglas lean el contenido de los nodos, -->
+    <!-- con lo cual no pude aplicar ninguna de las siguientes reglas  -->
     <!-- ================================================================= -->
 
+    <!-- :::: OBJETOS Y CAMPOS :::: -->
+    <!-- Regla para validar naming convention en campos y objetos custom-->
+    <!-- Regla para validar idioma Ingles en el apiName de campos y objetos custom-->
+    <!-- Regla para validar idioma Español en el label de campos y objetos custom-->
+    <!-- Regla para validar descripcion obligatoria en campos y objetos custom-->
 
-    <!-- 7. Flow Bypass Check: Validación de Seguridad -->
+
+    <!-- :::: VALIDATION RULES: AGREGAR EL TIPO DE ARCHIVO EN .YML :::: -->
+    <!-- Regla para validar naming convention en Validation Rules-->
+    <!-- Regla para validar descripcion obligatoria en Validation Rules-->
+    <!-- Regla para validar bypass permission set en Validation Rules-->
+
+
+    <!-- :::: FLOWS :::: -->
+    <!-- Regla para validar la descripcion en flows, debe estar presente y debe tener el equipo responsable -->
+
+    <!-- Flow Bypass Check: - ojo, cuando se logre hacer, hay que valida que esto solo aplica a ciertos tipos de flows
     <rule name="FlowMustHaveBypassCheck"
           language="xml"
           message="⚠️ FLOW: El Flow debe incluir un chequeo de Bypass ($Permission.ByPass_Flow) en la fórmula de inicio."
@@ -264,5 +281,6 @@
             </property>
         </properties>
     </rule>
+    -->
 
 </ruleset>
