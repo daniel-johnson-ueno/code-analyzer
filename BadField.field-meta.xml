@@ -9,7 +9,7 @@
        4. NoEnglishInLabel: El label contiene 'Start Date' (Inglés).
     -->
     <fullName>fecha_inicio__c</fullName>
-    <description></description>
+    <description>aaa</description>
     <label>Start Date</label>
     <type>Date</type>
 </CustomField>
