@@ -13,7 +13,7 @@
         </customErrorMessages>
     </customErrors>
     <environments>Default</environments>
-    <interviewLabel>Opportunity : Post to Group {!$Flow.CurrentDateTime}</interviewLabel>
+    <interviewLabel>Opportunity: Post to Group {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Opportunity : Post to Group</label>
     <processType>AutoLaunchedFlow</processType>
     <start>
