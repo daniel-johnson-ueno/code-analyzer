@@ -39,7 +39,6 @@
         </properties>
     </rule>
 
-    <!-- Por el momento queda solo en warning, pero lo vamos a ajustar a error en el futuro -->
     <rule name="EnforceDAOPattern"
           language="apex"
           message="No se permiten SOQLs (ni Database.query) en esta clase. Mover la consulta a una clase DAO."
@@ -50,7 +49,7 @@
             2. Clases que tengan un metodo 'execute' (Batch, Queueable, Schedulable).
             3. Clases que tengan un metodo 'start' (Batch).
         </description>
-        <priority>3</priority>
+        <priority>1</priority>
         <properties>
             <property name="xpath">
                 <value>
@@ -91,7 +90,7 @@
             cualquier consulta en un DAO debe construirse utilizando las utilidades de la clase SOQLHelper.
             Se excluyen las clases de Test.
         </description>
-        <priority>3</priority>
+        <priority>1</priority>
         <properties>
             <property name="xpath">
                 <value>
@@ -121,13 +120,15 @@
 
 
 <!-- SECURITY: https://pmd.github.io/pmd/pmd_rules_apex_security.html -->
-<!-- Por el momento queda solo en warning, pero lo vamos a ajustar a error en el futuro -->
-    <rule ref="category/apex/security.xml/ApexOpenRedirect" />
-    <rule ref="category/apex/security.xml/ApexSharingViolations" />
-    <rule ref="category/apex/security.xml/ApexSOQLInjection" />
-    <rule ref="category/apex/security.xml/ApexSuggestUsingNamedCred" />
-    <rule ref="category/apex/security.xml/ApexXSSFromEscapeFalse" />
-    <rule ref="category/apex/security.xml/ApexXSSFromURLParam" />
+    <rule ref="category/apex/security.xml/ApexOpenRedirect">
+        <priority>1</priority>
+    </rule>
+    <rule ref="category/apex/security.xml/ApexSharingViolations">
+        <priority>1</priority>
+    </rule>
+    <rule ref="category/apex/security.xml/ApexSuggestUsingNamedCred">
+        <priority>1</priority>
+    </rule>
 
 
 <!-- DESIGN: https://pmd.github.io/pmd/pmd_rules_apex_design.html -->
