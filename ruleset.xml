@@ -96,7 +96,7 @@
                 <value>
                     <![CDATA[
                 //UserClass[contains(lower-case(@Image), 'dao')]
-                           [count(ModifierNode/Annotation/AnnotationName[lower-case(@Image)='istest']) = 0]
+                           [not(contains(lower-case(@Image), 'test'))]
                   //Method
                   [
                     (
