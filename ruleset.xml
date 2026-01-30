@@ -81,7 +81,6 @@
         </properties>
     </rule>
 
-    <!-- Por el momento queda solo en warning, pero lo vamos a ajustar a error en el futuro -->
     <rule name="EnforceSOQLHelperInDAO"
           language="apex"
           message="Los metodos DAO con queries deben utilizar SOQLHelper para garantizar FLS y sanitizacion."
@@ -89,29 +88,31 @@
         <description>
             Para asegurar que se respeten los permisos de campos (FLS) y se evite la inyeccion SOQL,
             cualquier consulta en un DAO debe construirse utilizando las utilidades de la clase SOQLHelper.
+            Se excluyen las clases de Test.
         </description>
         <priority>3</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //UserClass[contains(lower-case(@Image), 'dao') and !contains(lower-case(@Image), 'test')]
-                      //Method
-                      [
-                        (
-                          .//SoqlExpression
-                          or
-                          .//MethodCallExpression[
-                              lower-case(@MethodName) = 'query'
-                              and
-                              .//ReferenceExpression[lower-case(@Image) = 'database']
-                          ]
-                        )
+                //UserClass[contains(lower-case(@Image), 'dao')]
+                           [count(ModifierNode/Annotation/AnnotationName[lower-case(@Image)='istest']) = 0]
+                  //Method
+                  [
+                    (
+                      .//SoqlExpression
+                      or
+                      .//MethodCallExpression[
+                          lower-case(@MethodName) = 'query'
+                          and
+                          .//ReferenceExpression[lower-case(@Image) = 'database']
                       ]
-                      [
-                        count(.//ReferenceExpression[lower-case(@Image) = 'soqlhelper']) = 0
-                      ]
-                    ]]>
+                    )
+                  ]
+                  [
+                    count(.//ReferenceExpression[lower-case(@Image) = 'soqlhelper']) = 0
+                  ]
+                ]]>
                 </value>
             </property>
         </properties>
