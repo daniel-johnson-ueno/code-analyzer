@@ -11,7 +11,6 @@ public with sharing class AccountDAO {
         String soql = 'SELECT ' + String.join(lstFields,',');
         soql = soql + '  FROM Account';
         soql = soql + ' WHERE Id =: accountId';
-
         return Database.query(soql);
     }
 
