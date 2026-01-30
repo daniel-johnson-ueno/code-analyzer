@@ -16,7 +16,6 @@ private class AccountDAOTest {
     @IsTest
     private static void getAccountByIdTest(){
         Account company = [SELECT Id, Name FROM Account WHERE IsPersonAccount = false];
-
         Account account = AccountDAO.getAccountById(company.Id);
 
         System.assertEquals('Test Account', account.Name);
