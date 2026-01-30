@@ -25,13 +25,14 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //CatchBlockStatement[
-                        count(
-                           .//MethodCallExpression[
-                               lower-case(@MethodName) = 'generateerrorlogevent'
-                           ]
-                        ) = 0
-                    ]
+                    //UserClass[not(contains(lower-case(@Image), 'test'))]
+                        //CatchBlockStatement[
+                            count(
+                               .//MethodCallExpression[
+                                   lower-case(@MethodName) = 'generateerrorlogevent'
+                               ]
+                            ) = 0
+                        ]
                     ]]>
                 </value>
             </property>
