@@ -55,6 +55,7 @@ private class AccountDAOTest {
         Account personAccount = [SELECT Id, Phone, PersonEmail FROM Account WHERE IsPersonAccount = TRUE LIMIT 1];
         personAccount.Phone = '1234556';
         personAccount.PersonEmail = 'test@mail.com';
+
         update personAccount;
 
         List<Account> accounts = AccountDAO.getAccountByTemporaryKey(personAccount.PersonEmail, personAccount.Phone);
