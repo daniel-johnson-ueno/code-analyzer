@@ -44,7 +44,21 @@ public with sharing class AccountDAO {
 
         return Database.query(soql);
     }
+    public void testErrorProneAndCustomRule() {
+        try {
+            // VIOLACIÓN: Category/Apex/ErrorProne (AvoidHardcodingId)
+            // Uso explícito de un ID de 18 caracteres.
+            String hardcodedId = '001xx000003DGSWAA4';
 
+            Integer division = 1 / 0; // Provocar excepción
+
+        } catch (Exception e) {
+            // VIOLACIÓN: Custom Rule "EnforceLoggerInCatch"
+            // Tu regla XPath exige que haya una llamada a 'GenerateLogEvent...'.
+            // Al usar solo System.debug, esta regla debería saltar.
+            System.debug('Error: ' + e.getMessage());
+        }
+    }
     public static List<Account> getAccountByTypeAndDocumentNumber (String typeAndDocNumber){
 
         if(typeAndDocNumber == 'Simulate Exception'){
