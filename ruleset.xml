@@ -95,7 +95,7 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                    //UserClass[contains(lower-case(@Image), 'dao')]
+                    //UserClass[contains(lower-case(@Image), 'dao') and !contains(lower-case(@Image), 'test')]
                       //Method
                       [
                         (
