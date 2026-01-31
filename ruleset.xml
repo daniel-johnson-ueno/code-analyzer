@@ -447,7 +447,7 @@
                         //*:Flow[
                             count(*:description) = 0
                             or
-                            not(matches(*:description/text/@Text, '.*\[(Eco|Sales|Core|Service)\].*'))
+                            not(matches(*:description/text/@Text, '.*\[(eco|sales|core|service)\].*', 'i'))
                         ]
                     ]]>
                 </value>
@@ -460,10 +460,8 @@
           message="Los Record-Triggered Flows deben usar una Fórmula de Entrada e incluir '$Permission.ByPass_Flow'."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <description>
-            Verifica que:
-            1. Sea un Record-Triggered Flow.
-            2. Use uns Formula en el Start element.
-            3. La fórmula contenga el permiso de Bypass.
+            Verifica Record-Triggered Flows.
+            Usa '.' para leer fórmulas multilínea correctamente.
         </description>
         <priority>1</priority>
         <properties>
@@ -476,7 +474,7 @@
                         [
                             count(*:start/*:filterFormula) = 0
                             or
-                            not(contains(*:start/*:filterFormula/text/@Text, '$Permission.ByPass_Flow'))
+                            not(contains(*:start/*:filterFormula, '$Permission.ByPass_Flow'))
                         ]
                 ]]>
                 </value>
