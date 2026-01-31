@@ -254,76 +254,42 @@
         </properties>
     </rule>
 
-    <rule name="GettingNo"
-          language="xml"
-          message="Description contiene 'No' (Acceso con Namespace)"
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <description>
-            Detecta descripciones que contienen la palabra 'No' en archivos XML con Namespaces.
-        </description>
-        <priority>3</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                //*:PermissionSet/*:description[contains(text(), 'No')]
-                ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
-
-    <rule name="GettingNoRobust"
-          language="xml"
-          message="Description contiene 'No' (Ignorando Namespace)"
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <description>
-            Usa local-name() para ignorar el xmlns de Salesforce y text() para leer el contenido.
-        </description>
-        <priority>3</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                //*[local-name()='PermissionSet']
-                  /*[local-name()='description']
-                  [contains(text(), 'No')]
-                ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
-
-    <rule name="TestDescriptionDot"
-          language="xml"
-          message="Description detectada (Usando punto)"
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <description>
-            Usa el selector '.' para obtener el valor del nodo.
-        </description>
-        <priority>3</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                //PermissionSet/description[contains(., 'No')]
-                ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
 
     <!-- ================================================================= -->
-    <!-- REGLAS DE METADATOS (FLOWS, VALIDATION RULES, OBJETOS, Y CAMPOS)  -->
-    <!-- por algun motivo no estoy logrando que las reglas lean el contenido de los nodos, -->
-    <!-- con lo cual no pude aplicar ninguna de las siguientes reglas  -->
+    <!-- REGLAS DE METADATOS : OBJETOS CUSTOM  -->
     <!-- ================================================================= -->
+    <rule name="CustomObjectDescriptionRequired"
+          language="xml"
+          message="Todos los Custom Objects deben tener una descripción."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            Verifica que el campo description exista y no esté vacío.
+        </description>
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                <![CDATA[
+                //*:CustomObject[
+                    count(*:description) = 0
+                    or
+                    string-length(*:description/text/@Text) = 0
+                ]
+                ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
 
-    <!-- :::: OBJETOS Y CAMPOS :::: -->
-    <!-- Regla para validar naming convention en campos y objetos custom-->
-    <!-- Regla para validar idioma Ingles en el apiName de campos y objetos custom-->
-    <!-- Regla para validar idioma Español en el label de campos y objetos custom-->
-    <!-- Regla para validar descripcion obligatoria en campos y objetos custom-->
+
+
+    <!-- ================================================================= -->
+    <!-- REGLAS DE METADATOS : CAMPOS CUSTOM  -->
+    <!-- ================================================================= -->
+    <!-- Regla para validar naming convention en campos custom-->
+    <!-- Regla para validar idioma Ingles en el apiName de campos custom-->
+    <!-- Regla para validar idioma Español en el label de campos custom-->
+    <!-- Regla para validar descripcion obligatoria custom-->
 
 
     <!-- :::: VALIDATION RULES: AGREGAR EL TIPO DE ARCHIVO EN .YML :::: -->
