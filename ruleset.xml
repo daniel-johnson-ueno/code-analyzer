@@ -429,9 +429,59 @@
         </properties>
     </rule>
 
-    <!-- :::: FLOWS :::: -->
-    <!-- Regla para validar la descripcion en flows, debe estar presente y contener [Eco], [Sales], [Core], o [Service] -->
-    <!-- La condicion de inicio debe ser una formula y debe incluir el check de bypass $Permission.ByPass_Flow -->
+    <!-- ================================================================= -->
+    <!-- FLOWS -->
+    <!-- ================================================================= -->
+    <rule name="FlowDescriptionWithTag"
+          language="xml"
+          message="Todo Flow debe tener una descripción, y debe incluir un tag de equipo: [Eco], [Sales], [Core] o [Service]."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            Valida clasificación del flow mediante tags en la descripción.
+        </description>
+        <priority>1</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                        //*:Flow[
+                            count(*:description) = 0
+                            or
+                            not(matches(*:description/text/@Text, '.*\[(Eco|Sales|Core|Service)\].*'))
+                        ]
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
 
+    <rule name="FlowEntryConditionBypass"
+          language="xml"
+          message="Los Record-Triggered Flows deben usar una Fórmula de Entrada e incluir '$Permission.ByPass_Flow'."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            Verifica que:
+            1. Sea un Record-Triggered Flow.
+            2. Use uns Formula en el Start element.
+            3. La fórmula contenga el permiso de Bypass.
+        </description>
+        <priority>1</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                        //*:Flow[
+                            *:start/*:triggerType[contains(@Text, 'Record')]
+                        ]
+                        [
+                            count(*:start/*:filterFormula) = 0
+                            or
+                            not(contains(*:start/*:filterFormula/text/@Text, '$Permission.ByPass_Flow'))
+                        ]
+                ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
 
 </ruleset>
