@@ -294,7 +294,7 @@
             1. Estructura base: Empieza con Mayúscula y termina en __c/__mdt.
             2. Separación: No permite minúscula seguida de mayúscula sin guion (CamelCase).
         </description>
-        <priority>3</priority>
+        <priority>1</priority>
         <properties>
             <property name="xpath">
                 <value>
