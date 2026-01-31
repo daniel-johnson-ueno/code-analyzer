@@ -260,7 +260,7 @@
     <!-- ================================================================= -->
     <rule name="CustomObjectDescriptionRequired"
           language="xml"
-          message="Todos los Custom Objects deben tener una descripción."
+          message="Todos los Custom Objects deben tener una descripción detallada."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <description>
             Verifica que el campo description exista y no esté vacío.
