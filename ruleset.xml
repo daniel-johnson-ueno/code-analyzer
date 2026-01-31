@@ -250,13 +250,13 @@
         <properties>
             <property name="xpath">
                 <value>
-                <![CDATA[
-                //*:CustomObject[
-                    count(*:description) = 0
-                    or
-                    string-length(*:description/text/@Text) = 0
-                ]
-                ]]>
+                    <![CDATA[
+                        //*:CustomObject[
+                            count(*:description) = 0
+                            or
+                            string-length(*:description/text/@Text) = 0
+                        ]
+                    ]]>
                 </value>
             </property>
         </properties>
@@ -280,12 +280,12 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                //*:CustomField/*:fullName/text[
-                    not(matches(@Text, '^[A-Z][a-zA-Z0-9]*(_[A-Z][a-zA-Z0-9]*)*(__c|__mdt)$'))
-                    or
-                    matches(@Text, '.*[a-z][A-Z].*')
-                ]
-            ]]>
+                        //*:CustomField/*:fullName/text[
+                            not(matches(@Text, '^[A-Z][a-zA-Z0-9]*(_[A-Z][a-zA-Z0-9]*)*(__c|__mdt)$'))
+                            or
+                            matches(@Text, '.*[a-z][A-Z].*')
+                        ]
+                    ]]>
                 </value>
             </property>
         </properties>
@@ -303,12 +303,12 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                //*:CustomField[
-                    count(*:description) = 0
-                    or
-                    string-length(*:description/text/@Text) = 0
-                ]
-            ]]>
+                        //*:CustomField[
+                            count(*:description) = 0
+                            or
+                            string-length(*:description/text/@Text) = 0
+                        ]
+                    ]]>
                 </value>
             </property>
         </properties>
@@ -339,11 +339,96 @@
         </properties>
     </rule>
 
-    <!-- :::: VALIDATION RULES: AGREGAR EL TIPO DE ARCHIVO EN .YML :::: -->
-    <!-- Regla para validar naming convention en Validation Rules-->
-    <!-- Regla para validar descripcion obligatoria en Validation Rules-->
-    <!-- Regla para validar bypass permission set en Validation Rules-->
+    <rule name="ValidationRuleBypassRequired"
+          language="xml"
+          message="La fórmula debe incluir el bypass '$Permission.ByPass_Validation_Rules' para permitir cargas masivas o admins."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            Busca la cadena '$Permission.ByPass_Validation_Rules' dentro de errorConditionFormula.
+        </description>
+        <priority>1</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                        //*:ValidationRule/*:errorConditionFormula/text[
+                            not(contains(@Text, '$Permission.ByPass_Validation_Rules'))
+                        ]
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
 
+    <rule name="ValidationRuleMessageIdentifier"
+          language="xml"
+          message="El mensaje de error debe contener el código de la regla (el FullName o al menos 'RV_') para soporte."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            Ayuda a soporte técnico a encontrar rápidamente qué regla disparó el error.
+        </description>
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                //*:ValidationRule[
+                    let $msg := *:errorMessage/text/@Text
+                    let $name := *:fullName/text/@Text
+                    return
+                    not(contains($msg, 'RV_'))
+                    and
+                    not(contains($msg, $name))
+                ]
+            ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- ================================================================= -->
+    <!-- VALIDATION RULES -->
+    <!-- ================================================================= -->
+    <rule name="ValidationRuleNamingConvention"
+          language="xml"
+          message="El nombre de la Validation Rule debe comenzar con 'RV_' (Ej: RV_CASE_001_Impide_Cambio_Fecha)."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            Estandarización de nombres para fácil identificación en logs y deploy.
+        </description>
+        <priority>1</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                        //*:ValidationRule/*:fullName/text[
+                            not(starts-with(@Text, 'RV_'))
+                        ]
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <rule name="ValidationRuleDescriptionRequired"
+          language="xml"
+          message="La Validation Rule debe tener una descripción explicando su lógica de negocio."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <priority>1</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                        //*:ValidationRule[
+                            count(*:description) = 0
+                            or
+                            string-length(*:description/text/@Text) = 0
+                        ]
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
 
     <!-- :::: FLOWS :::: -->
     <!-- Regla para validar la descripcion en flows, debe estar presente y debe tener el equipo responsable -->
