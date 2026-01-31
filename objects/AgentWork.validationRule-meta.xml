@@ -3,7 +3,7 @@
     <fullName>CASE_012_CompletCampo_StatusBloqueado</fullName>
     <active>false</active>
     <errorConditionFormula>AND(
-        NOT($Permission.ByPass_Validation_Ruless),
+        NOT($Permission.ByPass_Validation_Tules),
         RecordType.DeveloperName = &#39;Reclamo_Fraude&#39;,
         ISPICKVAL(PRIORVALUE (Status),&quot;Bloqueado&quot;),
         ISCHANGED( Status),
