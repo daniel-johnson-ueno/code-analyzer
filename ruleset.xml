@@ -468,8 +468,12 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                        //*:Flow/*:start/*:filterFormula[
-                            not(contains(text/@Text, '$Permission.ByPass_Flow'))
+                        //*:Flow[
+                            count(*:start/*:filterFormula) = 0
+                            or
+                            *:start/*:filterFormula[
+                                not(contains(text/@Text, '$Permission.ByPass_Flow'))
+                            ]
                         ]
                     ]]>
                 </value>
