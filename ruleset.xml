@@ -254,6 +254,46 @@
         </properties>
     </rule>
 
+    <rule name="GettingNo"
+          language="xml"
+          message="Description contiene 'No' (Acceso con Namespace)"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            Detecta descripciones que contienen la palabra 'No' en archivos XML con Namespaces.
+        </description>
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                //*:PermissionSet/*:description[contains(text(), 'No')]
+                ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <rule name="GettingNoRobust"
+          language="xml"
+          message="Description contiene 'No' (Ignorando Namespace)"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            Usa local-name() para ignorar el xmlns de Salesforce y text() para leer el contenido.
+        </description>
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                //*[local-name()='PermissionSet']
+                  /*[local-name()='description']
+                  [contains(text(), 'No')]
+                ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
     <!-- ================================================================= -->
     <!-- REGLAS DE METADATOS (FLOWS, VALIDATION RULES, OBJETOS, Y CAMPOS)  -->
     <!-- por algun motivo no estoy logrando que las reglas lean el contenido de los nodos, -->
