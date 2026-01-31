@@ -93,7 +93,7 @@ jobs:
                fi
           
             # 2. Metadatos: Campos, Objetos y Flows (Regex Unificado)
-            elif [[ "$file" =~ \.(field-meta|object-meta|flow-meta)\.xml$ ]] || [[ "$file" =~ \.flow$ ]]; then
+            elif [[ "$file" =~ \.(field-meta|object-meta|flow-meta)\.xml$ ]]; then
                if [ -f "$file" ]; then 
                   echo "$file" >> $FILES_TO_SCAN
                   count=$((count+1))
