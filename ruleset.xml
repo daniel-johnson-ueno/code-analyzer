@@ -294,6 +294,25 @@
         </properties>
     </rule>
 
+    <rule name="TestDescriptionDot"
+          language="xml"
+          message="Description detectada (Usando punto)"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            Usa el selector '.' para obtener el valor del nodo.
+        </description>
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                //PermissionSet/description[contains(., 'No')]
+                ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
     <!-- ================================================================= -->
     <!-- REGLAS DE METADATOS (FLOWS, VALIDATION RULES, OBJETOS, Y CAMPOS)  -->
     <!-- por algun motivo no estoy logrando que las reglas lean el contenido de los nodos, -->
