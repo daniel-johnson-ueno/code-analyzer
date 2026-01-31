@@ -468,9 +468,7 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                        //*:Flow[
-                            *:start/*:triggerType[contains(@Text, 'Record')]
-                        ]
+                        //*:Flow
                         [
                             count(*:start/*:filterFormula) = 0
                             or
