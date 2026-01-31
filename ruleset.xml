@@ -468,13 +468,15 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                        //*:Flow
+                        //*:Flow[
+                            *:start/*:triggerType[contains(., 'Record')]
+                        ]
                         [
                             count(*:start/*:filterFormula) = 0
                             or
-                            not(contains(*:start/*:filterFormula, '$Permission.ByPass_Flow'))
+                            *:start/*:filterFormula[not(contains(., '$Permission.ByPass_Flow'))]
                         ]
-                ]]>
+                    ]]>
                 </value>
             </property>
         </properties>
