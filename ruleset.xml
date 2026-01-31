@@ -470,10 +470,6 @@
                     <![CDATA[
                 //*:Flow
                 [
-                    (: 1. Filtro: Validamos que sea Record-Triggered :)
-                    contains(string(*:start/*:triggerType), 'Record')
-                ]
-                [
                     (: 2. Validación: Falla si no hay formula OR si la formula completa no tiene el permiso :)
                     count(*:start/*:filterFormula) = 0
                     or
