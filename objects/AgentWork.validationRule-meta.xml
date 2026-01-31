@@ -9,6 +9,6 @@
         ISCHANGED( Status),
         ISPICKVAL( accretion_suggested__c, &quot;&quot;)
         )</errorConditionFormula>
-    <errorDisplayField>accretion_suggested__c</errorDisplayField>
+    <errorDisplayField>accretions_suggested__c</errorDisplayField>
     <errorMessage>Debes completar el campo Se sugiere acreditación para cambiar de estado</errorMessage>
 </ValidationRule>

@@ -384,6 +384,27 @@
         </properties>
     </rule>
 
+    <rule name="ValidationRuleBypassRequired"
+          language="xml"
+          message="La fórmula debe incluir el bypass '$Permission.ByPass_Validation_Rules' para permitir cargas masivas o admins."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            Busca la cadena '$Permission.ByPass_Validation_Rules' dentro de errorConditionFormula.
+        </description>
+        <priority>1</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                        //*:ValidationRule/*:errorConditionFormula/text[
+                            not(contains(@Text, '$Permission.ByPass_Validation_Rules'))
+                        ]
+                    ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
     <rule name="ValidationRuleMessageIdentifier"
           language="xml"
           message="El mensaje de error debe contener el código de la regla (el FullName o al menos 'RV_') para soporte."
@@ -405,27 +426,6 @@
                     not(contains($msg, $name))
                 ]
             ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
-
-    <rule name="ValidationRuleBypassRequired"
-          language="xml"
-          message="La fórmula debe incluir el bypass '$Permission.ByPass_Validation_Rules' para permitir cargas masivas o admins."
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <description>
-            Busca la cadena '$Permission.ByPass_Validation_Rules' dentro de errorConditionFormula.
-        </description>
-        <priority>1</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                        //*:ValidationRule/*:errorConditionFormula/text[
-                            not(contains(@Text, '$Permission.ByPass_Validation_Rules'))
-                        ]
-                    ]]>
                 </value>
             </property>
         </properties>
