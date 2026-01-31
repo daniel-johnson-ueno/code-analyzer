@@ -461,7 +461,7 @@
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <description>
             Verifica Record-Triggered Flows.
-            Usa la función string() para concatenar saltos de línea y evitar falsos  positivos.
+            Usa string() para concatenar correctamente fórmulas multilínea y evitar falsos positivos por indentación.
         </description>
         <priority>1</priority>
         <properties>
@@ -470,9 +470,11 @@
                     <![CDATA[
                 //*:Flow
                 [
+                    (: 1. Filtro: Validamos que sea Record-Triggered :)
                     contains(string(*:start/*:triggerType), 'Record')
                 ]
                 [
+                    (: 2. Validación: Falla si no hay formula OR si la formula completa no tiene el permiso :)
                     count(*:start/*:filterFormula) = 0
                     or
                     not(contains(string(*:start/*:filterFormula), '$Permission.ByPass_Flow'))
