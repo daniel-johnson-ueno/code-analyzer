@@ -256,7 +256,7 @@
 
 
     <!-- ================================================================= -->
-    <!-- REGLAS DE METADATOS : OBJETOS CUSTOM  -->
+    <!-- CUSTOM OBJECTS -->
     <!-- ================================================================= -->
     <rule name="CustomObjectDescriptionRequired"
           language="xml"
@@ -265,7 +265,7 @@
         <description>
             Verifica que el campo description exista y no esté vacío.
         </description>
-        <priority>3</priority>
+        <priority>1</priority>
         <properties>
             <property name="xpath">
                 <value>
@@ -282,15 +282,79 @@
     </rule>
 
 
-
     <!-- ================================================================= -->
-    <!-- REGLAS DE METADATOS : CAMPOS CUSTOM  -->
+    <!-- CUSTOM FIELDS -->
     <!-- ================================================================= -->
-    <!-- Regla para validar naming convention en campos custom-->
-    <!-- Regla para validar idioma Ingles en el apiName de campos custom-->
-    <!-- Regla para validar idioma Español en el label de campos custom-->
-    <!-- Regla para validar descripcion obligatoria custom-->
+    <rule name="CustomFieldNamingConvention"
+          language="xml"
+          message="El API Name debe separar palabras con guiones bajos (Ej: 'Nombre_Del_Campo')."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            Valida dos cosas:
+            1. Estructura base: Empieza con Mayúscula y termina en __c/__mdt.
+            2. Separación: No permite minúscula seguida de mayúscula sin guion (CamelCase).
+        </description>
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                //*:CustomField/*:fullName/text[
+                    not(matches(@Text, '^[A-Z][a-zA-Z0-9]*(_[A-Z][a-zA-Z0-9]*)*(__c|__mdt)$'))
+                    or
+                    matches(@Text, '.*[a-z][A-Z].*')
+                ]
+            ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
 
+    <rule name="CustomFieldDescriptionRequired"
+          language="xml"
+          message="Todos los campos custom deben tener una descripción detallada."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            Verifica que el campo description exista y no esté vacío.
+        </description>
+        <priority>1</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                //*:CustomField[
+                    count(*:description) = 0
+                    or
+                    string-length(*:description/text/@Text) = 0
+                ]
+            ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <rule name="CustomFieldApiNameEnglish"
+          language="xml"
+          message="El API Name debe estar en inglés. Se detectaron caracteres latinos o palabras en español (Ej: Use 'Date' en vez de 'Fecha')."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            Detecta si el fullName contiene:
+            1. Caracteres latinos (ñ, tildes).
+            2. Palabras comunes en español (Fecha, Nombre, etc).
+        </description>
+        <priority>1</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                //*:CustomField/*:fullName/text[
+                    matches(@Text, '(?i).*([ñáéíóúü]|fecha|nombre|apellido|direccion|telefono|celular|pais|provincia|localidad|barrio|codigo|estado|tipo|precio|costo|monto|cantidad|impuesto|descuento|saldo|vencimiento|pago).*')
+                ]
+            ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
 
     <!-- :::: VALIDATION RULES: AGREGAR EL TIPO DE ARCHIVO EN .YML :::: -->
     <!-- Regla para validar naming convention en Validation Rules-->
