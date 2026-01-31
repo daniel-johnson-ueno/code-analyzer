@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>CASE_012_CompletCampo_StatusBloqueado</fullName>
+    <fullName>RV_CASE_012_CompletCampo_StatusBloqueado</fullName>
     <active>false</active>
+    <description>no tiene pero bueno</description>
     <errorConditionFormula>AND(
-        NOT($Permission.ByPass_Validation_Tules),
+        NOT($Permission.ByPass_Validation_Rules),
         RecordType.DeveloperName = &#39;Reclamo_Fraude&#39;,
         ISPICKVAL(PRIORVALUE (Status),&quot;Bloqueado&quot;),
         ISCHANGED(Status),
         ISPICKVAL( accretion_suggested__c, &quot;&quot;)
         )</errorConditionFormula>
     <errorDisplayField>accretions_suggested__c</errorDisplayField>
-    <errorMessage>Debes completar el campo Se sugiere acreditación para cambiar de estado</errorMessage>
+    <errorMessage>RV_CASE_012: Debes completar el campo Se sugiere acreditación para cambiar de estado</errorMessage>
 </ValidationRule>
