@@ -461,20 +461,23 @@
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <description>
             Verifica Record-Triggered Flows.
-            Usa '.' para leer fórmulas multilínea correctamente.
+            Usa la función string() para concatenar saltos de línea y evitar falsos positivos.
         </description>
         <priority>1</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                        //*:Flow
-                        [
-                            count(*:start/*:filterFormula) = 0
-                            or
-                            *:start/*:filterFormula[not(contains(., '$Permission.ByPass_Flow'))]
-                        ]
-                    ]]>
+                //*:Flow
+                [
+                    contains(string(*:start/*:triggerType), 'Record')
+                ]
+                [
+                    count(*:start/*:filterFormula) = 0
+                    or
+                    not(contains(string(*:start/*:filterFormula), '$Permission.ByPass_Flow'))
+                ]
+            ]]>
                 </value>
             </property>
         </properties>
