@@ -5,7 +5,7 @@
     <environments>Default</environments>
     <description>description del equipo [core]</description>
     <interviewLabel>Case - Assign Account {!$Flow.CurrentDateTime}</interviewLabel>
-    <label>Case - Assign Account Async </label>
+    <label>Case - Assign Account Async</label>
     <processType>AutoLaunchedFlow</processType>
     <start>
         <locationX>50</locationX>
