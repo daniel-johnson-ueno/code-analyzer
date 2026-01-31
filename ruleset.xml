@@ -235,25 +235,6 @@
     </rule>
 
 
-    <rule name="TestXMLDescription"
-          language="xml"
-          message="Se detectó una descripción que contiene 'No'."
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <description>
-            Prueba de concepto para acceder al nodo de texto dentro de una etiqueta XML.
-        </description>
-        <priority>3</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                <![CDATA[
-                    //PermissionSet/description/text[contains(@Text, 'No')]
-                ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
-
 
     <!-- ================================================================= -->
     <!-- CUSTOM OBJECTS -->
