@@ -461,7 +461,7 @@
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <description>
             Verifica Record-Triggered Flows.
-            Usa la función string() para concatenar saltos de línea y evitar falsos positivos.
+            Usa la función string() para concatenar saltos de línea y evitar falsos  positivos.
         </description>
         <priority>1</priority>
         <properties>
