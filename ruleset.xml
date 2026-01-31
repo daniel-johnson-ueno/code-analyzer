@@ -430,35 +430,8 @@
     </rule>
 
     <!-- :::: FLOWS :::: -->
-    <!-- Regla para validar la descripcion en flows, debe estar presente y debe tener el equipo responsable -->
+    <!-- Regla para validar la descripcion en flows, debe estar presente y contener [Eco], [Sales], [Core], o [Service] -->
+    <!-- La condicion de inicio debe ser una formula y debe incluir el check de bypass $Permission.ByPass_Flow -->
 
-    <!-- Flow Bypass Check: - ojo, cuando se logre hacer, hay que valida que esto solo aplica a ciertos tipos de flows
-    <rule name="FlowMustHaveBypassCheck"
-          language="xml"
-          message="⚠️ FLOW: El Flow debe incluir un chequeo de Bypass ($Permission.ByPass_Flow) en la fórmula de inicio."
-          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
-        <description>
-            Asegura que el Flow tenga un mecanismo de bypass en el elemento Start.
-            Busca: NOT({!$Permission.ByPass_Flow}) en filterFormula.
-        </description>
-        <priority>2</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-                    <![CDATA[
-                    //*:Flow
-                    [
-                        not(
-                            *:start/*:filterFormula[
-                                contains(translate(string(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'bypass_flow')
-                            ]
-                        )
-                    ]
-                    ]]>
-                </value>
-            </property>
-        </properties>
-    </rule>
-    -->
 
 </ruleset>
