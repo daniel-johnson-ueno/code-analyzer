@@ -335,7 +335,7 @@
 
     <rule name="CustomFieldApiNameEnglish"
           language="xml"
-          message="El API Name debe estar en inglés. Se detectaron caracteres latinos o palabras en español (Ej: Use 'Date' en vez de 'Fecha')."
+          message="El API Name debe estar en inglés. Se detectaron caracteres latinos o palabras en español."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <description>
             Detecta si el fullName contiene:
@@ -347,10 +347,12 @@
             <property name="xpath">
                 <value>
                     <![CDATA[
-                //*:CustomField/*:fullName/text[
-                    matches(@Text, '(?i).*([ñáéíóúü]|fecha|nombre|apellido|direccion|telefono|celular|pais|provincia|localidad|barrio|codigo|estado|tipo|precio|costo|monto|cantidad|impuesto|descuento|saldo|vencimiento|pago).*')
-                ]
-            ]]>
+                        //*:CustomField/*:fullName/text[
+                            matches(@Text,
+                            '.*([ñáéíóúü]|fecha|nombre|apellido|direccion|telefono|celular|pais|provincia|localidad|barrio|codigo|estado|tipo|precio|costo|monto|cantidad|impuesto|descuento|saldo|vencimiento|pago).*',
+                            'i')
+                        ]
+                    ]]>
                 </value>
             </property>
         </properties>
