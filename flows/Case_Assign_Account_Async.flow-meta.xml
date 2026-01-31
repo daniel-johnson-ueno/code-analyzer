@@ -4,7 +4,7 @@
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <environments>Default</environments>
     <description>description del equipo [core]</description>
-    <interviewLabel>Case - Assign Account {!$Flow.CurrentDateTime}</interviewLabel>
+    <interviewLabel>Case - Assign Account {!$Flow.CurrentDateTimes}</interviewLabel>
     <label>Case - Assign Account Async</label>
     <processType>AutoLaunchedFlow</processType>
     <start>
