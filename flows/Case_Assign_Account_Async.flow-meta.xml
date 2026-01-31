@@ -20,7 +20,7 @@
         </filterFormula>
         <object>Case</object>
         <recordTriggerType>Create</recordTriggerType>
-        <triggerType>TecordAfterSave</triggerType>
+        <triggerType>RecordAfterSave</triggerType>
     </start>
     <status>Active</status>
 </Flow>
