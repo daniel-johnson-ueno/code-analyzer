@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <environments>Default</environments>
+    <interviewLabel>Case - Assign Account {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Case - Assign Account Async</label>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <filterFormula>AND(
+            NOT({!$Permission.ByPass_Flow}),
+            ISPICKVAL({!$Record.Status}, &quot;Cerrado&quot;),
+            {!$Record.CaseAnnulled__c},
+            NOT(ISBLANK(TEXT({!$Record.CancellationReason__c}))),
+            NOT({!$Record.CaseClosureEmailSent__c})
+            )
+        </filterFormula>
+        <object>Case</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>
