@@ -15,5 +15,6 @@
     <recordTypeTrackHistory>false</recordTypeTrackHistory>
     <searchLayouts />
     <sharingModel>Read</sharingModel>
+    <description></description>
     <visibility>Public</visibility>
 </CustomObject>
