@@ -386,18 +386,19 @@
 
     <rule name="ValidationRuleBypassRequired"
           language="xml"
-          message="La fórmula debe incluir el bypass '$Permission.ByPass_Validation_Rules' para permitir cargas masivas o admins."
+          message="La fórmula debe incluir el bypass '$Permission.ByPass_Validation_Rules'."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <description>
             Busca la cadena '$Permission.ByPass_Validation_Rules' dentro de errorConditionFormula.
+            Se selecciona el nodo padre para evitar errores de coordenadas en PMD.
         </description>
         <priority>1</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                        //*:ValidationRule/*:errorConditionFormula/text[
-                            not(contains(@Text, '$Permission.ByPass_Validation_Rules'))
+                        //*:ValidationRule/*:errorConditionFormula[
+                            not(contains(text/@Text, '$Permission.ByPass_Validation_Rules'))
                         ]
                     ]]>
                 </value>
@@ -407,25 +408,22 @@
 
     <rule name="ValidationRuleMessageIdentifier"
           language="xml"
-          message="El mensaje de error debe contener el código de la regla (el FullName o al menos 'RV_') para soporte."
+          message="El mensaje de error debe contener el código de la regla (el FullName o al menos 'RV_')."
           class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
         <description>
-            Ayuda a soporte técnico a encontrar rápidamente qué regla disparó el error.
+            Verifica que errorMessage contenga 'RV_' O el fullName de la regla.
         </description>
         <priority>1</priority>
         <properties>
             <property name="xpath">
                 <value>
                     <![CDATA[
-                //*:ValidationRule[
-                    let $msg := *:errorMessage/text/@Text
-                    let $name := *:fullName/text/@Text
-                    return
-                    not(contains($msg, 'RV_'))
-                    and
-                    not(contains($msg, $name))
-                ]
-            ]]>
+                        //*:ValidationRule[
+                            not(contains(*:errorMessage/text/@Text, 'RV_'))
+                            and
+                            not(contains(*:errorMessage/text/@Text, *:fullName/text/@Text))
+                        ]
+                    ]]>
                 </value>
             </property>
         </properties>

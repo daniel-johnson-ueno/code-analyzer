@@ -6,7 +6,7 @@
         NOT($Permission.ByPass_Validation_Tules),
         RecordType.DeveloperName = &#39;Reclamo_Fraude&#39;,
         ISPICKVAL(PRIORVALUE (Status),&quot;Bloqueado&quot;),
-        ISCHANGED( Status),
+        ISCHANGED(Status),
         ISPICKVAL( accretion_suggested__c, &quot;&quot;)
         )</errorConditionFormula>
     <errorDisplayField>accretions_suggested__c</errorDisplayField>
