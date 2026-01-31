@@ -3,7 +3,7 @@
     <apiVersion>62.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <environments>Default</environments>
-    <interviewLabel>Case- Assign Account {!$Flow.CurrentDateTime}</interviewLabel>
+    <interviewLabel>Case - Assign Account {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Case - Assign Account Async</label>
     <processType>AutoLaunchedFlow</processType>
     <start>
