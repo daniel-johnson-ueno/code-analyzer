@@ -247,7 +247,7 @@
             <property name="xpath">
                 <value>
                 <![CDATA[
-                    //PermissionSet/description/text[contains(@Image, 'No')]
+                    //PermissionSet/description/text[contains(@Text, 'No')]
                 ]]>
                 </value>
             </property>
