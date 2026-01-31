@@ -11,7 +11,7 @@
         <locationX>50</locationX>
         <locationY>0</locationY>
         <filterFormula>AND(
-            NOT({!$Permission.ByPass_Plow}),
+            NOT({!$Permission.ByPass_Flow}),
             ISPICKVAL({!$Record.Status}, &quot;Cerrado&quot;),
             {!$Record.CaseAnnulled__c},
             NOT(ISBLANK(TEXT({!$Record.CancellationReason__c}))),

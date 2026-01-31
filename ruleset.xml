@@ -470,7 +470,6 @@
                     <![CDATA[
                 //*:Flow
                 [
-                    (: 2. Validación: Falla si no hay formula OR si la formula completa no tiene el permiso :)
                     count(*:start/*:filterFormula) = 0
                     or
                     not(contains(string(*:start/*:filterFormula), '$Permission.ByPass_Flow'))
