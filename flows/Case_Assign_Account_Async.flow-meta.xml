@@ -10,6 +10,7 @@
     <start>
         <locationX>50</locationX>
         <locationY>0</locationY>
+
         <object>Case</object>
         <recordTriggerType>Create</recordTriggerType>
         <triggerType>RecordAfterSave</triggerType>
