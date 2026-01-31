@@ -3,7 +3,7 @@
     <apiVersion>62.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <environments>Default</environments>
-    <description>description del equipo [core]</description>
+    <description>description del equipo</description>
     <interviewLabel>Case - Assign Account {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Case - Assign Account Async </label>
     <processType>AutoLaunchedFlow</processType>
@@ -11,7 +11,7 @@
         <locationX>50</locationX>
         <locationY>0</locationY>
         <filterFormula>AND(
-            NOT({!$Permission.ByPass_Flow}),
+            NOT({!$Permission.ByPass_Plow}),
             ISPICKVAL({!$Record.Status}, &quot;Cerrado&quot;),
             {!$Record.CaseAnnulled__c},
             NOT(ISBLANK(TEXT({!$Record.CancellationReason__c}))),
