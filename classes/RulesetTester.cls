@@ -15,7 +15,6 @@ public class RulesetTester {
                 if (p3 != null) {
                     if (p5) {
                         System.debug('Demasiado anidamiento bro');
-
                     }
                 }
             }

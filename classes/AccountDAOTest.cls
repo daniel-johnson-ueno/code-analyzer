@@ -16,7 +16,6 @@ private class AccountDAOTest {
     @IsTest
     private static void getAccountByIdTest(){
         Account company = [SELECT Id, Name FROM Account WHERE IsPersonAccount = false];
-
         Account account = AccountDAO.getAccountById(company.Id);
 
         System.assertEquals('Test Account', account.Name);
@@ -55,7 +54,6 @@ private class AccountDAOTest {
         Account personAccount = [SELECT Id, Phone, PersonEmail FROM Account WHERE IsPersonAccount = TRUE LIMIT 1];
         personAccount.Phone = '1234556';
         personAccount.PersonEmail = 'test@mail.com';
-
         update personAccount;
 
         List<Account> accounts = AccountDAO.getAccountByTemporaryKey(personAccount.PersonEmail, personAccount.Phone);

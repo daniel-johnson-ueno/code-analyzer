@@ -59,13 +59,13 @@
                         not(contains(lower-case(@Image), 'dao'))
                     ]
                     [
+                        not(contains(lower-case(@Image), 'test'))
+                    ]
+                    [
                         count(.//Method[lower-case(@Image)='execute']) = 0
                     ]
                     [
                         count(.//Method[lower-case(@Image)='start']) = 0
-                    ]
-                    [
-                        count(.//Method[lower-case(@Image)='test']) = 0
                     ]
                     [
                         .//SoqlExpression
