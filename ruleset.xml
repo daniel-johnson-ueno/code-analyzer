@@ -485,4 +485,83 @@
         </properties>
     </rule>
 
+    <rule name="FlowComplexityLogic"
+          language="xml"
+          message="Flow demasiado complejo (tiene demasiadas Decisiones o Loops). Considere dividirlo en Subflows o migrar a Apex"
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            Calcula la complejidad contando elementos de decisión y bucles.
+            Fórmula: (Decisiones + Loops) > 15
+        </description>
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                //*:Flow[
+                    (count(*:decisions) + count(*:loops)) > 15
+                ]
+            ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <rule name="FlowComplexityDataOperations"
+          language="xml"
+          message="El Flow realiza demasiadas operaciones de base de datos (Get/Create/Update/Delete). Riesgo de performance."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            Suma todas las interacciones con la DB.
+            Fórmula: (Get + Create + Update + Delete) > 15
+        </description>
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                //*:Flow[
+                    (
+                        count(*:recordLookups) +
+                        count(*:recordCreates) +
+                        count(*:recordUpdates) +
+                        count(*:recordDeletes)
+                    ) > 15
+                ]
+            ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <rule name="FlowSizeTooLarge"
+          language="xml"
+          message="El Flow es demasiado extenso. Tiene demasiados elementos y es difícil de mantener, debe migrarse a Apex o dividirse en Subflows."
+          class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+        <description>
+            Cuenta el total de elementos funcionales (Pantallas, Acciones, CRUD, Lógica).
+        </description>
+        <priority>3</priority>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+                //*:Flow[
+                    (
+                        count(*:screens) +
+                        count(*:actionCalls) +
+                        count(*:decisions) +
+                        count(*:loops) +
+                        count(*:recordLookups) +
+                        count(*:recordCreates) +
+                        count(*:recordUpdates) +
+                        count(*:recordDeletes)
+                    ) > 50
+                ]
+            ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
 </ruleset>
