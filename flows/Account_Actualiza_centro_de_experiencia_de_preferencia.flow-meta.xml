@@ -280,45 +280,6 @@
         </inputAssignments>
         <inputReference>$Record</inputReference>
     </recordUpdates>
-    <recordUpdates>
-        <name>Actualice_el_Centro_de_Experiencia_de_Preferencia_de_la_Cuenta_Empresa</name>
-        <label>Actualice el Centro de Experiencia de Preferencia de la Cuenta Empresa</label>
-        <locationX>314</locationX>
-        <locationY>647</locationY>
-        <inputAssignments>
-            <field>Preference_Experience_Center__c</field>
-            <value>
-                <elementReference>Obtenga_el_contacto_interno.AccountId</elementReference>
-            </value>
-        </inputAssignments>
-        <inputReference>$Record</inputReference>
-    </recordUpdates>
-    <recordUpdates>
-        <name>Actualice_el_Centro_de_Experiencia_de_Preferencia_de_la_Cuenta_Empresa</name>
-        <label>Actualice el Centro de Experiencia de Preferencia de la Cuenta Empresa</label>
-        <locationX>314</locationX>
-        <locationY>647</locationY>
-        <inputAssignments>
-            <field>Preference_Experience_Center__c</field>
-            <value>
-                <elementReference>Obtenga_el_contacto_interno.AccountId</elementReference>
-            </value>
-        </inputAssignments>
-        <inputReference>$Record</inputReference>
-    </recordUpdates>
-    <recordUpdates>
-        <name>Actualice_el_Centro_de_Experiencia_de_Preferencia_de_la_Cuenta_Empresa</name>
-        <label>Actualice el Centro de Experiencia de Preferencia de la Cuenta Empresa</label>
-        <locationX>314</locationX>
-        <locationY>647</locationY>
-        <inputAssignments>
-            <field>Preference_Experience_Center__c</field>
-            <value>
-                <elementReference>Obtenga_el_contacto_interno.AccountId</elementReference>
-            </value>
-        </inputAssignments>
-        <inputReference>$Record</inputReference>
-    </recordUpdates>
     <start>
         <locationX>188</locationX>
         <locationY>0</locationY>
