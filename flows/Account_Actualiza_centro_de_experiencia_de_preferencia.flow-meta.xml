@@ -137,6 +137,18 @@
     <decisions>
         <name>Valida_el_tipo_de_cuenta</name>
         <label>Valida el tipo de cuenta</label>
+    </decisions>
+    <decisions>
+        <name>Valida_el_tipo_de_cuenta</name>
+        <label>Valida el tipo de cuenta</label>
+    </decisions>
+    <decisions>
+        <name>Valida_el_tipo_de_cuenta</name>
+        <label>Valida el tipo de cuenta</label>
+    </decisions>
+    <decisions>
+        <name>Valida_el_tipo_de_cuenta</name>
+        <label>Valida el tipo de cuenta</label>
         <locationX>314</locationX>
         <locationY>539</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
