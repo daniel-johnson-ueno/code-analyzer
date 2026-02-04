@@ -108,7 +108,7 @@
     </decisions>
     <decisions>
         <name>Valida_el_tipo_de_cuenta</name>
-        <label>Valida el tipo de cuenta</label>
+        <label>Valida el tipo de cuentas</label>
     </decisions>
     <decisions>
         <name>Valida_el_tipo_de_cuenta</name>
